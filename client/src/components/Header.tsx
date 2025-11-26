@@ -13,6 +13,7 @@ export default function Header() {
     { href: "/about", label: "About Us" },
     { href: "/services", label: "Services" },
     { href: "/properties", label: "Properties" },
+    { href: "/locations", label: "Locations" },
     { href: "/team", label: "Team" },
     { href: "/contact", label: "Contact" },
     { href: "/faq", label: "FAQ" },

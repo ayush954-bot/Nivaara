@@ -119,16 +119,14 @@ export default function Properties() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Locations</SelectItem>
-                  <SelectItem value="Kharadi">Kharadi</SelectItem>
-                  <SelectItem value="Viman Nagar">Viman Nagar</SelectItem>
-                  <SelectItem value="Wagholi">Wagholi</SelectItem>
-                  <SelectItem value="Kalyani Nagar">Kalyani Nagar</SelectItem>
-                  <SelectItem value="Hadapsar">Hadapsar</SelectItem>
-                  <SelectItem value="Magarpatta">Magarpatta</SelectItem>
-                  <SelectItem value="Koregaon Park">Koregaon Park</SelectItem>
-                  <SelectItem value="Hinjewadi">Hinjewadi</SelectItem>
-                  <SelectItem value="Balewadi">Balewadi</SelectItem>
-                  <SelectItem value="Baner">Baner</SelectItem>
+                  <SelectItem value="pune-east">Pune - East Zone</SelectItem>
+                  <SelectItem value="pune-west">Pune - West Zone</SelectItem>
+                  <SelectItem value="pune-north">Pune - North Zone</SelectItem>
+                  <SelectItem value="pune-south">Pune - South Zone</SelectItem>
+                  <SelectItem value="mumbai">Mumbai</SelectItem>
+                  <SelectItem value="delhi">Delhi NCR</SelectItem>
+                  <SelectItem value="bangalore">Bangalore</SelectItem>
+                  <SelectItem value="dubai">Dubai, UAE</SelectItem>
                 </SelectContent>
               </Select>
             </div>

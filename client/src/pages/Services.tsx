@@ -124,7 +124,7 @@ export default function Services() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl font-bold mb-6 text-foreground">Our Services</h1>
             <p className="text-xl text-muted-foreground">
-              Comprehensive real estate solutions tailored to your needs. From search to paperwork — we manage everything.
+              Comprehensive real estate solutions across India and international markets. From search to paperwork — we manage everything.
             </p>
           </div>
         </div>
@@ -161,22 +161,20 @@ export default function Services() {
       <section className="py-16 bg-secondary/30">
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-6 text-foreground">Areas We Cover</h2>
+            <h2 className="text-4xl font-bold mb-6 text-foreground">Where We Operate</h2>
             <p className="text-lg text-muted-foreground mb-8">
-              All our services are available across Pune's key locations, with special expertise in:
+              Our services are available across India and international markets. We have deep expertise in:
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                "Kharadi",
-                "Viman Nagar",
-                "Wagholi",
-                "Kalyani Nagar",
-                "Hadapsar",
-                "Magarpatta",
-                "Koregaon Park",
-                "Hinjewadi",
-                "Balewadi",
-                "Baner",
+                "Pune (All Zones)",
+                "Mumbai",
+                "Delhi NCR",
+                "Bangalore",
+                "Hyderabad",
+                "Chennai",
+                "Dubai, UAE",
+                "More Cities",
               ].map((area) => (
                 <div
                   key={area}
@@ -185,6 +183,11 @@ export default function Services() {
                   {area}
                 </div>
               ))}
+            </div>
+            <div className="text-center mt-6">
+              <Button variant="outline" asChild>
+                <Link href="/locations">View Detailed Location Map</Link>
+              </Button>
             </div>
           </div>
         </div>

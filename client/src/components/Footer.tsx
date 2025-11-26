@@ -14,7 +14,7 @@ export default function Footer() {
               <span className="text-xl font-bold">{APP_TITLE}</span>
             </div>
             <p className="text-sm text-background/80">
-              We Build Trust. Your trusted partner in Pune real estate.
+              We Build Trust. Your trusted real estate partner across India and international markets.
             </p>
             <div className="flex items-center space-x-2 text-sm">
               <MapPin className="h-4 w-4 text-primary" />

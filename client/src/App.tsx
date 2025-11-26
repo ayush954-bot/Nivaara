@@ -13,6 +13,7 @@ import Properties from "./pages/Properties";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
+import Locations from "./pages/Locations";
 
 function Router() {
   return (
@@ -27,6 +28,7 @@ function Router() {
           <Route path={"/team"} component={Team} />
           <Route path={"/contact"} component={Contact} />
           <Route path={"/faq"} component={FAQ} />
+          <Route path={"/locations"} component={Locations} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>

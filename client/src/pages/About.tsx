@@ -23,13 +23,13 @@ export default function About() {
             <h2 className="text-4xl font-bold mb-8 text-foreground">Our Story</h2>
             <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
               <p>
-                Nivaara was founded with a simple yet powerful vision: to transform the real estate experience in Pune by building relationships based on trust, transparency, and excellence. The name "Nivaara" itself embodies our core purpose — it means shelter, protection, and settlement in Sanskrit, reflecting our commitment to helping people find not just properties, but homes and opportunities that truly serve their needs.
+                Nivaara was founded with a simple yet powerful vision: to transform the real estate experience across India and international markets by building relationships based on trust, transparency, and excellence. The name "Nivaara" itself embodies our core purpose — it means shelter, protection, and settlement in Sanskrit, reflecting our commitment to helping people find not just properties, but homes and opportunities that truly serve their needs.
               </p>
               <p>
-                Based in the heart of Kharadi, one of Pune's most dynamic neighborhoods, we have established ourselves as a comprehensive real estate solutions provider. Our team combines deep market knowledge with strong relationships across Pune's real estate ecosystem, from established builders to emerging developers, from residential communities to commercial hubs.
+                Based in the heart of Kharadi, Pune, we have expanded our operations across major Indian cities and international markets including Dubai. Our team combines deep market knowledge with strong relationships across India's real estate ecosystem, from established builders to emerging developers, from residential communities to commercial hubs.
               </p>
               <p>
-                What sets us apart is our holistic approach. We don't just facilitate transactions; we provide end-to-end support throughout your real estate journey. Whether you're a first-time homebuyer, a seasoned investor, or a business looking for the perfect commercial space, we bring the same level of dedication, professionalism, and transparency to every engagement.
+                What sets us apart is our holistic approach and geographic reach. We don't just facilitate transactions; we provide end-to-end support throughout your real estate journey across India and beyond. Whether you're a first-time homebuyer in Pune, a seasoned investor exploring opportunities in Mumbai or Dubai, or a business looking for the perfect commercial space in Bangalore, we bring the same level of dedication, professionalism, and transparency to every engagement.
               </p>
             </div>
           </div>

@@ -31,7 +31,7 @@ export default function Home() {
             We Build Trust
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            Your trusted partner in Pune real estate. Every property. Every solution. One name — Nivaara.
+            Your trusted real estate partner across India and international markets. Every property. Every solution. One name — Nivaara.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="text-lg">
@@ -49,10 +49,10 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-6 text-foreground">
-              Complete Real Estate Solutions in Pune
+              Complete Real Estate Solutions Across India & Beyond
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Nivaara is your comprehensive real estate consultancy partner, specializing in all aspects of property transactions across Pune. From residential flats to commercial spaces, land deals to investment advisory, we provide end-to-end solutions with complete transparency and professionalism. Our name means shelter, protection, and settlement — values we bring to every client relationship.
+              Nivaara is your comprehensive real estate consultancy partner, operating across India and international markets including Dubai. From residential flats to commercial spaces, land deals to investment advisory, we provide end-to-end solutions with complete transparency and professionalism. Based in Pune with expertise spanning major Indian cities, our name means shelter, protection, and settlement — values we bring to every client relationship worldwide.
             </p>
           </div>
         </div>
@@ -169,28 +169,40 @@ export default function Home() {
       <section className="py-16 bg-secondary/30">
         <div className="container">
           <h2 className="text-4xl font-bold text-center mb-12 text-foreground">
-            Areas We Serve in Pune
+            Our Geographic Reach
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto text-center mb-8">
+            <p className="text-lg text-muted-foreground mb-6">
+              Serving clients across India and international markets with local expertise
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {[
-              "Kharadi",
-              "Viman Nagar",
-              "Wagholi",
-              "Kalyani Nagar",
-              "Hadapsar",
-              "Magarpatta",
-              "Koregaon Park",
-              "Hinjewadi",
-              "Balewadi",
-              "Baner",
-            ].map((area) => (
+              { name: "Pune (All Zones)", highlight: true },
+              { name: "Mumbai", highlight: false },
+              { name: "Delhi NCR", highlight: false },
+              { name: "Bangalore", highlight: false },
+              { name: "Hyderabad", highlight: false },
+              { name: "Chennai", highlight: false },
+              { name: "Dubai, UAE", highlight: true },
+              { name: "More Cities", highlight: false },
+            ].map((location) => (
               <div
-                key={area}
-                className="bg-card text-card-foreground p-4 rounded-lg text-center font-medium hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+                key={location.name}
+                className={`p-4 rounded-lg text-center font-medium transition-colors cursor-pointer ${
+                  location.highlight
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card text-card-foreground hover:bg-primary hover:text-primary-foreground"
+                }`}
               >
-                {area}
+                {location.name}
               </div>
             ))}
+          </div>
+          <div className="text-center mt-8">
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/locations">View All Locations & Pune Zones</Link>
+            </Button>
           </div>
         </div>
       </section>
