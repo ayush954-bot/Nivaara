@@ -97,8 +97,8 @@
 
 ## GitHub Integration
 
-- [ ] Configure Git repository
-- [ ] Add remote origin to https://github.com/ayush954-bot/Nivaara
-- [ ] Push all code to GitHub
-- [ ] Verify repository contents
-- [ ] Provide Eclipse setup instructions
+- [x] Configure Git repository
+- [x] Add remote origin to https://github.com/ayush954-bot/Nivaara
+- [x] Push all code to GitHub
+- [x] Verify repository contents
+- [x] Provide Eclipse setup instructions
