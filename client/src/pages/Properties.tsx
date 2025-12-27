@@ -9,89 +9,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Building2, MapPin, Ruler, IndianRupee } from "lucide-react";
+import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 export default function Properties() {
   const [locationFilter, setLocationFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Sample property data
-  const properties = [
-    {
-      id: 1,
-      title: "Luxury 3BHK Apartment",
-      location: "Kharadi",
-      type: "Flat",
-      status: "Ready",
-      price: "₹95 Lakhs",
-      area: "1450 sq.ft",
-      image: "/images/luxury-home.jpg",
-      builder: "Premium Developers",
-    },
-    {
-      id: 2,
-      title: "Modern 2BHK Flat",
-      location: "Viman Nagar",
-      type: "Flat",
-      status: "Under-Construction",
-      price: "₹72 Lakhs",
-      area: "1100 sq.ft",
-      image: "/images/hero-building.jpg",
-      builder: "Skyline Builders",
-    },
-    {
-      id: 3,
-      title: "Commercial Office Space",
-      location: "Hinjewadi",
-      type: "Office",
-      status: "Ready",
-      price: "₹1.2 Crores",
-      area: "2500 sq.ft",
-      image: "/images/office-interior.jpg",
-      builder: "Corporate Realty",
-    },
-    {
-      id: 4,
-      title: "Spacious 4BHK Penthouse",
-      location: "Koregaon Park",
-      type: "Flat",
-      status: "Ready",
-      price: "₹2.5 Crores",
-      area: "3200 sq.ft",
-      image: "/images/luxury-home.jpg",
-      builder: "Elite Constructions",
-    },
-    {
-      id: 5,
-      title: "Retail Shop Space",
-      location: "Baner",
-      type: "Shop",
-      status: "Ready",
-      price: "₹85 Lakhs",
-      area: "800 sq.ft",
-      image: "/images/office-interior.jpg",
-      builder: "Retail Spaces Ltd",
-    },
-    {
-      id: 6,
-      title: "Residential Plot",
-      location: "Wagholi",
-      type: "Land",
-      status: "Ready",
-      price: "₹45 Lakhs",
-      area: "1200 sq.ft",
-      image: "/images/hero-building.jpg",
-      builder: "Land Developers",
-    },
-  ];
-
-  const filteredProperties = properties.filter((property) => {
-    if (locationFilter !== "all" && property.location !== locationFilter) return false;
-    if (typeFilter !== "all" && property.type !== typeFilter) return false;
-    if (statusFilter !== "all" && property.status !== statusFilter) return false;
-    return true;
+  // Fetch properties from database
+  const { data: properties = [], isLoading } = trpc.properties.search.useQuery({
+    location: locationFilter !== "all" ? locationFilter : undefined,
+    propertyType: typeFilter !== "all" ? typeFilter : undefined,
+    status: statusFilter !== "all" ? statusFilter : undefined,
   });
 
   return (
@@ -100,9 +31,9 @@ export default function Properties() {
       <section className="py-20 bg-secondary/30">
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6 text-foreground">Properties</h1>
+            <h1 className="text-5xl font-bold mb-6 text-foreground">Our Properties</h1>
             <p className="text-xl text-muted-foreground">
-              Discover your perfect property from our curated selection across Pune
+              Explore our curated selection of properties across India and international markets
             </p>
           </div>
         </div>
@@ -111,7 +42,7 @@ export default function Properties() {
       {/* Filters Section */}
       <section className="py-8 bg-background border-b">
         <div className="container">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
+          <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
             <div className="flex-1 w-full md:w-auto">
               <Select value={locationFilter} onValueChange={setLocationFilter}>
                 <SelectTrigger>
@@ -139,8 +70,8 @@ export default function Properties() {
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="Flat">Flat</SelectItem>
-                  <SelectItem value="Office">Office</SelectItem>
                   <SelectItem value="Shop">Shop</SelectItem>
+                  <SelectItem value="Office">Office</SelectItem>
                   <SelectItem value="Land">Land</SelectItem>
                   <SelectItem value="Rental">Rental</SelectItem>
                 </SelectContent>
@@ -159,17 +90,6 @@ export default function Properties() {
                 </SelectContent>
               </Select>
             </div>
-
-            <Button
-              variant="outline"
-              onClick={() => {
-                setLocationFilter("all");
-                setTypeFilter("all");
-                setStatusFilter("all");
-              }}
-            >
-              Clear Filters
-            </Button>
           </div>
         </div>
       </section>
@@ -177,89 +97,87 @@ export default function Properties() {
       {/* Properties Grid */}
       <section className="py-16 bg-background">
         <div className="container">
-          <div className="mb-6">
-            <p className="text-muted-foreground">
-              Showing {filteredProperties.length} of {properties.length} properties
-            </p>
-          </div>
-
-          {filteredProperties.length === 0 ? (
-            <div className="text-center py-16">
-              <Building2 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-2xl font-semibold mb-2">No properties found</h3>
-              <p className="text-muted-foreground mb-6">
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            </div>
+          ) : properties.length === 0 ? (
+            <div className="text-center py-20">
+              <Building2 className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-2xl font-semibold mb-2">No Properties Found</h3>
+              <p className="text-muted-foreground">
                 Try adjusting your filters to see more results
               </p>
-              <Button
-                onClick={() => {
-                  setLocationFilter("all");
-                  setTypeFilter("all");
-                  setStatusFilter("all");
-                }}
-              >
-                Clear All Filters
-              </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProperties.map((property) => (
-                <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div
-                    className="h-48 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${property.image})` }}
-                  />
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2">
+            <>
+              <div className="mb-6 text-muted-foreground">
+                Showing {properties.length} {properties.length === 1 ? "property" : "properties"}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {properties.map((property) => (
+                  <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div
+                      className="h-48 bg-cover bg-center"
+                      style={{
+                        backgroundImage: `url(${property.imageUrl || "/images/hero-building.jpg"})`,
+                      }}
+                    />
+                    <CardHeader>
+                      <div className="flex justify-between items-start mb-2">
+                        <Badge variant={property.status === "Ready" ? "default" : "secondary"}>
+                          {property.status}
+                        </Badge>
+                        <Badge variant="outline">{property.propertyType}</Badge>
+                      </div>
                       <CardTitle className="text-xl">{property.title}</CardTitle>
-                      <Badge variant={property.status === "Ready" ? "default" : "secondary"}>
-                        {property.status}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center text-muted-foreground text-sm">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {property.location}
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-sm">
-                          <Ruler className="h-4 w-4 mr-2 text-primary" />
-                          <span>{property.area}</span>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          {property.area ? `${property.area}, ${property.location}` : property.location}
                         </div>
-                        <div className="flex items-center text-sm">
-                          <Building2 className="h-4 w-4 mr-2 text-primary" />
-                          <span>{property.type}</span>
+                        {property.area_sqft && (
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Ruler className="h-4 w-4 mr-2" />
+                            {property.area_sqft} sq.ft
+                          </div>
+                        )}
+                        {property.builder && (
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Building2 className="h-4 w-4 mr-2" />
+                            {property.builder}
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between pt-2 border-t">
+                          <div className="flex items-center text-lg font-bold text-primary">
+                            <IndianRupee className="h-5 w-5 mr-1" />
+                            {property.priceLabel || `₹${(Number(property.price) / 100000).toFixed(0)}L`}
+                          </div>
+                          <Button size="sm" asChild>
+                            <Link href="/contact">Inquire</Link>
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center text-2xl font-bold text-primary">
-                        <IndianRupee className="h-6 w-6" />
-                        <span>{property.price.replace("₹", "")}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">By {property.builder}</p>
-                      <Button className="w-full" asChild>
-                        <Link href="/contact">Enquire Now</Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-secondary/30">
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container text-center">
-          <h2 className="text-4xl font-bold mb-6 text-foreground">
-            Can't Find What You're Looking For?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            We have access to many more properties that aren't listed online. Contact us with your requirements and we'll find the perfect match.
+          <h2 className="text-4xl font-bold mb-6">Can't Find What You're Looking For?</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Let us know your requirements and we'll find the perfect property for you.
           </p>
-          <Button size="lg" asChild>
-            <Link href="/contact">Contact Our Team</Link>
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/contact">Contact Us</Link>
           </Button>
         </div>
       </section>

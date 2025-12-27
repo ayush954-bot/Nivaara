@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { MapView } from "@/components/Map";
+import { trpc } from "@/lib/trpc";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -16,11 +17,23 @@ export default function Contact() {
     message: "",
   });
 
+  const createInquiry = trpc.inquiries.create.useMutation({
+    onSuccess: () => {
+      toast.success("Thank you for your inquiry! We'll get back to you soon.");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    },
+    onError: (error) => {
+      toast.error("Failed to submit inquiry. Please try again.");
+      console.error(error);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would send the form data to a backend
-    toast.success("Thank you for your inquiry! We'll get back to you soon.");
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    createInquiry.mutate({
+      ...formData,
+      inquiryType: "general",
+    });
   };
 
   const handleChange = (

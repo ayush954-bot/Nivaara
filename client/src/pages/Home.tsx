@@ -1,6 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 import {
   Building2,
   CheckCircle2,
@@ -13,6 +15,8 @@ import {
 } from "lucide-react";
 
 export default function Home() {
+  const { data: testimonials = [] } = trpc.testimonials.list.useQuery();
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -214,24 +218,8 @@ export default function Home() {
             What Our Clients Say
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Rajesh Kumar",
-                location: "Kharadi",
-                text: "Nivaara helped us find our dream home in Kharadi. Their transparency and professionalism made the entire process smooth and stress-free.",
-              },
-              {
-                name: "Priya Sharma",
-                location: "Viman Nagar",
-                text: "Excellent service for commercial property rental. The team understood our requirements perfectly and delivered beyond expectations.",
-              },
-              {
-                name: "Amit Patel",
-                location: "Hinjewadi",
-                text: "Best real estate consultancy in Pune. Their market knowledge and investment advisory helped us make the right property decision.",
-              },
-            ].map((testimonial, index) => (
-              <Card key={index}>
+            {testimonials.slice(0, 3).map((testimonial) => (
+              <Card key={testimonial.id}>
                 <CardContent className="pt-6">
                   <p className="text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
                   <div className="font-semibold">{testimonial.name}</div>

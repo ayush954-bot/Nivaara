@@ -14,8 +14,8 @@ import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Locations from "./pages/Locations";
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
