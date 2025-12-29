@@ -5,6 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
 import { notifyOwner } from "./_core/notification";
+import { sendInquiryNotification, sendInquiryConfirmation } from "./email";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -65,14 +66,28 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const result = await db.createInquiry(input);
         
-        // Notify owner about new inquiry
+        // Send email notification to info@nivaararealty.com
+        try {
+          await sendInquiryNotification(input);
+        } catch (error) {
+          console.error("Failed to send email notification:", error);
+        }
+        
+        // Send confirmation email to the user
+        try {
+          await sendInquiryConfirmation(input);
+        } catch (error) {
+          console.error("Failed to send confirmation email:", error);
+        }
+        
+        // Notify owner via Manus notification system
         try {
           await notifyOwner({
             title: "New Inquiry Received",
             content: `From: ${input.name} (${input.email})\nPhone: ${input.phone}\nType: ${input.inquiryType}\nMessage: ${input.message}`,
           });
         } catch (error) {
-          console.error("Failed to send notification:", error);
+          console.error("Failed to send Manus notification:", error);
         }
         
         return { success: true, id: result.insertId };

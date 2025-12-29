@@ -120,3 +120,23 @@
 - [x] Update Paresh Gurav profile with Real Estate experience
 - [x] Update Ayush profile - Technology & Innovation focus with Software Engineering background
 - [x] Update Anuj Agrawal profile - Real Estate dealing with Software Engineering background
+
+## Email Notifications & Real Property Listings
+
+- [x] Configure email notifications for inquiries to info@nivaararealty.com
+- [x] Search for 1-2 real property listings in Kharadi area
+- [x] Add real property listings to database (2 BHK Vishal Leela, 4 BHK Mahindra IvyLush)
+- [x] Install and configure Resend email service
+- [x] Create email notification system with confirmation emails
+- [x] Test Resend API key validation
+- [x] Verify properties display correctly on website
+- [x] Test inquiry form email delivery end-to-end
+
+## Purandar Land Listing
+
+- [x] Create 5-acre land listing in Purandar
+- [x] Highlight new Pune International Airport proximity
+- [x] Add investment opportunity details
+- [x] Include land/agricultural images
+- [x] Add to database (₹2.5 Crores, 5 acres, South Zone)
+- [x] Verify display on website
