@@ -109,3 +109,14 @@
 - [x] Create example .env file with sample configuration
 - [x] Document database connection setup
 - [x] Push updated documentation to GitHub
+
+## Business Information Updates
+
+- [x] Add RERA registration mention across website
+- [x] Update email to info@nivaararealty.com
+- [x] Update phone to +91 9764515697
+- [x] Update office address to "Office No. 203, Sr No.69/4, Plot.B Zen Square, Kharadi, Pune (MH)"
+- [x] Update Team page - Remove Anshul, keep 3 partners
+- [x] Update Paresh Gurav profile with Real Estate experience
+- [x] Update Ayush profile - Technology & Innovation focus with Software Engineering background
+- [x] Update Anuj Agrawal profile - Real Estate dealing with Software Engineering background

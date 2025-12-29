@@ -86,8 +86,9 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold mb-2">Office Location</h3>
                         <p className="text-muted-foreground">
-                          Kharadi, Pune<br />
-                          Maharashtra, India
+                          Office No. 203, Sr No.69/4,<br />
+                          Plot.B Zen Square, Kharadi,<br />
+                          Pune (MH), India
                         </p>
                       </div>
                     </div>
@@ -105,7 +106,7 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold mb-2">Phone</h3>
                         <p className="text-muted-foreground">
-                          +91 XXXXX XXXXX<br />
+                          +91 9764515697<br />
                           <span className="text-sm">Mon-Sat: 9:00 AM - 7:00 PM</span>
                         </p>
                       </div>
@@ -124,7 +125,7 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold mb-2">Email</h3>
                         <p className="text-muted-foreground">
-                          info@nivaara.com<br />
+                          info@nivaararealty.com<br />
                           <span className="text-sm">We'll respond within 24 hours</span>
                         </p>
                       </div>
@@ -147,7 +148,7 @@ export default function Contact() {
                         </p>
                         <Button variant="outline" size="sm" asChild>
                           <a
-                            href="https://wa.me/91XXXXXXXXXX"
+                            href="https://wa.me/919764515697"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
