@@ -89,7 +89,7 @@ export async function sendInquiryNotification(data: InquiryEmailData): Promise<b
     `;
 
     const result = await client.emails.send({
-      from: 'Nivaara Inquiries <inquiries@updates.nivaararealty.com>',
+      from: 'Nivaara Inquiries <noreply@nivaararealty.com>',
       to: 'info@nivaararealty.com',
       subject: `New Inquiry from ${data.name} - ${data.inquiryType}`,
       html: emailHtml,
@@ -157,10 +157,11 @@ export async function sendInquiryConfirmation(data: InquiryEmailData): Promise<b
     `;
 
     const result = await client.emails.send({
-      from: 'Nivaara Real Estate <noreply@updates.nivaararealty.com>',
+      from: 'Nivaara Real Estate <noreply@nivaararealty.com>',
       to: data.email,
       subject: 'Thank You for Your Inquiry - Nivaara Real Estate',
       html: emailHtml,
+      replyTo: 'info@nivaararealty.com',
     });
 
     console.log('[Email] Confirmation email sent successfully:', result.data?.id);

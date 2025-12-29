@@ -140,3 +140,13 @@
 - [x] Include land/agricultural images
 - [x] Add to database (₹2.5 Crores, 5 acres, South Zone)
 - [x] Verify display on website
+
+## Email Delivery Troubleshooting
+
+- [x] Check Resend domain verification status
+- [x] Verify email configuration in server/email.ts
+- [x] Test email sending with proper from/to addresses
+- [x] Check if domain is verified in Resend
+- [x] Fix email delivery issue (changed from onboarding@resend.dev to noreply@nivaararealty.com)
+- [x] Test end-to-end inquiry submission
+- [x] Email notifications confirmed working - received at info@nivaararealty.com
