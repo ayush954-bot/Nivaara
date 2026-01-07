@@ -150,3 +150,24 @@
 - [x] Fix email delivery issue (changed from onboarding@resend.dev to noreply@nivaararealty.com)
 - [x] Test end-to-end inquiry submission
 - [x] Email notifications confirmed working - received at info@nivaararealty.com
+
+## WWW Subdomain Fix
+
+- [ ] Check current DNS configuration for www.nivaararealty.com
+- [ ] Verify GoDaddy CNAME or A record for www subdomain
+- [ ] Provide correct DNS configuration
+- [ ] Test www subdomain after DNS update
+- [ ] Confirm both nivaararealty.com and www.nivaararealty.com work
+
+## Website Branding & Content Updates
+
+- [x] Replace logo with new Nivaara Realty Solutions logo
+- [x] Add "Simplifying Realty" tagline throughout website
+- [ ] Update favicon with new logo
+- [x] Change "Ayush" to "Ayush Agrawal" in team section
+- [x] Remove all mentions of Anshul Agrawal from website
+- [x] Update footer copyright to "© 2026 Nivaara Realty Solutions LLP"
+- [x] Remove all non-Pune property listings
+- [x] Add real Pune property listings from 99acres
+- [x] Update database to remove non-Pune properties
+- [x] Test all branding changes across pages

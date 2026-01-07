@@ -13,20 +13,12 @@ export default function Team() {
       icon: Award,
     },
     {
-      name: "Ayush",
+      name: "Ayush Agrawal",
       role: "Co-Founder & Technology Lead",
       expertise: "Technology & Innovation in Real Estate",
       bio: "Bringing technology and innovation to real estate with a strong Software Engineering background. Ayush leverages modern technology to streamline property transactions, enhance customer experience, and build data-driven solutions for smarter real estate decisions.",
       specialties: ["Software Engineering", "Digital Innovation", "Process Automation", "Tech Solutions"],
       icon: Code,
-    },
-    {
-      name: "Anuj Agrawal",
-      role: "Co-Founder & Property Consultant",
-      expertise: "Real Estate Dealing & Technical Solutions",
-      bio: "Anuj combines real estate property dealing expertise with a Software Engineering background. His unique blend of technical knowledge and market insight helps clients navigate complex property transactions with confidence and transparency.",
-      specialties: ["Property Consulting", "Software Engineering", "Transaction Management", "Client Relations"],
-      icon: TrendingUp,
     },
   ];
 
@@ -50,12 +42,12 @@ export default function Team() {
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6 text-foreground">Leadership That Builds Trust</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Nivaara is led by three partners who share a common vision: to transform the real estate landscape through ethical practices, transparency, and client-focused service. Our unique combination of real estate expertise and software engineering background enables us to deliver innovative, efficient, and trustworthy property solutions.
+              Nivaara is led by two partners who share a common vision: to transform the real estate landscape through ethical practices, transparency, and client-focused service. Our unique combination of real estate expertise and software engineering background enables us to deliver innovative, efficient, and trustworthy property solutions.
             </p>
           </div>
 
           {/* Founders Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {founders.map((founder, index) => {
               const Icon = founder.icon;
               return (

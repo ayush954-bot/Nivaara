@@ -90,7 +90,7 @@ export const appRouter = router({
           console.error("Failed to send Manus notification:", error);
         }
         
-        return { success: true, id: result.insertId };
+        return { success: true };
       }),
   }),
 
