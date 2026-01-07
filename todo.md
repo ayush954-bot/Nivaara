@@ -219,3 +219,10 @@
 - [x] Regenerate all favicon files with transparent background
 - [x] Test favicon displays without white square
 - [x] Verify transparency works on all backgrounds
+
+## Push Changes to GitHub
+
+- [ ] Check current git status
+- [ ] Add all changes to git
+- [ ] Commit changes with descriptive message
+- [ ] Push to GitHub repository (ayush954-bot/Nivaara)
