@@ -179,3 +179,11 @@
 - [x] Update team grid layout back to 3 columns
 - [x] Update team description to mention "three partners"
 - [x] Confirm no mentions of Anshul Agrawal anywhere on site
+
+## Logo Background Removal
+
+- [x] Remove white background from logo image
+- [x] Create transparent PNG version
+- [x] Replace logo file in public directory
+- [x] Test logo appearance on website header
+- [x] Verify logo blends seamlessly with background
