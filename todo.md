@@ -205,3 +205,10 @@
 - [x] Add Open Graph and Twitter Card meta tags with logo
 - [x] Test favicon appears in browser tab
 - [x] Verify favicon will show in Google search results
+
+## Regenerate Favicon with Full Logo
+
+- [x] Use complete logo (with text) instead of cropped house icon
+- [x] Regenerate all favicon sizes with full logo
+- [x] Test favicon readability at small sizes
+- [x] Verify favicon displays correctly in browser tab
