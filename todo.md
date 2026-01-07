@@ -222,7 +222,15 @@
 
 ## Push Changes to GitHub
 
-- [ ] Check current git status
-- [ ] Add all changes to git
-- [ ] Commit changes with descriptive message
-- [ ] Push to GitHub repository (ayush954-bot/Nivaara)
+- [x] Check current git status
+- [x] Add all changes to git
+- [x] Commit changes with descriptive message
+- [x] Push to GitHub repository (ayush954-bot/Nivaara)
+
+## Add Team Photos
+
+- [x] Copy Ayush Agrawal's photo to website images directory
+- [x] Optimize photo for web (resize, compress)
+- [x] Update Team.tsx to display Ayush's photo
+- [x] Test team section displays correctly
+- [x] Save checkpoint with team photo update

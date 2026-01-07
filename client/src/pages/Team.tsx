@@ -61,9 +61,19 @@ export default function Team() {
               return (
                 <Card key={index} className="hover:shadow-lg transition-shadow">
                   <CardContent className="pt-6">
-                    <div className="flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mx-auto mb-6">
-                      <Icon className="h-12 w-12 text-primary" />
-                    </div>
+                    {founder.name === "Ayush Agrawal" ? (
+                      <div className="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden mx-auto mb-6 border-4 border-primary/20">
+                        <img 
+                          src="/images/ayush-agrawal.jpg" 
+                          alt="Ayush Agrawal" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mx-auto mb-6">
+                        <Icon className="h-12 w-12 text-primary" />
+                      </div>
+                    )}
                     <div className="text-center mb-4">
                       <h3 className="text-2xl font-bold mb-2">{founder.name}</h3>
                       <p className="text-primary font-semibold mb-2">{founder.role}</p>
