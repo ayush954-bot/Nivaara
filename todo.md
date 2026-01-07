@@ -171,3 +171,11 @@
 - [x] Add real Pune property listings from 99acres
 - [x] Update database to remove non-Pune properties
 - [x] Test all branding changes across pages
+
+## Team Correction - Restore Anuj Agrawal
+
+- [x] Restore Anuj Agrawal as 3rd partner in Team page
+- [x] Verify 3 partners total: Paresh Gurav, Ayush Agrawal, Anuj Agrawal
+- [x] Update team grid layout back to 3 columns
+- [x] Update team description to mention "three partners"
+- [x] Confirm no mentions of Anshul Agrawal anywhere on site
