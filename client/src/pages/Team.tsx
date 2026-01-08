@@ -74,7 +74,7 @@ export default function Team() {
                         <img 
                           src="/images/ayush-agrawal.jpg" 
                           alt="Ayush Agrawal" 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-[center_30%]"
                         />
                       </div>
                     ) : (

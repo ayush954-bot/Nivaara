@@ -246,3 +246,9 @@
 - [x] Adjust CSS to reposition Paresh's photo so face is visible
 - [x] Test image positioning in circular frame
 - [x] Save checkpoint with corrected photo positioning
+
+## Fix Ayush Photo Positioning
+
+- [x] Adjust CSS to reposition Ayush's photo so face is better visible
+- [x] Test image positioning in circular frame
+- [x] Save checkpoint with corrected photo positioning
