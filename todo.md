@@ -222,15 +222,21 @@
 
 ## Push Changes to GitHub
 
-- [x] Check current git status
-- [x] Add all changes to git
-- [x] Commit changes with descriptive message
-- [x] Push to GitHub repository (ayush954-bot/Nivaara)
+- [ ] Check current git status
+- [ ] Add all changes to git
+- [ ] Commit changes with descriptive message
+- [ ] Push to GitHub repository (ayush954-bot/Nivaara)
 
-## Add Team Photos
+## Update Google Search Favicon
 
-- [x] Copy Ayush Agrawal's photo to website images directory
-- [x] Optimize photo for web (resize, compress)
-- [x] Update Team.tsx to display Ayush's photo
-- [x] Test team section displays correctly
-- [x] Save checkpoint with team photo update
+- [ ] Create guide for requesting Google re-crawl
+- [ ] Provide instructions for Google Search Console
+- [ ] Explain favicon caching timeline
+- [ ] Provide alternative methods to speed up update
+
+## Add Paresh Gurav's Photo
+
+- [x] Copy Paresh Gurav's photo to website images directory
+- [x] Update Team.tsx to display Paresh's photo
+- [x] Test team section displays both photos correctly
+- [x] Save checkpoint with both team photos
