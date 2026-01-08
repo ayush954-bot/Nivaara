@@ -240,3 +240,9 @@
 - [x] Update Team.tsx to display Paresh's photo
 - [x] Test team section displays both photos correctly
 - [x] Save checkpoint with both team photos
+
+## Fix Paresh Photo Positioning
+
+- [x] Adjust CSS to reposition Paresh's photo so face is visible
+- [x] Test image positioning in circular frame
+- [x] Save checkpoint with corrected photo positioning

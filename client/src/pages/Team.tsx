@@ -66,7 +66,7 @@ export default function Team() {
                         <img 
                           src="/images/paresh-gurav.jpg" 
                           alt="Paresh Gurav" 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-[center_20%]"
                         />
                       </div>
                     ) : founder.name === "Ayush Agrawal" ? (
