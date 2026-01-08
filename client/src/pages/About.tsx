@@ -145,7 +145,7 @@ export default function About() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-6 text-foreground">Our Leadership</h2>
             <p className="text-lg text-muted-foreground mb-12">
-              Nivaara is led by three partners who bring together decades of combined experience in real estate, technology, and business development. Paresh, Anuj, and Ayush share a common vision of transforming Pune's real estate landscape through ethical practices and client-focused service.
+              Nivaara is led by two partners who bring together decades of combined experience in real estate, technology, and business development. Paresh and Ayush share a common vision of transforming Pune's real estate landscape through ethical practices and client-focused service.
             </p>
             <p className="text-lg text-muted-foreground">
               Each partner brings unique expertise to the table, ensuring that our clients benefit from comprehensive guidance across all aspects of real estate transactions. Together, they have built Nivaara into a trusted name in Pune's property market.

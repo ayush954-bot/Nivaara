@@ -252,3 +252,13 @@
 - [x] Adjust CSS to reposition Ayush's photo so face is better visible
 - [x] Test image positioning in circular frame
 - [x] Save checkpoint with corrected photo positioning
+
+## Remove Anuj Agrawal Completely
+
+- [x] Remove Anuj Agrawal from Team page
+- [x] Remove Anuj Agrawal from About page
+- [x] Update "three partners" to "two partners" in all text
+- [x] Update team grid layout to 2 columns
+- [x] Search for any other mentions of Anuj
+- [x] Test all pages display correctly
+- [x] Save checkpoint with 2-partner structure
