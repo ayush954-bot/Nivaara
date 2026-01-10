@@ -99,7 +99,7 @@ export default function Partners() {
               </h2>
             </div>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Partnering with leading banks and NBFCs to provide you with the best home loan options and financial solutions
+              Partnering with leading banks to bring you exclusive opportunities in distressed sales, bank auctions, and foreclosed properties
             </p>
           </div>
           

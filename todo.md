@@ -292,3 +292,11 @@
 - [x] Integrate into Home page
 - [x] Test responsiveness on mobile and desktop
 - [x] Save checkpoint with Partners section
+
+## Update Financial Partners Section Clarification
+
+- [x] Change Financial Partners subtitle to clarify distressed/auction property partnerships
+- [x] Update description to emphasize bank foreclosure and auction property deals
+- [x] Remove any references to home loans or financing
+- [x] Test updated content on website
+- [x] Save checkpoint with corrected Financial Partners section
