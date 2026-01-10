@@ -511,3 +511,11 @@
 - [x] Add logo to header with larger size
 - [x] Adjust text layout accordingly
 - [x] Save checkpoint
+
+## Fix Logo with Correct File
+
+- [x] Remove current logo from header
+- [x] Delete old logo files
+- [x] Copy correct house icon from attachment
+- [x] Add correct logo to header
+- [x] Save checkpoint
