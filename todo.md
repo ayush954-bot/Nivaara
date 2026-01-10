@@ -409,3 +409,25 @@
 - [x] Add cache-busting to favicon links
 - [x] Force browser to load new favicon
 - [x] Save checkpoint with working favicon
+
+## Fix Published Site Favicon
+
+- [ ] Check published site favicon files
+- [ ] Verify favicon files are in correct location for deployment
+- [ ] Increase cache-busting version number
+- [ ] Republish and verify on live site
+
+## Upload Favicon to System
+
+- [ ] Upload user's house logo favicon to CDN
+- [ ] Update site configuration with new favicon URL
+- [ ] Verify on published site
+- [ ] Save checkpoint
+
+## Diagnose Favicon Not Updating
+
+- [ ] Check if logo environment variable was updated
+- [ ] Create new checkpoint after logo update
+- [ ] Republish site with new checkpoint
+- [ ] Clear CDN cache if needed
+- [ ] Verify favicon on published site
