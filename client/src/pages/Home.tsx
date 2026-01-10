@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import Partners from "@/components/Partners";
 import {
   Building2,
   CheckCircle2,
@@ -210,6 +211,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Partners Section */}
+      <Partners />
 
       {/* Testimonials */}
       <section className="py-16 bg-background">

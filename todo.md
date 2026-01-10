@@ -262,3 +262,33 @@
 - [x] Search for any other mentions of Anuj
 - [x] Test all pages display correctly
 - [x] Save checkpoint with 2-partner structure
+
+## Instagram Business Account Setup
+
+- [x] Create Instagram setup guide with profile details
+- [x] Write optimized bio and profile description
+- [x] Prepare first 5-10 post captions
+- [x] Create content strategy and posting schedule
+- [x] Document hashtag strategy for real estate
+- [x] Provide visual content recommendations
+
+## Resolve Zscaler Blocking Issue
+
+- [x] Diagnose why Zscaler is blocking nivaararealty.com
+- [x] Check website security certificates and SSL
+- [x] Document solutions for Zscaler whitelisting
+- [x] Create guide for IT team to whitelist domain
+- [ ] Implement security improvements if needed
+
+## Add Our Partners Section
+
+- [x] Search and download logos for 20 builders
+- [x] Search and download logos for banks and NBFCs
+- [x] Optimize all logos for web display
+- [x] Create Partners section component with professional design
+- [x] Add builder logos with names
+- [x] Add bank/NBFC logos with names (no descriptions)
+- [x] Implement elegant display (carousel, grid, or animated)
+- [x] Integrate into Home page
+- [x] Test responsiveness on mobile and desktop
+- [x] Save checkpoint with Partners section
