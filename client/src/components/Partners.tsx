@@ -34,13 +34,13 @@ const banks = [
   { name: "Canara Bank", logo: "/images/partners/canara.png" },
   { name: "Kotak Mahindra Bank", logo: "/images/partners/kotak.png" },
   { name: "IDFC FIRST Bank", logo: "/images/partners/idfc.png" },
-  { name: "Bajaj Housing Finance" },
+  { name: "Bajaj Housing Finance", logo: "/images/partners/bajaj-housing.jpg" },
   { name: "LIC Housing Finance", logo: "/images/partners/lic-hfl.png" },
   { name: "PNB Housing Finance", logo: "/images/partners/pnb-hfl.jpg" },
   { name: "Tata Capital Housing Finance", logo: "/images/partners/tata-capital.jpg" },
   { name: "Home First Finance", logo: "/images/partners/home-first.jpg" },
   { name: "Piramal Finance", logo: "/images/partners/piramal.jpg" },
-  { name: "L&T Finance" },
+  { name: "L&T Finance", logo: "/images/partners/lt-finance.png" },
   { name: "Mahindra Finance", logo: "/images/partners/mahindra-finance.jpg" },
 ];
 
