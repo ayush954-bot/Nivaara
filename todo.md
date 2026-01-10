@@ -468,3 +468,15 @@
 - [x] Search and download images for missing properties
 - [x] Add images to project
 - [x] Save checkpoint
+
+## Fix Missing Property Images
+
+- [ ] Check which properties are missing images
+- [ ] Search and download images for missing properties
+- [ ] Add images to project
+- [ ] Save checkpoint
+
+## Restore Simplifying Realty Tagline
+
+- [x] Add "Simplifying Realty" tagline back to header
+- [x] Save checkpoint

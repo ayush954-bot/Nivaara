@@ -27,8 +27,11 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
             <img src={APP_LOGO} alt="Nivaara" className="h-12 sm:h-16 w-auto" />
             <div className="flex flex-col leading-tight">
-              <span className="text-lg sm:text-xl font-bold text-foreground">Nivaara</span>
-              <span className="text-xs sm:text-sm text-muted-foreground">Realty Solutions</span>
+              <div className="flex flex-col">
+                <span className="text-lg sm:text-xl font-bold text-foreground">Nivaara</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">Realty Solutions</span>
+              </div>
+              <span className="text-[10px] sm:text-xs text-muted-foreground italic mt-0.5">Simplifying Realty</span>
             </div>
           </Link>
 
