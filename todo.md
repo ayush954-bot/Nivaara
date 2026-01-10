@@ -317,3 +317,21 @@
 - [x] Update all pages with phone numbers (Contact, Footer, etc.)
 - [x] Test updated phone sections
 - [x] Save checkpoint with phone number updates
+
+## Add Missing Partner Logos
+
+- [x] Search for Kumar Properties logo
+- [x] Search for Panchshil Realty logo
+- [x] Search for Nyati Group logo
+- [x] Search for Gera Developments logo
+- [x] Search for Paranjape Schemes logo
+- [x] Search for BramhaCorp logo
+- [x] Search for Marvel Realtors logo
+- [x] Search for Mittal Brothers logo
+- [x] Search for Mantra Properties logo
+- [x] Search for Sobha Limited logo
+- [x] Search for Axis Bank logo
+- [x] Search for other missing bank logos
+- [x] Update Partners.tsx with new logo paths
+- [x] Test Partners section display
+- [x] Save checkpoint with complete logos
