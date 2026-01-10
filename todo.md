@@ -487,3 +487,8 @@
 - [x] Better alignment for mobile and desktop
 - [x] Apply creative styling for professional look
 - [x] Test and save checkpoint
+
+## Increase Logo Size
+
+- [x] Make header logo bigger
+- [x] Save checkpoint

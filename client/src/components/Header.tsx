@@ -25,7 +25,7 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <img src={APP_LOGO} alt="Nivaara" className="h-14 sm:h-16 w-auto" />
+            <img src={APP_LOGO} alt="Nivaara" className="h-16 sm:h-20 w-auto" />
             <div className="flex flex-col justify-center">
               <div className="flex items-baseline gap-2">
                 <span className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Nivaara</span>
