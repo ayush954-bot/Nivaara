@@ -498,3 +498,9 @@
 - [x] Replace logo with new house icon design
 - [x] Copy new logo to project
 - [x] Save checkpoint
+
+## Remove Logo Icon from Header
+
+- [x] Remove logo/icon image from header
+- [x] Keep only text branding
+- [x] Save checkpoint
