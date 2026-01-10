@@ -439,3 +439,17 @@
 - [x] Update all favicon references
 - [x] Save checkpoint and republish
 - [x] Verify on published site
+
+## Fix Favicon - House Icon Only (No Text)
+
+- [ ] User wants ONLY the house icon for favicon (no "Nivaara Realty" text)
+- [ ] The current favicon shows full logo with text
+- [ ] Need to update Settings to use the house icon file user provided
+- [ ] Verify favicon shows only house icon without text
+
+## Fix Partner Logos Display
+
+- [x] Remove grayscale filter from partner logos
+- [x] Display logos in full color by default
+- [x] Ensure high quality display without hover requirement
+- [x] Test and save checkpoint

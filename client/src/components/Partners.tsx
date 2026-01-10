@@ -73,7 +73,7 @@ export default function Partners() {
                     <img
                       src={builder.logo}
                       alt={builder.name}
-                      className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                      className="max-w-full max-h-full object-contain transition-all duration-300"
                     />
                   </div>
                 ) : (
@@ -114,7 +114,7 @@ export default function Partners() {
                     <img
                       src={bank.logo}
                       alt={bank.name}
-                      className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                      className="max-w-full max-h-full object-contain transition-all duration-300"
                     />
                   </div>
                 ) : (
