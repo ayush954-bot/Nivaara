@@ -10,38 +10,38 @@ const builders = [
   { name: "Mahindra Lifespaces", logo: "/images/partners/mahindra.webp" },
   { name: "Kalpataru Group", logo: "/images/partners/kalpataru.png" },
   { name: "Runwal Group", logo: "/images/partners/runwal.jpg" },
-  { name: "Vilas Javdekar Developers", logo: "/partners/vilas-javdekar.png" },
-  { name: "Kumar Properties", logo: "/partners/kumar-properties.png" },
-  { name: "Panchshil Realty", logo: "/partners/panchshil.jpeg" },
-  { name: "Nyati Group", logo: "/partners/nyati.jpg" },
-  { name: "Gera Developments", logo: "/partners/gera.jpg" },
-  { name: "Paranjape Schemes (PSPL)", logo: "/partners/paranjape.gif" },
-  { name: "BramhaCorp", logo: "/partners/brahmacorp.png" },
-  { name: "Marvel Realtors", logo: "/partners/marvel.webp" },
-  { name: "Mittal Brothers", logo: "/partners/mittal.png" },
-  { name: "Mantra Properties", logo: "/partners/mantra.png" },
-  { name: "Sobha Limited", logo: "/partners/sobha.png" },
+  { name: "Vilas Javdekar Developers", logo: "/images/partners/vilas-javdekar.png" },
+  { name: "Kumar Properties", logo: "/images/partners/kumar-properties.png" },
+  { name: "Panchshil Realty", logo: "/images/partners/panchshil.jpeg" },
+  { name: "Nyati Group", logo: "/images/partners/nyati.jpg" },
+  { name: "Gera Developments", logo: "/images/partners/gera.jpg" },
+  { name: "Paranjape Schemes (PSPL)", logo: "/images/partners/paranjape.gif" },
+  { name: "BramhaCorp", logo: "/images/partners/brahmacorp.png" },
+  { name: "Marvel Realtors", logo: "/images/partners/marvel.webp" },
+  { name: "Mittal Brothers", logo: "/images/partners/mittal.png" },
+  { name: "Mantra Properties", logo: "/images/partners/mantra.png" },
+  { name: "Sobha Limited", logo: "/images/partners/sobha.png" },
 ];
 
 const banks = [
   { name: "State Bank of India", logo: "/images/partners/sbi.png" },
   { name: "HDFC Bank", logo: "/images/partners/hdfc.png" },
   { name: "ICICI Bank", logo: "/images/partners/icici.png" },
-  { name: "Axis Bank", logo: "/partners/axis-bank.png" },
-  { name: "Punjab National Bank", logo: "/partners/pnb.png" },
-  { name: "Bank of Baroda", logo: "/partners/bob.png" },
-  { name: "Union Bank of India", logo: "/partners/union-bank.png" },
-  { name: "Canara Bank", logo: "/partners/canara.png" },
-  { name: "Kotak Mahindra Bank", logo: "/partners/kotak.png" },
-  { name: "IDFC FIRST Bank", logo: "/partners/idfc.png" },
+  { name: "Axis Bank", logo: "/images/partners/axis-bank.png" },
+  { name: "Punjab National Bank", logo: "/images/partners/pnb.png" },
+  { name: "Bank of Baroda", logo: "/images/partners/bob.png" },
+  { name: "Union Bank of India", logo: "/images/partners/union-bank.png" },
+  { name: "Canara Bank", logo: "/images/partners/canara.png" },
+  { name: "Kotak Mahindra Bank", logo: "/images/partners/kotak.png" },
+  { name: "IDFC FIRST Bank", logo: "/images/partners/idfc.png" },
   { name: "Bajaj Housing Finance" },
-  { name: "LIC Housing Finance", logo: "/partners/lic-hfl.png" },
-  { name: "PNB Housing Finance", logo: "/partners/pnb-hfl.jpg" },
-  { name: "Tata Capital Housing Finance", logo: "/partners/tata-capital.jpg" },
-  { name: "Home First Finance", logo: "/partners/home-first.jpg" },
-  { name: "Piramal Finance", logo: "/partners/piramal.jpg" },
+  { name: "LIC Housing Finance", logo: "/images/partners/lic-hfl.png" },
+  { name: "PNB Housing Finance", logo: "/images/partners/pnb-hfl.jpg" },
+  { name: "Tata Capital Housing Finance", logo: "/images/partners/tata-capital.jpg" },
+  { name: "Home First Finance", logo: "/images/partners/home-first.jpg" },
+  { name: "Piramal Finance", logo: "/images/partners/piramal.jpg" },
   { name: "L&T Finance" },
-  { name: "Mahindra Finance", logo: "/partners/mahindra-finance.jpg" },
+  { name: "Mahindra Finance", logo: "/images/partners/mahindra-finance.jpg" },
 ];
 
 export default function Partners() {
@@ -137,7 +137,7 @@ export default function Partners() {
               What Our Partners Say
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Trusted relationships built on successful collaborations in distressed property deals
+              Trusted relationships built on successful collaborations and professional service
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function Partners() {
                 </div>
               </div>
               <p className="text-gray-700 italic leading-relaxed">
-                "Nivaara has been instrumental in helping us liquidate distressed inventory efficiently. Their market knowledge and network in Pune is exceptional."
+                "Nivaara has been an excellent broker partner, consistently bringing us qualified buyers. Their market knowledge and professional approach in Pune is exceptional."
               </p>
             </div>
 
@@ -183,7 +183,7 @@ export default function Partners() {
                 </div>
               </div>
               <p className="text-gray-700 italic leading-relaxed">
-                "Nivaara's expertise in handling distressed assets has made them our go-to partner for special situations. Highly recommended."
+                "Nivaara's expertise in property marketing and client relations has made them our preferred broker partner. Their transparency and dedication is highly commendable."
               </p>
             </div>
           </div>

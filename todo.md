@@ -374,3 +374,15 @@
 - [x] Test property filters with all filter combinations
 - [x] Test chat widget email submission
 - [x] Save checkpoint with all fixes and features
+
+## Fix Partner Logos, Testimonials, and Property Images
+
+- [x] Check and fix builder logo paths (some showing placeholder icons)
+- [x] Check and fix bank logo paths (some showing placeholder icons)
+- [x] Update builder testimonials to mention normal broker services only
+- [x] Keep bank testimonials focused on auction properties
+- [x] Find and add images for all properties without pictures
+- [x] Test Partners section logo display
+- [x] Test testimonials content
+- [x] Test Properties page image display
+- [x] Save checkpoint with all fixes
