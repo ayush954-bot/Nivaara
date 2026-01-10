@@ -519,3 +519,9 @@
 - [x] Copy correct house icon from attachment
 - [x] Add correct logo to header
 - [x] Save checkpoint
+
+## Make Logo Transparent
+
+- [x] Remove white background from logo
+- [x] Create transparent PNG version
+- [x] Save checkpoint
