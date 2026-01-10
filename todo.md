@@ -453,3 +453,11 @@
 - [x] Display logos in full color by default
 - [x] Ensure high quality display without hover requirement
 - [x] Test and save checkpoint
+
+## Fix Mobile Header Text Alignment
+
+- [x] Restructure header logo text for better mobile display
+- [x] Show "Nivaara" on first line (larger font)
+- [x] Show "Realty Solutions" on second line (smaller font)
+- [x] Test across different screen sizes
+- [x] Save checkpoint

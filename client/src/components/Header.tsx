@@ -24,11 +24,11 @@ export default function Header() {
       <div className="container">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <img src={APP_LOGO} alt={APP_TITLE} className="h-16 w-auto" />
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-foreground">{APP_TITLE}</span>
-              <span className="text-xs text-muted-foreground">Simplifying Realty</span>
+          <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
+            <img src={APP_LOGO} alt="Nivaara" className="h-12 sm:h-16 w-auto" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-lg sm:text-xl font-bold text-foreground">Nivaara</span>
+              <span className="text-xs sm:text-sm text-muted-foreground">Realty Solutions</span>
             </div>
           </Link>
 
