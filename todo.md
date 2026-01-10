@@ -431,3 +431,11 @@
 - [ ] Republish site with new checkpoint
 - [ ] Clear CDN cache if needed
 - [ ] Verify favicon on published site
+
+## Hardcode New Favicon URL
+
+- [x] Update index.html with direct CDN URL for favicon
+- [x] Generate proper .ico file from new logo
+- [x] Update all favicon references
+- [x] Save checkpoint and republish
+- [x] Verify on published site
