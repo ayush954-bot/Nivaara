@@ -480,3 +480,10 @@
 
 - [x] Add "Simplifying Realty" tagline back to header
 - [x] Save checkpoint
+
+## Redesign Header Logo Layout
+
+- [x] Improve visual hierarchy of logo, company name, and tagline
+- [x] Better alignment for mobile and desktop
+- [x] Apply creative styling for professional look
+- [x] Test and save checkpoint

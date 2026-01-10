@@ -24,14 +24,14 @@ export default function Header() {
       <div className="container">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
-            <img src={APP_LOGO} alt="Nivaara" className="h-12 sm:h-16 w-auto" />
-            <div className="flex flex-col leading-tight">
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-bold text-foreground">Nivaara</span>
-                <span className="text-xs sm:text-sm text-muted-foreground">Realty Solutions</span>
+          <Link href="/" className="flex items-center space-x-3">
+            <img src={APP_LOGO} alt="Nivaara" className="h-14 sm:h-16 w-auto" />
+            <div className="flex flex-col justify-center">
+              <div className="flex items-baseline gap-2">
+                <span className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Nivaara</span>
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Realty Solutions</span>
               </div>
-              <span className="text-[10px] sm:text-xs text-muted-foreground italic mt-0.5">Simplifying Realty</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground/80 italic mt-0.5 tracking-wide">Simplifying Realty</span>
             </div>
           </Link>
 
