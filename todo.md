@@ -504,3 +504,10 @@
 - [x] Remove logo/icon image from header
 - [x] Keep only text branding
 - [x] Save checkpoint
+
+## Add Logo Back with Larger Size
+
+- [x] Check Bhartiya Property website reference
+- [x] Add logo to header with larger size
+- [x] Adjust text layout accordingly
+- [x] Save checkpoint
