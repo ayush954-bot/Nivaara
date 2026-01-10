@@ -492,3 +492,9 @@
 
 - [x] Make header logo bigger
 - [x] Save checkpoint
+
+## Update Header Logo
+
+- [x] Replace logo with new house icon design
+- [x] Copy new logo to project
+- [x] Save checkpoint
