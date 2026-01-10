@@ -308,3 +308,12 @@
 - [x] Remove fixed time mentions (show flexible availability)
 - [x] Test updated content on all pages
 - [x] Save checkpoint with working hours update
+
+## Update Phone Numbers
+
+- [x] Find all phone number mentions with timing (Mon-Sat 9-7)
+- [x] Remove timing mentions from phone sections
+- [x] Add second contact number: +91 9022813423
+- [x] Update all pages with phone numbers (Contact, Footer, etc.)
+- [x] Test updated phone sections
+- [x] Save checkpoint with phone number updates

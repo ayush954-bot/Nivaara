@@ -107,7 +107,8 @@ export default function Contact() {
                         <h3 className="font-semibold mb-2">Phone</h3>
                         <p className="text-muted-foreground">
                           +91 9764515697<br />
-                          <span className="text-sm">Mon-Sat: 9:00 AM - 7:00 PM</span>
+                          +91 9022813423<br />
+                          <span className="text-sm">Available 7 days a week</span>
                         </p>
                       </div>
                     </div>
