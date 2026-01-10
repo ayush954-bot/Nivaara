@@ -300,3 +300,11 @@
 - [x] Remove any references to home loans or financing
 - [x] Test updated content on website
 - [x] Save checkpoint with corrected Financial Partners section
+
+## Update Working Hours/Days
+
+- [x] Find all locations where working hours/days are mentioned
+- [x] Update to show Monday to Sunday availability
+- [x] Remove fixed time mentions (show flexible availability)
+- [x] Test updated content on all pages
+- [x] Save checkpoint with working hours update

@@ -263,32 +263,26 @@ export default function Contact() {
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-8 text-foreground">
-              Office Hours
+              Availability
             </h2>
             <Card>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-semibold mb-3">Working Days</h3>
+                    <h3 className="font-semibold mb-3">We're Available</h3>
                     <div className="space-y-2 text-muted-foreground">
-                      <div className="flex justify-between">
-                        <span>Monday - Friday</span>
-                        <span className="font-medium">9:00 AM - 7:00 PM</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-foreground">Monday to Sunday</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Saturday</span>
-                        <span className="font-medium">10:00 AM - 5:00 PM</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Sunday</span>
-                        <span className="font-medium">Closed</span>
-                      </div>
+                      <p className="text-sm">
+                        Available all 7 days for your convenience. Contact us anytime via phone, WhatsApp, or email.
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-3">Emergency Contact</h3>
+                    <h3 className="font-semibold mb-3">Flexible Consultation</h3>
                     <p className="text-muted-foreground mb-2">
-                      For urgent property matters outside office hours, please contact us via WhatsApp or email. We'll respond as soon as possible.
+                      We understand real estate decisions don't follow a 9-to-5 schedule. Reach out to us any day of the week, and we'll arrange a consultation at your convenience.
                     </p>
                   </div>
                 </div>
