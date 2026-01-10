@@ -357,3 +357,20 @@
 - [x] Add 3-4 testimonial quotes from partners
 - [x] Test complete Partners section
 - [x] Save checkpoint with 100% logo coverage and testimonials
+
+## Bug Fixes and New Features
+
+- [x] Investigate property filters not working properly
+- [x] Fix property filter functionality
+- [x] Add Jabalpur city to location filter
+- [x] Add USA country to location filter
+- [x] Enlarge logo in header
+- [x] Enlarge favicon size
+- [x] Add Jabalpur as a city location
+- [x] Add USA as a country location
+- [x] Create chat widget component
+- [x] Integrate chat widget with email API (info@nivaararealty.com)
+- [x] Add auto-response: "Thanks for submitting we will get back to you shortly"
+- [x] Test property filters with all filter combinations
+- [x] Test chat widget email submission
+- [x] Save checkpoint with all fixes and features

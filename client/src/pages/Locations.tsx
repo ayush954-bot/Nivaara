@@ -37,6 +37,11 @@ export default function Locations() {
       description: "Premium residential and commercial properties in Dubai's prime locations",
       icon: "🇦🇪",
     },
+    {
+      name: "USA",
+      description: "Investment opportunities in residential and commercial properties across major US cities",
+      icon: "🇺🇸",
+    },
   ];
 
   const majorIndianCities = [
@@ -48,6 +53,7 @@ export default function Locations() {
     { name: "Kolkata", state: "West Bengal" },
     { name: "Ahmedabad", state: "Gujarat" },
     { name: "Surat", state: "Gujarat" },
+    { name: "Jabalpur", state: "Madhya Pradesh" },
   ];
 
   return (

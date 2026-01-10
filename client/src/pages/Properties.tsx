@@ -50,14 +50,16 @@ export default function Properties() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Locations</SelectItem>
-                  <SelectItem value="pune-east">Pune - East Zone</SelectItem>
-                  <SelectItem value="pune-west">Pune - West Zone</SelectItem>
-                  <SelectItem value="pune-north">Pune - North Zone</SelectItem>
-                  <SelectItem value="pune-south">Pune - South Zone</SelectItem>
-                  <SelectItem value="mumbai">Mumbai</SelectItem>
-                  <SelectItem value="delhi">Delhi NCR</SelectItem>
-                  <SelectItem value="bangalore">Bangalore</SelectItem>
-                  <SelectItem value="dubai">Dubai, UAE</SelectItem>
+                  <SelectItem value="Pune - East Zone">Pune - East Zone</SelectItem>
+                  <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
+                  <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
+                  <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
+                  <SelectItem value="Mumbai">Mumbai</SelectItem>
+                  <SelectItem value="Delhi NCR">Delhi NCR</SelectItem>
+                  <SelectItem value="Bangalore">Bangalore</SelectItem>
+                  <SelectItem value="Dubai">Dubai, UAE</SelectItem>
+                  <SelectItem value="Jabalpur">Jabalpur</SelectItem>
+                  <SelectItem value="USA">USA</SelectItem>
                 </SelectContent>
               </Select>
             </div>

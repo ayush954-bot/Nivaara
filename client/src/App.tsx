@@ -14,6 +14,7 @@ import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Locations from "./pages/Locations";
+import ChatWidget from "./components/ChatWidget";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -34,6 +35,7 @@ function Router() {
         </Switch>
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
