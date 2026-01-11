@@ -641,3 +641,10 @@
 - [x] Make zone cards scrollable horizontally on mobile
 - [x] Improve touch targets and spacing
 - [x] Test on mobile viewport sizes
+
+
+## Desktop Zone Layout Fix
+- [x] Fix desktop view showing only 2 zones instead of 4
+- [x] Ensure interactive map displays properly on desktop
+- [x] Verify mobile view still works correctly
+- [x] Test on both viewport sizes

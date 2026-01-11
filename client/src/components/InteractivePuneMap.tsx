@@ -82,7 +82,7 @@ export default function InteractivePuneMap() {
         </p>
 
         {/* Mobile: Zone Buttons First */}
-        <div className="lg:hidden mb-8">
+        <div className="sm:hidden mb-8">
           <div className="grid grid-cols-1 gap-3">
             {puneZones.map((zone) => (
               <button
@@ -103,7 +103,7 @@ export default function InteractivePuneMap() {
         </div>
 
         {/* Desktop: Map and Details Side by Side */}
-        <div className="hidden lg:grid lg:grid-cols-2 gap-12 items-center">
+        <div className="hidden sm:grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center">
           {/* Interactive Map */}
           <div className="relative">
             <div className="aspect-square max-w-md mx-auto relative">
@@ -246,7 +246,7 @@ export default function InteractivePuneMap() {
         </div>
 
         {/* Mobile: Zone Details Below Buttons */}
-        <div className="lg:hidden">
+        <div className="sm:hidden">
           {selectedZone ? (
             <Card className="animate-scale-in">
               <CardContent className="pt-6">
