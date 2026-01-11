@@ -174,6 +174,33 @@ export const appRouter = router({
         }
         return await db.getAllProperties();
       }),
+
+      bulkImport: publicProcedure
+        .input(
+          z.object({
+            properties: z.array(
+              z.object({
+                title: z.string().min(1),
+                description: z.string().min(1),
+                propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental"]),
+                status: z.enum(["Under-Construction", "Ready"]),
+                location: z.string().min(1),
+                price: z.number(),
+                area: z.number().optional(),
+                bedrooms: z.number().optional(),
+                bathrooms: z.number().optional(),
+                builder: z.string().optional(),
+                featured: z.boolean().default(false),
+              })
+            ),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          if (!ctx.user || ctx.user.role !== "admin") {
+            throw new Error("Unauthorized: Admin access required");
+          }
+          return await db.bulkImportProperties(input.properties);
+        }),
     }),
 
     // Inquiry Management

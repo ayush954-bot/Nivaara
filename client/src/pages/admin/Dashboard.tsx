@@ -13,6 +13,7 @@ import {
   Eye,
   Star,
   AlertCircle,
+  Upload,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -147,12 +148,20 @@ export default function AdminDashboard() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Properties Management</CardTitle>
-            <Button asChild>
-              <Link href="/admin/properties/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Property
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline">
+                <Link href="/admin/properties/bulk-import">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Bulk Import
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link href="/admin/properties/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Property
+                </Link>
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>

@@ -166,6 +166,53 @@ export async function deleteProperty(id: number) {
   await db.delete(properties).where(eq(properties.id, id));
 }
 
+export async function bulkImportProperties(propertiesToImport: any[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const results = {
+    success: 0,
+    failed: 0,
+    errors: [] as { row: number; error: string }[],
+  };
+
+  for (let i = 0; i < propertiesToImport.length; i++) {
+    try {
+      const property = propertiesToImport[i];
+      
+      // Images can be added later through edit function
+
+      // Prepare property data
+      const propertyData: InsertProperty = {
+        title: property.title,
+        description: property.description,
+        propertyType: property.propertyType,
+        status: property.status,
+        location: property.location,
+        price: property.price.toString(),
+        area: property.area?.toString(),
+        bedrooms: property.bedrooms,
+        bathrooms: property.bathrooms,
+        area_sqft: property.area,
+        builder: property.builder,
+        imageUrl: undefined, // Images can be added later via edit
+        featured: property.featured || false,
+      };
+
+      await db.insert(properties).values(propertyData);
+      results.success++;
+    } catch (error) {
+      results.failed++;
+      results.errors.push({
+        row: i + 1,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  }
+
+  return results;
+}
+
 // Inquiries queries
 export async function getAllInquiries() {
   const db = await getDb();

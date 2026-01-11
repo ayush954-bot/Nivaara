@@ -17,6 +17,7 @@ import Locations from "./pages/Locations";
 import ChatWidget from "./components/ChatWidget";
 import AdminDashboard from "./pages/admin/Dashboard";
 import PropertyForm from "./pages/admin/PropertyForm";
+import BulkImport from "./pages/admin/BulkImport";
 import StaffLogin from "./pages/StaffLogin";
 import StaffManagement from "./pages/admin/StaffManagement";
 function Router() {
@@ -39,6 +40,7 @@ function Router() {
           <Route path={"/admin/staff"} component={StaffManagement} />
           <Route path={"/admin/properties/new"} component={PropertyForm} />
           <Route path={"/admin/properties/edit/:id"} component={PropertyForm} />
+          <Route path={"/admin/properties/bulk-import"} component={BulkImport} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>
