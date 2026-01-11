@@ -1,9 +1,14 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Partners from "@/components/Partners";
+import PropertySearch from "@/components/PropertySearch";
+import FeaturedProperties from "@/components/FeaturedProperties";
+import WhatsAppButton from "@/components/WhatsAppButton";
+import TrustIndicators from "@/components/TrustIndicators";
+import InteractivePuneMap from "@/components/InteractivePuneMap";
+import EMICalculator from "@/components/EMICalculator";
 import {
   Building2,
   CheckCircle2,
@@ -20,8 +25,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton variant="fixed" />
+
+      {/* Hero Section with Search */}
+      <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 z-0"
           style={{
@@ -35,9 +43,15 @@ export default function Home() {
           <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
             We Build Trust
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
             Your trusted real estate partner across India and international markets. Every property. Every solution. One name — Nivaara.
           </p>
+          
+          {/* Property Search Component */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <PropertySearch variant="hero" />
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="text-lg">
               <Link href="/properties">Explore Properties</Link>
@@ -48,6 +62,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Trust Indicators Section */}
+      <TrustIndicators />
 
       {/* Introduction Section */}
       <section className="py-16 bg-background">
@@ -63,8 +80,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured Properties Section */}
+      <FeaturedProperties />
+
       {/* Services Overview */}
-      <section className="py-16 bg-secondary/30">
+      <section className="py-16 bg-background">
         <div className="container">
           <h2 className="text-4xl font-bold text-center mb-12 text-foreground">
             Our Services
@@ -112,9 +132,14 @@ export default function Home() {
                 description: "Bank mortgage and distress property solutions",
               },
             ].map((service, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card 
+                key={index} 
+                className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+              >
                 <CardContent className="pt-6">
-                  <service.icon className="h-12 w-12 text-primary mb-4" />
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
+                    <service.icon className="h-7 w-7 text-primary" />
+                  </div>
                   <h3 className="text-lg font-semibold mb-2">{service.title}</h3>
                   <p className="text-sm text-muted-foreground">{service.description}</p>
                 </CardContent>
@@ -130,7 +155,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Nivaara */}
-      <section className="py-16 bg-background">
+      <section className="py-16 bg-secondary/30">
         <div className="container">
           <h2 className="text-4xl font-bold text-center mb-12 text-foreground">
             Why Choose Nivaara
@@ -158,8 +183,8 @@ export default function Home() {
                 description: "Deep understanding of Pune's real estate market and investment opportunities",
               },
             ].map((feature, index) => (
-              <div key={index} className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+              <div key={index} className="text-center group">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-all group-hover:scale-110">
                   <feature.icon className="h-8 w-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
@@ -170,47 +195,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Target Areas */}
-      <section className="py-16 bg-secondary/30">
-        <div className="container">
-          <h2 className="text-4xl font-bold text-center mb-12 text-foreground">
-            Our Geographic Reach
-          </h2>
-          <div className="max-w-4xl mx-auto text-center mb-8">
-            <p className="text-lg text-muted-foreground mb-6">
-              Serving clients across India and international markets with local expertise
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            {[
-              { name: "Pune (All Zones)", highlight: true },
-              { name: "Mumbai", highlight: false },
-              { name: "Delhi NCR", highlight: false },
-              { name: "Bangalore", highlight: false },
-              { name: "Hyderabad", highlight: false },
-              { name: "Chennai", highlight: false },
-              { name: "Dubai, UAE", highlight: true },
-              { name: "More Cities", highlight: false },
-            ].map((location) => (
-              <div
-                key={location.name}
-                className={`p-4 rounded-lg text-center font-medium transition-colors cursor-pointer ${
-                  location.highlight
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card text-card-foreground hover:bg-primary hover:text-primary-foreground"
-                }`}
-              >
-                {location.name}
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-8">
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/locations">View All Locations & Pune Zones</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Interactive Pune Map */}
+      <InteractivePuneMap />
+
+      {/* EMI Calculator */}
+      <EMICalculator />
 
       {/* Partners Section */}
       <Partners />
@@ -223,8 +212,19 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.slice(0, 3).map((testimonial) => (
-              <Card key={testimonial.id}>
+              <Card key={testimonial.id} className="hover:shadow-xl transition-shadow">
                 <CardContent className="pt-6">
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="h-5 w-5 fill-amber-400 text-amber-400"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
                   <p className="text-muted-foreground mb-4 italic">"{testimonial.text}"</p>
                   <div className="font-semibold">{testimonial.name}</div>
                   <div className="text-sm text-muted-foreground">{testimonial.location}</div>
@@ -249,6 +249,7 @@ export default function Home() {
             <Button size="lg" variant="outline" asChild className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
               <Link href="/contact">Schedule Consultation</Link>
             </Button>
+            <WhatsAppButton variant="inline" />
           </div>
         </div>
       </section>
