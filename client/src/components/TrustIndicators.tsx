@@ -17,10 +17,13 @@ function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: Cou
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let startTime: number;
+    let startTime: number | null = null;
     let animationFrame: number;
+    let isCancelled = false;
 
     const animate = (timestamp: number) => {
+      if (isCancelled) return;
+      
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
 
@@ -34,6 +37,7 @@ function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: Cou
     animationFrame = requestAnimationFrame(animate);
 
     return () => {
+      isCancelled = true;
       if (animationFrame) {
         cancelAnimationFrame(animationFrame);
       }

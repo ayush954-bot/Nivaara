@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { MapPin } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 
@@ -56,8 +56,8 @@ export default function InteractivePuneMap() {
   // Fetch all properties to count by zone
   const { data: allProperties = [] } = trpc.properties.search.useQuery({});
 
-  // Calculate property counts by zone
-  useEffect(() => {
+  // Calculate property counts by zone using useMemo to prevent infinite loops
+  const zonesWithCounts = useMemo(() => {
     const zoneCounts: Record<string, number> = {
       'east-pune': 0,
       'west-pune': 0,
@@ -80,13 +80,16 @@ export default function InteractivePuneMap() {
     });
 
     // Merge counts with base data
-    const zonesWithCounts = baseZoneData.map((zone) => ({
+    return baseZoneData.map((zone) => ({
       ...zone,
       properties: zoneCounts[zone.id] || 0,
     }));
-
-    setPuneZones(zonesWithCounts);
   }, [allProperties]);
+
+  // Update state when zones change
+  useEffect(() => {
+    setPuneZones(zonesWithCounts);
+  }, [zonesWithCounts]);
 
   return (
     <section className="py-16 md:py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
