@@ -62,6 +62,9 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Locations</SelectItem>
+              
+              {/* Pune Areas */}
+              <SelectItem value="pune" disabled className="font-semibold text-primary">━━━ Pune ━━━</SelectItem>
               <SelectItem value="kharadi">Kharadi</SelectItem>
               <SelectItem value="viman-nagar">Viman Nagar</SelectItem>
               <SelectItem value="wagholi">Wagholi</SelectItem>
@@ -75,6 +78,36 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               <SelectItem value="undri">Undri</SelectItem>
               <SelectItem value="kondhwa">Kondhwa</SelectItem>
               <SelectItem value="purandar">Purandar</SelectItem>
+              <SelectItem value="koregaon-park">Koregaon Park</SelectItem>
+              
+              {/* Major Indian Cities */}
+              <SelectItem value="india" disabled className="font-semibold text-primary">━━━ India ━━━</SelectItem>
+              <SelectItem value="mumbai">Mumbai</SelectItem>
+              <SelectItem value="delhi">Delhi/NCR</SelectItem>
+              <SelectItem value="bangalore">Bangalore</SelectItem>
+              <SelectItem value="hyderabad">Hyderabad</SelectItem>
+              <SelectItem value="chennai">Chennai</SelectItem>
+              <SelectItem value="kolkata">Kolkata</SelectItem>
+              <SelectItem value="ahmedabad">Ahmedabad</SelectItem>
+              <SelectItem value="surat">Surat</SelectItem>
+              <SelectItem value="jaipur">Jaipur</SelectItem>
+              <SelectItem value="lucknow">Lucknow</SelectItem>
+              <SelectItem value="nagpur">Nagpur</SelectItem>
+              <SelectItem value="indore">Indore</SelectItem>
+              <SelectItem value="thane">Thane</SelectItem>
+              <SelectItem value="bhopal">Bhopal</SelectItem>
+              <SelectItem value="visakhapatnam">Visakhapatnam</SelectItem>
+              <SelectItem value="pimpri-chinchwad-city">Pimpri-Chinchwad</SelectItem>
+              <SelectItem value="patna">Patna</SelectItem>
+              <SelectItem value="vadodara">Vadodara</SelectItem>
+              <SelectItem value="ghaziabad">Ghaziabad</SelectItem>
+              <SelectItem value="ludhiana">Ludhiana</SelectItem>
+              
+              {/* International */}
+              <SelectItem value="international" disabled className="font-semibold text-primary">━━━ International ━━━</SelectItem>
+              <SelectItem value="dubai">Dubai, UAE</SelectItem>
+              <SelectItem value="abu-dhabi">Abu Dhabi, UAE</SelectItem>
+              <SelectItem value="sharjah">Sharjah, UAE</SelectItem>
             </SelectContent>
           </Select>
         </div>

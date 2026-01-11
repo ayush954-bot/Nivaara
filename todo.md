@@ -608,3 +608,15 @@
 - [x] Keep only: Builder Partners and Bank Tie-ups counters
 - [x] Fix WhatsApp button overlap with chat widget
 - [x] Adjust WhatsApp button position to avoid conflicts
+
+
+## New Requirements - Property Management & Fixes
+- [x] Remove green WhatsApp floating button (keep hover effects)
+- [x] Create admin panel for team to upload/manage properties
+- [x] Add authentication/login for admin panel
+- [x] Connect property counts to real database data
+- [x] Fix location dropdown to include cities and countries (not just Pune)
+- [x] Thoroughly test property upload and display features
+- [x] Verify animations are working properly
+- [ ] Implement property comparison tool
+- [ ] Add property alerts/notification system

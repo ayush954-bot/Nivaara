@@ -99,6 +99,106 @@ export const appRouter = router({
       return await db.getPublishedTestimonials();
     }),
   }),
+
+  admin: router({
+    // Property Management
+    properties: router({
+      create: publicProcedure
+        .input(
+          z.object({
+            title: z.string().min(1),
+            description: z.string().min(1),
+            propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental"]),
+            status: z.enum(["Under-Construction", "Ready"]),
+            location: z.string().min(1),
+            area: z.string().optional(),
+            price: z.string(), // Will be converted to decimal
+            priceLabel: z.string().optional(),
+            bedrooms: z.number().optional(),
+            bathrooms: z.number().optional(),
+            area_sqft: z.number().optional(),
+            builder: z.string().optional(),
+            imageUrl: z.string().optional(),
+            featured: z.boolean().default(false),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          // Check if user is admin
+          if (!ctx.user || ctx.user.role !== "admin") {
+            throw new Error("Unauthorized: Admin access required");
+          }
+          return await db.createProperty(input as any);
+        }),
+
+      update: publicProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            title: z.string().min(1).optional(),
+            description: z.string().min(1).optional(),
+            propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental"]).optional(),
+            status: z.enum(["Under-Construction", "Ready"]).optional(),
+            location: z.string().min(1).optional(),
+            area: z.string().optional(),
+            price: z.string().optional(),
+            priceLabel: z.string().optional(),
+            bedrooms: z.number().optional(),
+            bathrooms: z.number().optional(),
+            area_sqft: z.number().optional(),
+            builder: z.string().optional(),
+            imageUrl: z.string().optional(),
+            featured: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          if (!ctx.user || ctx.user.role !== "admin") {
+            throw new Error("Unauthorized: Admin access required");
+          }
+          const { id, ...updates } = input;
+          return await db.updateProperty(id, updates as any);
+        }),
+
+      delete: publicProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input, ctx }) => {
+          if (!ctx.user || ctx.user.role !== "admin") {
+            throw new Error("Unauthorized: Admin access required");
+          }
+          return await db.deleteProperty(input.id);
+        }),
+
+      list: publicProcedure.query(async ({ ctx }) => {
+        if (!ctx.user || ctx.user.role !== "admin") {
+          throw new Error("Unauthorized: Admin access required");
+        }
+        return await db.getAllProperties();
+      }),
+    }),
+
+    // Inquiry Management
+    inquiries: router({
+      list: publicProcedure.query(async ({ ctx }) => {
+        if (!ctx.user || ctx.user.role !== "admin") {
+          throw new Error("Unauthorized: Admin access required");
+        }
+        return await db.getAllInquiries();
+      }),
+
+      updateStatus: publicProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            status: z.enum(["new", "contacted", "closed"]),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          if (!ctx.user || ctx.user.role !== "admin") {
+            throw new Error("Unauthorized: Admin access required");
+          }
+          return await db.updateInquiryStatus(input.id, input.status);
+        }),
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

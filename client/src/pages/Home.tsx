@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import Partners from "@/components/Partners";
 import PropertySearch from "@/components/PropertySearch";
 import FeaturedProperties from "@/components/FeaturedProperties";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
 import TrustIndicators from "@/components/TrustIndicators";
 import InteractivePuneMap from "@/components/InteractivePuneMap";
 import EMICalculator from "@/components/EMICalculator";
@@ -25,8 +25,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* WhatsApp Floating Button */}
-      <WhatsAppButton variant="fixed" />
+
 
       {/* Hero Section with Search */}
       <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden">
@@ -249,7 +248,7 @@ export default function Home() {
             <Button size="lg" variant="outline" asChild className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
               <Link href="/contact">Schedule Consultation</Link>
             </Button>
-            <WhatsAppButton variant="inline" />
+
           </div>
         </div>
       </section>

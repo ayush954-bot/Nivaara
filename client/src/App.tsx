@@ -15,6 +15,8 @@ import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Locations from "./pages/Locations";
 import ChatWidget from "./components/ChatWidget";
+import AdminDashboard from "./pages/admin/Dashboard";
+import PropertyForm from "./pages/admin/PropertyForm";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -30,6 +32,9 @@ function Router() {
           <Route path={"/contact"} component={Contact} />
           <Route path={"/faq"} component={FAQ} />
           <Route path={"/locations"} component={Locations} />
+          <Route path={"/admin/dashboard"} component={AdminDashboard} />
+          <Route path={"/admin/properties/new"} component={PropertyForm} />
+          <Route path={"/admin/properties/edit/:id"} component={PropertyForm} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>
