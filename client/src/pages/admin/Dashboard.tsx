@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,12 +16,12 @@ import {
 } from "lucide-react";
 
 export default function AdminDashboard() {
-  const { data: user } = trpc.auth.me.useQuery();
+  const { user, canManageProperties, isLoading: authLoading } = useAuth();
   const { data: properties = [], refetch: refetchProperties } = trpc.admin.properties.list.useQuery(undefined, {
-    enabled: user?.role === "admin",
+    enabled: canManageProperties,
   });
   const { data: inquiries = [] } = trpc.admin.inquiries.list.useQuery(undefined, {
-    enabled: user?.role === "admin",
+    enabled: canManageProperties,
   });
 
   const deleteProperty = trpc.admin.properties.delete.useMutation({
@@ -30,6 +31,10 @@ export default function AdminDashboard() {
   });
 
   const [selectedProperty, setSelectedProperty] = useState<number | null>(null);
+
+  if (authLoading) {
+    return <div className="container py-16 text-center">Loading...</div>;
+  }
 
   if (!user) {
     return (
@@ -45,16 +50,21 @@ export default function AdminDashboard() {
             <p className="text-muted-foreground mb-4">
               Please sign in to access the admin dashboard.
             </p>
-            <Button asChild className="w-full">
-              <a href="/api/oauth/login">Sign In</a>
-            </Button>
+            <div className="space-y-2">
+              <Button asChild className="w-full">
+                <a href="/api/oauth/login">Sign In as Admin (Owner)</a>
+              </Button>
+              <Button asChild variant="outline" className="w-full">
+                <Link href="/staff/login">Sign In as Staff</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  if (user.role !== "admin") {
+  if (!canManageProperties) {
     return (
       <div className="container py-16">
         <Card className="max-w-md mx-auto">
@@ -66,7 +76,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              You don't have permission to access this page. Admin access is required.
+              You don't have permission to access this page. Property management access is required.
             </p>
           </CardContent>
         </Card>
@@ -87,7 +97,7 @@ export default function AdminDashboard() {
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back, {user.name || user.email}
+          Welcome back, {user.name || (user.type === 'admin' ? user.email : user.username)}
         </p>
       </div>
 

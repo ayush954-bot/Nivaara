@@ -15,6 +15,13 @@
       "when": 1766838246370,
       "tag": "0001_perpetual_stature",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768126142254,
+      "tag": "0002_chilly_talkback",
+      "breakpoints": true
     }
   ]
 }

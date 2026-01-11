@@ -17,6 +17,8 @@ import Locations from "./pages/Locations";
 import ChatWidget from "./components/ChatWidget";
 import AdminDashboard from "./pages/admin/Dashboard";
 import PropertyForm from "./pages/admin/PropertyForm";
+import StaffLogin from "./pages/StaffLogin";
+import StaffManagement from "./pages/admin/StaffManagement";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -32,7 +34,9 @@ function Router() {
           <Route path={"/contact"} component={Contact} />
           <Route path={"/faq"} component={FAQ} />
           <Route path={"/locations"} component={Locations} />
+          <Route path={"/staff/login"} component={StaffLogin} />
           <Route path={"/admin/dashboard"} component={AdminDashboard} />
+          <Route path={"/admin/staff"} component={StaffManagement} />
           <Route path={"/admin/properties/new"} component={PropertyForm} />
           <Route path={"/admin/properties/edit/:id"} component={PropertyForm} />
           <Route path={"/404"} component={NotFound} />
