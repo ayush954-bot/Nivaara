@@ -51,13 +51,12 @@ const baseZoneData: Omit<PuneZone, 'properties'>[] = [
 
 export default function InteractivePuneMap() {
   const [selectedZone, setSelectedZone] = useState<PuneZone | null>(null);
-  const [puneZones, setPuneZones] = useState<PuneZone[]>([]);
 
   // Fetch all properties to count by zone
   const { data: allProperties = [] } = trpc.properties.search.useQuery({});
 
   // Calculate property counts by zone using useMemo to prevent infinite loops
-  const zonesWithCounts = useMemo(() => {
+  const puneZones = useMemo(() => {
     const zoneCounts: Record<string, number> = {
       'east-pune': 0,
       'west-pune': 0,
@@ -85,11 +84,6 @@ export default function InteractivePuneMap() {
       properties: zoneCounts[zone.id] || 0,
     }));
   }, [allProperties]);
-
-  // Update state when zones change
-  useEffect(() => {
-    setPuneZones(zonesWithCounts);
-  }, [zonesWithCounts]);
 
   return (
     <section className="py-16 md:py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
