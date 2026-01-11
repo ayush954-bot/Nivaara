@@ -680,3 +680,12 @@
 - [x] Test zone map button filtering
 - [x] Test Properties page direct filtering
 - [x] Verify filter counts match displayed properties
+
+
+## Pimpri-Chinchwad & Filter Fixes
+- [x] Remove Pimpri-Chinchwad from separate cities list
+- [x] Add "Pune - Pimpri-Chinchwad" as a Pune zone option
+- [x] Add Budget filter to Properties page
+- [x] Add BHK filter to Properties page
+- [x] Ensure Properties page has all 4 filters matching homepage
+- [x] Test all filters work correctly

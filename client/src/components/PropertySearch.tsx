@@ -69,6 +69,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
               <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
               <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
+              <SelectItem value="Pune - Pimpri-Chinchwad">Pune - Pimpri-Chinchwad</SelectItem>
               
               {/* Major Indian Cities */}
               <SelectItem value="india" disabled className="font-semibold text-primary">━━━ India ━━━</SelectItem>
@@ -87,7 +88,6 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               <SelectItem value="thane">Thane</SelectItem>
               <SelectItem value="bhopal">Bhopal</SelectItem>
               <SelectItem value="visakhapatnam">Visakhapatnam</SelectItem>
-              <SelectItem value="pimpri-chinchwad-city">Pimpri-Chinchwad</SelectItem>
               <SelectItem value="patna">Patna</SelectItem>
               <SelectItem value="vadodara">Vadodara</SelectItem>
               <SelectItem value="ghaziabad">Ghaziabad</SelectItem>

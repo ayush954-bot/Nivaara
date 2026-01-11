@@ -19,6 +19,8 @@ export default function Properties() {
   const [locationFilter, setLocationFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [budgetFilter, setBudgetFilter] = useState("all");
+  const [bhkFilter, setBhkFilter] = useState("all");
 
   // Read zone or location parameter from URL and set location filter
   useEffect(() => {
@@ -84,6 +86,7 @@ export default function Properties() {
                   <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
                   <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
                   <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
+                  <SelectItem value="Pune - Pimpri-Chinchwad">Pune - Pimpri-Chinchwad</SelectItem>
                   
                   {/* Major Indian Cities */}
                   <SelectItem value="Mumbai">Mumbai</SelectItem>
@@ -101,7 +104,6 @@ export default function Properties() {
                   <SelectItem value="Thane">Thane</SelectItem>
                   <SelectItem value="Bhopal">Bhopal</SelectItem>
                   <SelectItem value="Visakhapatnam">Visakhapatnam</SelectItem>
-                  <SelectItem value="Pimpri-Chinchwad">Pimpri-Chinchwad</SelectItem>
                   <SelectItem value="Patna">Patna</SelectItem>
                   <SelectItem value="Vadodara">Vadodara</SelectItem>
                   <SelectItem value="Ghaziabad">Ghaziabad</SelectItem>
@@ -140,6 +142,40 @@ export default function Properties() {
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="Ready">Ready to Move</SelectItem>
                   <SelectItem value="Under-Construction">Under Construction</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex-1 w-full md:w-auto">
+              <Select value={budgetFilter} onValueChange={setBudgetFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Budget" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Budgets</SelectItem>
+                  <SelectItem value="0-50">Under ₹50 Lakhs</SelectItem>
+                  <SelectItem value="50-75">₹50L - ₹75L</SelectItem>
+                  <SelectItem value="75-100">₹75L - ₹1 Cr</SelectItem>
+                  <SelectItem value="100-150">₹1 Cr - ₹1.5 Cr</SelectItem>
+                  <SelectItem value="150-200">₹1.5 Cr - ₹2 Cr</SelectItem>
+                  <SelectItem value="200-300">₹2 Cr - ₹3 Cr</SelectItem>
+                  <SelectItem value="300-plus">Above ₹3 Cr</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex-1 w-full md:w-auto">
+              <Select value={bhkFilter} onValueChange={setBhkFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="BHK" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All BHK</SelectItem>
+                  <SelectItem value="1">1 BHK</SelectItem>
+                  <SelectItem value="2">2 BHK</SelectItem>
+                  <SelectItem value="3">3 BHK</SelectItem>
+                  <SelectItem value="4">4 BHK</SelectItem>
+                  <SelectItem value="5">5+ BHK</SelectItem>
                 </SelectContent>
               </Select>
             </div>
