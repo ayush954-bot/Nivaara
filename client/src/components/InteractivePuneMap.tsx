@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapPin } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
 
 interface PuneZone {
   id: string;
@@ -13,39 +14,35 @@ interface PuneZone {
   priceRange: string;
 }
 
-const puneZones: PuneZone[] = [
+const baseZoneData: Omit<PuneZone, 'properties'>[] = [
   {
-    id: 'east',
+    id: 'east-pune',
     name: 'East Pune',
     color: 'bg-blue-500',
-    properties: 5,
     description: 'Real Estate Market',
     growth: '+10%',
     priceRange: '₹75L - ₹1.2Cr',
   },
   {
-    id: 'west',
+    id: 'west-pune',
     name: 'West Pune',
     color: 'bg-green-500',
-    properties: 2,
     description: 'Real Estate Market',
     growth: '+15%',
     priceRange: '₹1Cr - ₹3Cr',
   },
   {
-    id: 'north',
+    id: 'north-pune',
     name: 'North Pune',
     color: 'bg-purple-500',
-    properties: 0,
     description: 'Real Estate Market',
     growth: '+8%',
     priceRange: '₹50L - ₹80L',
   },
   {
-    id: 'south',
+    id: 'south-pune',
     name: 'South Pune',
     color: 'bg-amber-500',
-    properties: 0,
     description: 'Real Estate Market',
     growth: '+12%',
     priceRange: '₹80L - ₹1.5Cr',
@@ -54,6 +51,42 @@ const puneZones: PuneZone[] = [
 
 export default function InteractivePuneMap() {
   const [selectedZone, setSelectedZone] = useState<PuneZone | null>(null);
+  const [puneZones, setPuneZones] = useState<PuneZone[]>([]);
+
+  // Fetch all properties to count by zone
+  const { data: allProperties = [] } = trpc.properties.search.useQuery({});
+
+  // Calculate property counts by zone
+  useEffect(() => {
+    const zoneCounts: Record<string, number> = {
+      'east-pune': 0,
+      'west-pune': 0,
+      'north-pune': 0,
+      'south-pune': 0,
+    };
+
+    // Count properties by zone
+    allProperties.forEach((property) => {
+      const location = property.location?.toLowerCase() || '';
+      if (location.includes('east zone')) {
+        zoneCounts['east-pune']++;
+      } else if (location.includes('west zone')) {
+        zoneCounts['west-pune']++;
+      } else if (location.includes('north zone')) {
+        zoneCounts['north-pune']++;
+      } else if (location.includes('south zone')) {
+        zoneCounts['south-pune']++;
+      }
+    });
+
+    // Merge counts with base data
+    const zonesWithCounts = baseZoneData.map((zone) => ({
+      ...zone,
+      properties: zoneCounts[zone.id] || 0,
+    }));
+
+    setPuneZones(zonesWithCounts);
+  }, [allProperties]);
 
   return (
     <section className="py-16 md:py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
@@ -73,37 +106,41 @@ export default function InteractivePuneMap() {
               {/* West Pune - Top Left */}
               <button
                 onClick={() => setSelectedZone(puneZones[1])}
-                className={`${puneZones[1].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                className={`${puneZones[1]?.color || 'bg-green-500'} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                disabled={!puneZones[1]}
               >
                 <div className="text-sm font-semibold mb-1">West Pune</div>
-                <div className="text-xs">{puneZones[1].properties} Properties</div>
+                <div className="text-xs">{puneZones[1]?.properties || 0} Properties</div>
               </button>
 
               {/* East Pune - Top Right */}
               <button
                 onClick={() => setSelectedZone(puneZones[0])}
-                className={`${puneZones[0].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                className={`${puneZones[0]?.color || 'bg-blue-500'} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                disabled={!puneZones[0]}
               >
                 <div className="text-sm font-semibold mb-1">East Pune</div>
-                <div className="text-xs">{puneZones[0].properties} Properties</div>
+                <div className="text-xs">{puneZones[0]?.properties || 0} Properties</div>
               </button>
 
               {/* North Pune - Bottom Left */}
               <button
                 onClick={() => setSelectedZone(puneZones[2])}
-                className={`${puneZones[2].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                className={`${puneZones[2]?.color || 'bg-purple-500'} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                disabled={!puneZones[2]}
               >
                 <div className="text-sm font-semibold mb-1">North Pune</div>
-                <div className="text-xs">{puneZones[2].properties} Properties</div>
+                <div className="text-xs">{puneZones[2]?.properties || 0} Properties</div>
               </button>
 
               {/* South Pune - Bottom Right */}
               <button
                 onClick={() => setSelectedZone(puneZones[3])}
-                className={`${puneZones[3].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                className={`${puneZones[3]?.color || 'bg-amber-500'} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+                disabled={!puneZones[3]}
               >
-                <div className="text-sm font-semibold mb-1\">South Pune</div>
-                <div className="text-xs\">{puneZones[3].properties} Properties</div>
+                <div className="text-sm font-semibold mb-1">South Pune</div>
+                <div className="text-xs">{puneZones[3]?.properties || 0} Properties</div>
               </button>
             </div>
 

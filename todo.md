@@ -669,3 +669,14 @@
 - [x] Align PropertySearch component filters with Properties page filters
 - [x] Test zone filtering shows only relevant properties
 - [x] Test homepage search navigation with filters
+
+
+## Filter/Search Fixes
+- [x] Add all missing cities to Properties page location filter (Pimpri-Chinchwad, etc.)
+- [x] Ensure Properties page filter options exactly match homepage PropertySearch
+- [x] Fix white text visibility issue in selected filter dropdowns
+- [x] Debug zone tab filtering - ensure it shows only selected zone properties
+- [x] Test homepage search navigation with all location options
+- [x] Test zone map button filtering
+- [x] Test Properties page direct filtering
+- [x] Verify filter counts match displayed properties

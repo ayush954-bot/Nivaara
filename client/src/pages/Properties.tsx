@@ -78,16 +78,39 @@ export default function Properties() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Locations</SelectItem>
+                  
+                  {/* Pune Zones */}
                   <SelectItem value="Pune - East Zone">Pune - East Zone</SelectItem>
                   <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
                   <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
                   <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
+                  
+                  {/* Major Indian Cities */}
                   <SelectItem value="Mumbai">Mumbai</SelectItem>
                   <SelectItem value="Delhi NCR">Delhi NCR</SelectItem>
                   <SelectItem value="Bangalore">Bangalore</SelectItem>
-                  <SelectItem value="Dubai">Dubai, UAE</SelectItem>
-                  <SelectItem value="Jabalpur">Jabalpur</SelectItem>
-                  <SelectItem value="USA">USA</SelectItem>
+                  <SelectItem value="Hyderabad">Hyderabad</SelectItem>
+                  <SelectItem value="Chennai">Chennai</SelectItem>
+                  <SelectItem value="Kolkata">Kolkata</SelectItem>
+                  <SelectItem value="Ahmedabad">Ahmedabad</SelectItem>
+                  <SelectItem value="Surat">Surat</SelectItem>
+                  <SelectItem value="Jaipur">Jaipur</SelectItem>
+                  <SelectItem value="Lucknow">Lucknow</SelectItem>
+                  <SelectItem value="Nagpur">Nagpur</SelectItem>
+                  <SelectItem value="Indore">Indore</SelectItem>
+                  <SelectItem value="Thane">Thane</SelectItem>
+                  <SelectItem value="Bhopal">Bhopal</SelectItem>
+                  <SelectItem value="Visakhapatnam">Visakhapatnam</SelectItem>
+                  <SelectItem value="Pimpri-Chinchwad">Pimpri-Chinchwad</SelectItem>
+                  <SelectItem value="Patna">Patna</SelectItem>
+                  <SelectItem value="Vadodara">Vadodara</SelectItem>
+                  <SelectItem value="Ghaziabad">Ghaziabad</SelectItem>
+                  <SelectItem value="Ludhiana">Ludhiana</SelectItem>
+                  
+                  {/* International */}
+                  <SelectItem value="Dubai, UAE">Dubai, UAE</SelectItem>
+                  <SelectItem value="Abu Dhabi, UAE">Abu Dhabi, UAE</SelectItem>
+                  <SelectItem value="Sharjah, UAE">Sharjah, UAE</SelectItem>
                 </SelectContent>
               </Select>
             </div>
