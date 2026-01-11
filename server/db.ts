@@ -115,6 +115,7 @@ export async function searchProperties(filters: {
   status?: string;
   minPrice?: number;
   maxPrice?: number;
+  bedrooms?: number;
 }) {
   const db = await getDb();
   if (!db) return [];
@@ -134,6 +135,9 @@ export async function searchProperties(filters: {
   }
   if (filters.maxPrice) {
     conditions.push(sql`${properties.price} <= ${filters.maxPrice}`);
+  }
+  if (filters.bedrooms) {
+    conditions.push(eq(properties.bedrooms, filters.bedrooms));
   }
 
   if (conditions.length === 0) {

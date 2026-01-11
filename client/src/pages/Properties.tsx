@@ -48,11 +48,34 @@ export default function Properties() {
     }
   }, [location]);
 
+  // Parse budget filter to min/max price in lakhs (1L = 100000)
+  const getBudgetRange = (budget: string): { minPrice?: number; maxPrice?: number } => {
+    if (budget === "all") return {};
+    
+    const ranges: Record<string, { minPrice?: number; maxPrice?: number }> = {
+      "0-50": { minPrice: 0, maxPrice: 50 * 100000 },
+      "50-75": { minPrice: 50 * 100000, maxPrice: 75 * 100000 },
+      "75-100": { minPrice: 75 * 100000, maxPrice: 100 * 100000 },
+      "100-150": { minPrice: 100 * 100000, maxPrice: 150 * 100000 },
+      "150-200": { minPrice: 150 * 100000, maxPrice: 200 * 100000 },
+      "200-300": { minPrice: 200 * 100000, maxPrice: 300 * 100000 },
+      "300-plus": { minPrice: 300 * 100000 },
+    };
+    
+    return ranges[budget] || {};
+  };
+
+  const budgetRange = getBudgetRange(budgetFilter);
+  const bedroomsValue = bhkFilter !== "all" ? parseInt(bhkFilter) : undefined;
+
   // Fetch properties from database
   const { data: properties = [], isLoading } = trpc.properties.search.useQuery({
     location: locationFilter !== "all" ? locationFilter : undefined,
     propertyType: typeFilter !== "all" ? typeFilter : undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
+    minPrice: budgetRange.minPrice,
+    maxPrice: budgetRange.maxPrice,
+    bedrooms: bedroomsValue,
   });
 
   return (

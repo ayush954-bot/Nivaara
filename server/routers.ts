@@ -44,6 +44,7 @@ export const appRouter = router({
           status: z.string().optional(),
           minPrice: z.number().optional(),
           maxPrice: z.number().optional(),
+          bedrooms: z.number().optional(),
         })
       )
       .query(async ({ input }) => {
