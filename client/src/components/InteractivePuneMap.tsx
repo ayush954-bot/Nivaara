@@ -1,161 +1,110 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MapPin, TrendingUp, Building2 } from "lucide-react";
-import { Link } from "wouter";
-import { trpc } from "@/lib/trpc";
+'use client';
 
-interface Zone {
+import { useState } from 'react';
+import { MapPin } from 'lucide-react';
+
+interface PuneZone {
   id: string;
   name: string;
   color: string;
   properties: number;
-  avgPrice: string;
+  description: string;
   growth: string;
-  areas: string[];
+  priceRange: string;
 }
 
+const puneZones: PuneZone[] = [
+  {
+    id: 'east',
+    name: 'East Pune',
+    color: 'bg-blue-500',
+    properties: 5,
+    description: 'Real Estate Market',
+    growth: '+10%',
+    priceRange: '₹75L - ₹1.2Cr',
+  },
+  {
+    id: 'west',
+    name: 'West Pune',
+    color: 'bg-green-500',
+    properties: 2,
+    description: 'Real Estate Market',
+    growth: '+15%',
+    priceRange: '₹1Cr - ₹3Cr',
+  },
+  {
+    id: 'north',
+    name: 'North Pune',
+    color: 'bg-purple-500',
+    properties: 0,
+    description: 'Real Estate Market',
+    growth: '+8%',
+    priceRange: '₹50L - ₹80L',
+  },
+  {
+    id: 'south',
+    name: 'South Pune',
+    color: 'bg-amber-500',
+    properties: 0,
+    description: 'Real Estate Market',
+    growth: '+12%',
+    priceRange: '₹80L - ₹1.5Cr',
+  },
+];
+
 export default function InteractivePuneMap() {
-  const { data: allProperties = [] } = trpc.properties.list.useQuery();
-  const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
-
-  // Calculate property counts for each zone from database
-  const getZonePropertyCount = (areas: string[]) => {
-    return allProperties.filter(property => {
-      const location = property.location.toLowerCase();
-      const area = property.area?.toLowerCase() || "";
-      return areas.some(zoneArea => 
-        location.includes(zoneArea.toLowerCase()) || 
-        area.includes(zoneArea.toLowerCase())
-      );
-    }).length;
-  };
-
-  const puneZones: Zone[] = [
-    {
-      id: "east",
-      name: "East Pune",
-      color: "bg-blue-500",
-      properties: getZonePropertyCount(["Kharadi", "Viman Nagar", "Wagholi", "Hadapsar"]),
-      avgPrice: "₹85L - ₹1.5Cr",
-      growth: "+12%",
-      areas: ["Kharadi", "Viman Nagar", "Wagholi", "Hadapsar"],
-    },
-    {
-      id: "west",
-      name: "West Pune",
-      color: "bg-green-500",
-      properties: getZonePropertyCount(["Hinjewadi", "Baner", "Wakad", "Pimple Saudagar"]),
-      avgPrice: "₹95L - ₹2Cr",
-      growth: "+15%",
-      areas: ["Hinjewadi", "Baner", "Wakad", "Pimple Saudagar"],
-    },
-    {
-      id: "north",
-      name: "North Pune",
-      color: "bg-purple-500",
-      properties: getZonePropertyCount(["Aundh", "Pimpri-Chinchwad", "Ravet", "Moshi"]),
-      avgPrice: "₹75L - ₹1.2Cr",
-      growth: "+10%",
-      areas: ["Aundh", "Pimpri-Chinchwad", "Ravet", "Moshi"],
-    },
-    {
-      id: "south",
-      name: "South Pune",
-      color: "bg-amber-500",
-      properties: getZonePropertyCount(["Undri", "Kondhwa", "Wanowrie", "Katraj"]),
-      avgPrice: "₹80L - ₹1.3Cr",
-      growth: "+11%",
-      areas: ["Undri", "Kondhwa", "Wanowrie", "Katraj"],
-    },
-  ];
+  const [selectedZone, setSelectedZone] = useState<PuneZone | null>(null);
 
   return (
-    <section className="py-12 sm:py-16 bg-background">
-      <div className="container px-4">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-3 sm:mb-4 text-foreground">
-          Explore Pune by Zones
-        </h2>
-        <p className="text-sm sm:text-base text-center text-muted-foreground mb-8 sm:mb-12">
-          Tap on any zone to discover properties and market insights
-        </p>
-
-        {/* Mobile: Zone Buttons First */}
-        <div className="sm:hidden mb-8">
-          <div className="grid grid-cols-1 gap-3">
-            {puneZones.map((zone) => (
-              <button
-                key={zone.id}
-                onClick={() => setSelectedZone(zone)}
-                className={`${zone.color} text-white rounded-xl p-4 shadow-lg active:scale-95 transition-all duration-200 text-left`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-lg font-bold mb-1">{zone.name}</div>
-                    <div className="text-sm opacity-90">{zone.properties} Properties</div>
-                  </div>
-                  <MapPin className="h-6 w-6" />
-                </div>
-              </button>
-            ))}
-          </div>
+    <section className="py-16 md:py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Explore Pune by Zones</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Tap on any zone to discover properties and market insights
+          </p>
         </div>
 
-        {/* Desktop: Map and Details Side by Side */}
-        <div className="hidden sm:grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center">
-          {/* Interactive Map */}
-          <div className="relative">
-            <div className="aspect-square max-w-md mx-auto relative">
-              {/* Map Container */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-full h-full">
-                  {/* East Pune */}
-                  <button
-                    onClick={() => setSelectedZone(puneZones[0])}
-                    className={`absolute top-1/4 right-0 ${puneZones[0].color} text-white rounded-lg p-4 shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-2xl`}
-                    style={{ width: "45%", height: "45%" }}
-                  >
-                    <div className="text-sm font-semibold mb-1">East Pune</div>
-                    <div className="text-xs">{puneZones[0].properties} Properties</div>
-                  </button>
+        {/* Desktop: Grid + Details | Mobile: Stacked */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Zone Map - 2x2 Grid */}
+          <div className="w-full max-w-md mx-auto md:mx-0">
+            <div className="grid grid-cols-2 gap-3 aspect-square">
+              {/* West Pune - Top Left */}
+              <button
+                onClick={() => setSelectedZone(puneZones[1])}
+                className={`${puneZones[1].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+              >
+                <div className="text-sm font-semibold mb-1">West Pune</div>
+                <div className="text-xs">{puneZones[1].properties} Properties</div>
+              </button>
 
-                  {/* West Pune */}
-                  <button
-                    onClick={() => setSelectedZone(puneZones[1])}
-                    className={`absolute top-1/4 left-0 ${puneZones[1].color} text-white rounded-lg p-4 shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-2xl`}
-                    style={{ width: "45%", height: "45%" }}
-                  >
-                    <div className="text-sm font-semibold mb-1">West Pune</div>
-                    <div className="text-xs">{puneZones[1].properties} Properties</div>
-                  </button>
+              {/* East Pune - Top Right */}
+              <button
+                onClick={() => setSelectedZone(puneZones[0])}
+                className={`${puneZones[0].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+              >
+                <div className="text-sm font-semibold mb-1">East Pune</div>
+                <div className="text-xs">{puneZones[0].properties} Properties</div>
+              </button>
 
-                  {/* North Pune */}
-                  <button
-                    onClick={() => setSelectedZone(puneZones[2])}
-                    className={`absolute bottom-1/4 left-0 ${puneZones[2].color} text-white rounded-lg p-4 shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-2xl`}
-                    style={{ width: "45%", height: "45%" }}
-                  >
-                    <div className="text-sm font-semibold mb-1">North Pune</div>
-                    <div className="text-xs">{puneZones[2].properties} Properties</div>
-                  </button>
+              {/* North Pune - Bottom Left */}
+              <button
+                onClick={() => setSelectedZone(puneZones[2])}
+                className={`${puneZones[2].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+              >
+                <div className="text-sm font-semibold mb-1">North Pune</div>
+                <div className="text-xs">{puneZones[2].properties} Properties</div>
+              </button>
 
-                  {/* South Pune */}
-                  <button
-                    onClick={() => setSelectedZone(puneZones[3])}
-                    className={`absolute bottom-1/4 right-0 ${puneZones[3].color} text-white rounded-lg p-4 shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-2xl`}
-                    style={{ width: "45%", height: "45%" }}
-                  >
-                    <div className="text-sm font-semibold mb-1">South Pune</div>
-                    <div className="text-xs">{puneZones[3].properties} Properties</div>
-                  </button>
-
-                  {/* Center Label */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                    <div className="text-2xl font-bold text-primary">PUNE</div>
-                  </div>
-                </div>
-              </div>
+              {/* South Pune - Bottom Right */}
+              <button
+                onClick={() => setSelectedZone(puneZones[3])}
+                className={`${puneZones[3].color} text-white rounded-lg p-4 shadow-lg hover:scale-105 transition-all duration-300 hover:shadow-2xl flex flex-col items-center justify-center text-center`}
+              >
+                <div className="text-sm font-semibold mb-1\">South Pune</div>
+                <div className="text-xs\">{puneZones[3].properties} Properties</div>
+              </button>
             </div>
 
             {/* Legend */}
@@ -163,170 +112,63 @@ export default function InteractivePuneMap() {
               {puneZones.map((zone) => (
                 <div key={zone.id} className="flex items-center gap-2">
                   <div className={`w-4 h-4 rounded ${zone.color}`} />
-                  <span className="text-sm">{zone.name}</span>
+                  <span className="text-sm text-gray-700">{zone.name}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Zone Details - Desktop */}
-          <div>
+          {/* Zone Details Card */}
+          <div className="bg-white rounded-xl shadow-lg p-8 md:p-10">
             {selectedZone ? (
-              <Card className="animate-scale-in">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className={`w-12 h-12 rounded-lg ${selectedZone.color} flex items-center justify-center`}>
-                      <MapPin className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold">{selectedZone.name}</h3>
-                      <p className="text-muted-foreground">Real Estate Market</p>
-                    </div>
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-lg ${selectedZone.color} flex items-center justify-center`}>
+                    <MapPin className="w-6 h-6 text-white" />
                   </div>
-
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <Building2 className="h-5 w-5 text-primary" />
-                        <span className="font-medium">Available Properties</span>
-                      </div>
-                      <span className="text-2xl font-bold text-primary">
-                        {selectedZone.properties}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-green-500" />
-                        <span className="font-medium">YoY Growth</span>
-                      </div>
-                      <span className="text-xl font-bold text-green-500">
-                        {selectedZone.growth}
-                      </span>
-                    </div>
-
-                    <div className="p-4 bg-secondary/50 rounded-lg">
-                      <div className="font-medium mb-2">Average Price Range</div>
-                      <div className="text-2xl font-bold text-primary">
-                        {selectedZone.avgPrice}
-                      </div>
-                    </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">{selectedZone.name}</h3>
+                    <p className="text-gray-600">{selectedZone.description}</p>
                   </div>
+                </div>
 
-                  <div className="mb-6">
-                    <h4 className="font-semibold mb-3">Popular Areas</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedZone.areas.map((area) => (
-                        <Badge key={area} variant="outline">
-                          {area}
-                        </Badge>
-                      ))}
-                    </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="text-sm text-gray-600 mb-1">Available Properties</div>
+                    <div className="text-3xl font-bold text-gray-900">{selectedZone.properties}</div>
                   </div>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="text-sm text-gray-600 mb-1">YoY Growth</div>
+                    <div className="text-3xl font-bold text-green-600">{selectedZone.growth}</div>
+                  </div>
+                </div>
 
-                  <Button asChild className="w-full" size="lg">
-                    <Link href={`/properties?location=${selectedZone.id}`}>
-                      View Properties in {selectedZone.name}
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-sm text-gray-600 mb-2">Average Price Range</div>
+                  <div className="text-xl font-bold text-gray-900">{selectedZone.priceRange}</div>
+                </div>
+
+                <button className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                  View Properties in {selectedZone.name}
+                </button>
+              </div>
             ) : (
-              <Card>
-                <CardContent className="pt-6 text-center py-12">
-                  <MapPin className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">Select a Zone</h3>
-                  <p className="text-muted-foreground">
-                    Click on any zone on the map to view detailed information and available properties
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <MapPin className="w-16 h-16 text-gray-300 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Select a Zone</h3>
+                <p className="text-gray-600">
+                  Click on any zone on the map to view detailed information and available properties
+                </p>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Mobile: Zone Details Below Buttons */}
-        <div className="sm:hidden">
-          {selectedZone ? (
-            <Card className="animate-scale-in">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className={`w-12 h-12 rounded-lg ${selectedZone.color} flex items-center justify-center flex-shrink-0`}>
-                    <MapPin className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-bold">{selectedZone.name}</h3>
-                    <p className="text-sm text-muted-foreground">Real Estate Market</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-between p-3 sm:p-4 bg-secondary/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Building2 className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-sm sm:text-base font-medium">Available Properties</span>
-                    </div>
-                    <span className="text-xl sm:text-2xl font-bold text-primary">
-                      {selectedZone.properties}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 sm:p-4 bg-secondary/50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span className="text-sm sm:text-base font-medium">YoY Growth</span>
-                    </div>
-                    <span className="text-lg sm:text-xl font-bold text-green-500">
-                      {selectedZone.growth}
-                    </span>
-                  </div>
-
-                  <div className="p-3 sm:p-4 bg-secondary/50 rounded-lg">
-                    <div className="text-sm sm:text-base font-medium mb-2">Average Price Range</div>
-                    <div className="text-xl sm:text-2xl font-bold text-primary">
-                      {selectedZone.avgPrice}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <h4 className="text-sm sm:text-base font-semibold mb-3">Popular Areas</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedZone.areas.map((area) => (
-                      <Badge key={area} variant="outline" className="text-xs sm:text-sm">
-                        {area}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <Button asChild className="w-full h-12" size="lg">
-                  <Link href={`/properties?location=${selectedZone.id}`}>
-                    View Properties in {selectedZone.name}
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardContent className="pt-6 text-center py-8 sm:py-12">
-                <MapPin className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">Select a Zone</h3>
-                <p className="text-sm sm:text-base text-muted-foreground px-4">
-                  Tap on any zone above to view detailed information and available properties
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        {/* View All Link */}
-        <div className="text-center mt-8 sm:mt-12">
-          <Button asChild variant="outline" size="lg" className="h-11 sm:h-12">
-            <Link href="/locations">
-              View All Locations & Details
-            </Link>
-          </Button>
+        {/* Mobile: Full-width zone buttons below map */}
+        <div className="md:hidden mt-8 space-y-3">
+          <a href="/locations" className="block w-full bg-primary text-white py-3 rounded-lg font-semibold text-center hover:bg-primary/90 transition-colors">
+            View All Locations & Details
+          </a>
         </div>
       </div>
     </section>

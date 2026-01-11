@@ -648,3 +648,9 @@
 - [x] Ensure interactive map displays properly on desktop
 - [x] Verify mobile view still works correctly
 - [x] Test on both viewport sizes
+
+
+## Zone Positioning Fix
+- [x] Fix East and West Pune zones visibility
+- [x] Adjust absolute positioning to show all 4 zones
+- [x] Test on laptop/desktop viewport
