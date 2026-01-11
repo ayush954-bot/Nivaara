@@ -733,3 +733,19 @@
 - [x] Ensure Budget and BHK filters are consistent across both pages - Already consistent ✅
 - [x] Test filters on both pages to verify consistency - ALL TESTS PASSED ✅
 - [x] Verify filter options are identical on Home and Properties pages - 100% IDENTICAL ✅
+
+## Location Filter Visual Structure Alignment
+- [x] Examine Home page location filter to identify grouping headings - Found disabled SelectItems with ━━━ separators ✅
+- [x] Document the exact structure (Pune heading, India heading, International heading) - 3 headings with font-semibold text-primary ✅
+- [x] Update Properties page location filter to include same headings/separators - Added 3 disabled SelectItems ✅
+- [x] Ensure visual appearance is identical (font, spacing, styling) - Applied font-semibold text-primary ✅
+- [ ] Test both filters side-by-side to verify identical appearance
+
+## Shared LocationSelect Component (DRY Principle)
+- [x] Create LocationSelect component with proper SelectLabel groupings - Created ✅
+- [x] Implement visual groupings: Pune Zones, India, International - Using SelectGroup + SelectLabel ✅
+- [x] Replace location filter in PropertySearch.tsx with shared component - Replaced ✅
+- [x] Replace location filter in Properties.tsx with shared component - Replaced ✅
+- [x] Test Home page location filter shows visual groupings - WORKING ✅
+- [x] Test Properties page location filter shows visual groupings - WORKING ✅
+- [x] Verify both pages use identical component (no code duplication) - VERIFIED ✅

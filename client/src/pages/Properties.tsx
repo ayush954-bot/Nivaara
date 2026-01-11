@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
+import LocationSelect from "@/components/LocationSelect";
 import {
   Select,
   SelectContent,
@@ -10,9 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
 import { Link } from "wouter";
-import { trpc } from "@/lib/trpc";
 
 export default function Properties() {
   const [location] = useLocation();
@@ -102,47 +103,11 @@ export default function Properties() {
         <div className="container">
           <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
             <div className="flex-1 w-full md:w-auto">
-              <Select value={locationFilter} onValueChange={setLocationFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Locations</SelectItem>
-                  
-                  {/* Pune Zones */}
-                  <SelectItem value="Pune - East Zone">Pune - East Zone</SelectItem>
-                  <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
-                  <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
-                  <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
-                  <SelectItem value="Pune - Pimpri-Chinchwad">Pune - Pimpri-Chinchwad</SelectItem>
-                  
-                  {/* Major Indian Cities */}
-                  <SelectItem value="Mumbai">Mumbai</SelectItem>
-                  <SelectItem value="Delhi NCR">Delhi NCR</SelectItem>
-                  <SelectItem value="Bangalore">Bangalore</SelectItem>
-                  <SelectItem value="Hyderabad">Hyderabad</SelectItem>
-                  <SelectItem value="Chennai">Chennai</SelectItem>
-                  <SelectItem value="Kolkata">Kolkata</SelectItem>
-                  <SelectItem value="Ahmedabad">Ahmedabad</SelectItem>
-                  <SelectItem value="Surat">Surat</SelectItem>
-                  <SelectItem value="Jaipur">Jaipur</SelectItem>
-                  <SelectItem value="Lucknow">Lucknow</SelectItem>
-                  <SelectItem value="Nagpur">Nagpur</SelectItem>
-                  <SelectItem value="Indore">Indore</SelectItem>
-                  <SelectItem value="Thane">Thane</SelectItem>
-                  <SelectItem value="Bhopal">Bhopal</SelectItem>
-                  <SelectItem value="Visakhapatnam">Visakhapatnam</SelectItem>
-                  <SelectItem value="Patna">Patna</SelectItem>
-                  <SelectItem value="Vadodara">Vadodara</SelectItem>
-                  <SelectItem value="Ghaziabad">Ghaziabad</SelectItem>
-                  <SelectItem value="Ludhiana">Ludhiana</SelectItem>
-                  
-                  {/* International */}
-                  <SelectItem value="Dubai, UAE">Dubai, UAE</SelectItem>
-                  <SelectItem value="Abu Dhabi, UAE">Abu Dhabi, UAE</SelectItem>
-                  <SelectItem value="Sharjah, UAE">Sharjah, UAE</SelectItem>
-                </SelectContent>
-              </Select>
+              <LocationSelect
+                value={locationFilter}
+                onValueChange={setLocationFilter}
+                placeholder="All Locations"
+              />
             </div>
 
             <div className="flex-1 w-full md:w-auto">

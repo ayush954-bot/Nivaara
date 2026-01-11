@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useLocation } from "wouter";
+import LocationSelect from "@/components/LocationSelect";
 
 interface PropertySearchProps {
   variant?: "hero" | "compact";
@@ -51,55 +52,14 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
           <label className="text-xs sm:text-sm font-medium text-muted-foreground mb-1.5 sm:mb-2 block">
             Location
           </label>
-          <Select
+          <LocationSelect
             value={searchParams.location}
             onValueChange={(value) =>
               setSearchParams({ ...searchParams, location: value })
             }
-          >
-            <SelectTrigger className="h-11 sm:h-10 text-base sm:text-sm">
-              <SelectValue placeholder="Select Location" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Locations</SelectItem>
-              
-              {/* Pune Zones */}
-              <SelectItem value="pune" disabled className="font-semibold text-primary">━━━ Pune Zones ━━━</SelectItem>
-              <SelectItem value="Pune - East Zone">Pune - East Zone</SelectItem>
-              <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
-              <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
-              <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
-              <SelectItem value="Pune - Pimpri-Chinchwad">Pune - Pimpri-Chinchwad</SelectItem>
-              
-              {/* Major Indian Cities */}
-              <SelectItem value="india" disabled className="font-semibold text-primary">━━━ India ━━━</SelectItem>
-              <SelectItem value="Mumbai">Mumbai</SelectItem>
-              <SelectItem value="Delhi NCR">Delhi NCR</SelectItem>
-              <SelectItem value="Bangalore">Bangalore</SelectItem>
-              <SelectItem value="hyderabad">Hyderabad</SelectItem>
-              <SelectItem value="chennai">Chennai</SelectItem>
-              <SelectItem value="kolkata">Kolkata</SelectItem>
-              <SelectItem value="ahmedabad">Ahmedabad</SelectItem>
-              <SelectItem value="surat">Surat</SelectItem>
-              <SelectItem value="jaipur">Jaipur</SelectItem>
-              <SelectItem value="lucknow">Lucknow</SelectItem>
-              <SelectItem value="nagpur">Nagpur</SelectItem>
-              <SelectItem value="indore">Indore</SelectItem>
-              <SelectItem value="thane">Thane</SelectItem>
-              <SelectItem value="bhopal">Bhopal</SelectItem>
-              <SelectItem value="visakhapatnam">Visakhapatnam</SelectItem>
-              <SelectItem value="patna">Patna</SelectItem>
-              <SelectItem value="vadodara">Vadodara</SelectItem>
-              <SelectItem value="ghaziabad">Ghaziabad</SelectItem>
-              <SelectItem value="ludhiana">Ludhiana</SelectItem>
-              
-              {/* International */}
-              <SelectItem value="international" disabled className="font-semibold text-primary">━━━ International ━━━</SelectItem>
-              <SelectItem value="dubai">Dubai, UAE</SelectItem>
-              <SelectItem value="abu-dhabi">Abu Dhabi, UAE</SelectItem>
-              <SelectItem value="sharjah">Sharjah, UAE</SelectItem>
-            </SelectContent>
-          </Select>
+            placeholder="Select Location"
+            className="h-11 sm:h-10 text-base sm:text-sm"
+          />
         </div>
 
         {/* Property Type Filter */}
