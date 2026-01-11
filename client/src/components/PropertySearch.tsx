@@ -45,10 +45,10 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
         </h3>
       </div>
 
-      <div className={`grid ${isHero ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4" : "grid-cols-1 md:grid-cols-2"} gap-4`}>
+      <div className={`grid ${isHero ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-2"} gap-3 sm:gap-4`}>
         {/* Location Filter */}
         <div>
-          <label className="text-sm font-medium text-muted-foreground mb-2 block">
+          <label className="text-xs sm:text-sm font-medium text-muted-foreground mb-1.5 sm:mb-2 block">
             Location
           </label>
           <Select
@@ -57,7 +57,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               setSearchParams({ ...searchParams, location: value })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-11 sm:h-10 text-base sm:text-sm">
               <SelectValue placeholder="Select Location" />
             </SelectTrigger>
             <SelectContent>
@@ -114,7 +114,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
 
         {/* Property Type Filter */}
         <div>
-          <label className="text-sm font-medium text-muted-foreground mb-2 block">
+          <label className="text-xs sm:text-sm font-medium text-muted-foreground mb-1.5 sm:mb-2 block">
             Property Type
           </label>
           <Select
@@ -123,7 +123,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               setSearchParams({ ...searchParams, propertyType: value })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-11 sm:h-10 text-base sm:text-sm">
               <SelectValue placeholder="Select Type" />
             </SelectTrigger>
             <SelectContent>
@@ -140,7 +140,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
 
         {/* Budget Filter */}
         <div>
-          <label className="text-sm font-medium text-muted-foreground mb-2 block">
+          <label className="text-xs sm:text-sm font-medium text-muted-foreground mb-1.5 sm:mb-2 block">
             Budget
           </label>
           <Select
@@ -149,7 +149,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               setSearchParams({ ...searchParams, budget: value })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-11 sm:h-10 text-base sm:text-sm">
               <SelectValue placeholder="Select Budget" />
             </SelectTrigger>
             <SelectContent>
@@ -167,7 +167,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
 
         {/* Bedrooms Filter */}
         <div>
-          <label className="text-sm font-medium text-muted-foreground mb-2 block">
+          <label className="text-xs sm:text-sm font-medium text-muted-foreground mb-1.5 sm:mb-2 block">
             Bedrooms
           </label>
           <Select
@@ -176,7 +176,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
               setSearchParams({ ...searchParams, bedrooms: value })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-11 sm:h-10 text-base sm:text-sm">
               <SelectValue placeholder="Select BHK" />
             </SelectTrigger>
             <SelectContent>
@@ -191,11 +191,11 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
         </div>
       </div>
 
-      <div className="mt-6 flex gap-3">
+      <div className="mt-4 sm:mt-6 flex gap-2 sm:gap-3">
         <Button
           onClick={handleSearch}
           size="lg"
-          className="flex-1 text-base"
+          className="flex-1 text-sm sm:text-base h-12 sm:h-11"
         >
           <Search className="h-5 w-5 mr-2" />
           Search Properties
