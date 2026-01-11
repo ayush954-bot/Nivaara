@@ -1,20 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Lock, User, AlertCircle } from "lucide-react";
+import { Lock, User, AlertCircle, LogIn } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function StaffLogin() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const { user, isLoading: authLoading } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (user && !authLoading) {
+      setLocation("/admin/dashboard");
+    }
+  }, [user, authLoading, setLocation]);
+
+  const handleStaffLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
@@ -26,6 +35,7 @@ export default function StaffLogin() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -37,12 +47,25 @@ export default function StaffLogin() {
       }
 
       // Redirect to admin dashboard on successful login
-      setLocation("/admin/dashboard");
+      window.location.href = "/admin/dashboard";
     } catch (err) {
       setError("An error occurred. Please try again.");
       setIsLoading(false);
     }
   };
+
+  const handleOAuthLogin = () => {
+    // Redirect to OAuth login endpoint
+    window.location.href = "/api/login";
+  };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary/30 p-4">
@@ -53,13 +76,40 @@ export default function StaffLogin() {
               <Lock className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">Staff Login</CardTitle>
+          <CardTitle className="text-2xl text-center">Staff & Admin Login</CardTitle>
           <CardDescription className="text-center">
             Property Management System
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <CardContent className="space-y-6">
+          {/* Manus OAuth Login */}
+          <div className="space-y-3">
+            <div className="text-center text-sm font-medium text-muted-foreground">
+              Admin Login (Manus Account)
+            </div>
+            <Button 
+              onClick={handleOAuthLogin} 
+              className="w-full" 
+              variant="default"
+            >
+              <LogIn className="mr-2 h-4 w-4" />
+              Login with Manus
+            </Button>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with staff credentials
+              </span>
+            </div>
+          </div>
+
+          {/* Staff Credentials Login */}
+          <form onSubmit={handleStaffLogin} className="space-y-4">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -101,8 +151,8 @@ export default function StaffLogin() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+            <Button type="submit" className="w-full" variant="outline" disabled={isLoading}>
+              {isLoading ? "Signing in..." : "Sign In as Staff"}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground mt-4">

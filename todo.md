@@ -798,3 +798,13 @@
 - [x] Verify imported properties appear on website - Confirmed on Properties page \u2705
 - [x] Delete test properties after testing - Cleaned up via SQL \u2705
 - [x] Document bulk import feature and usage instructions - Created comprehensive documentation \u2705
+
+## Fix Admin/Staff Login Authentication Issues
+- [x] Investigate 404 error on admin login route - No /admin/login route exists ✅
+- [x] Investigate username/password prompt on staff login route - Custom staff auth system ✅
+- [x] Check authentication configuration in App.tsx - Routes configured correctly ✅
+- [x] Verify OAuth setup and redirect URLs - OAuth uses /api/login endpoint ✅
+- [x] Fix login flow to use Manus OAuth properly - Added OAuth button to StaffLogin ✅
+- [x] Test admin dashboard access after login - Auto-redirect working ✅
+- [x] Test staff login functionality - OAuth authentication working ✅
+- [x] Document correct login process for users - Created comprehensive authentication guide ✅
