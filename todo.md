@@ -709,3 +709,17 @@
 - [x] Add validation to prevent staff from entering bedrooms for non-residential properties
 - [x] Test filter visibility logic with different property type selections - WORKING ✅
 - [x] Test admin form validation and field visibility - VERIFIED via code review ✅
+
+## End-to-End Property Management Testing
+- [x] Setup or verify admin account exists - Admin exists in DB
+- [x] Login as staff/admin through staff login page - Already logged in as 'Test Staff Member'
+- [x] Navigate to admin dashboard - Dashboard loaded, showing 11 properties
+- [x] Add 12th property with complete details - Created 'Test Property - 2 BHK Flat in Hadapsar' ✅
+- [x] Verify property appears on Properties page - VISIBLE ✅
+- [x] Test 12th property works with Location filter - Pune East Zone ✅
+- [x] Test 12th property works with Type filter - Flat ✅
+- [x] Test 12th property works with Budget filter - Under ₹50L ✅
+- [x] Test 12th property works with BHK filter - 2 BHK ✅
+- [x] Delete the 12th property from admin dashboard - DELETED ✅
+- [x] Verify property is removed from Properties page - CONFIRMED ✅
+- [x] Confirm property count returns to 11 - VERIFIED ✅
