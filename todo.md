@@ -660,3 +660,12 @@
 - [x] Fix "View Properties in [Zone]" button functionality
 - [x] Implement navigation to properties page with zone filter
 - [x] Test property filtering by zone
+
+
+## Zone Filtering & Filter Alignment Fix
+- [x] Debug why zone filter shows all properties instead of filtered ones
+- [x] Check database location field values vs filter values
+- [x] Fix location naming consistency between homepage and properties page
+- [x] Align PropertySearch component filters with Properties page filters
+- [x] Test zone filtering shows only relevant properties
+- [x] Test homepage search navigation with filters

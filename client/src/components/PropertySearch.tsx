@@ -63,28 +63,18 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
             <SelectContent>
               <SelectItem value="all">All Locations</SelectItem>
               
-              {/* Pune Areas */}
-              <SelectItem value="pune" disabled className="font-semibold text-primary">━━━ Pune ━━━</SelectItem>
-              <SelectItem value="kharadi">Kharadi</SelectItem>
-              <SelectItem value="viman-nagar">Viman Nagar</SelectItem>
-              <SelectItem value="wagholi">Wagholi</SelectItem>
-              <SelectItem value="hadapsar">Hadapsar</SelectItem>
-              <SelectItem value="hinjewadi">Hinjewadi</SelectItem>
-              <SelectItem value="baner">Baner</SelectItem>
-              <SelectItem value="wakad">Wakad</SelectItem>
-              <SelectItem value="pimple-saudagar">Pimple Saudagar</SelectItem>
-              <SelectItem value="aundh">Aundh</SelectItem>
-              <SelectItem value="pimpri-chinchwad">Pimpri-Chinchwad</SelectItem>
-              <SelectItem value="undri">Undri</SelectItem>
-              <SelectItem value="kondhwa">Kondhwa</SelectItem>
-              <SelectItem value="purandar">Purandar</SelectItem>
-              <SelectItem value="koregaon-park">Koregaon Park</SelectItem>
+              {/* Pune Zones */}
+              <SelectItem value="pune" disabled className="font-semibold text-primary">━━━ Pune Zones ━━━</SelectItem>
+              <SelectItem value="Pune - East Zone">Pune - East Zone</SelectItem>
+              <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
+              <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
+              <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
               
               {/* Major Indian Cities */}
               <SelectItem value="india" disabled className="font-semibold text-primary">━━━ India ━━━</SelectItem>
-              <SelectItem value="mumbai">Mumbai</SelectItem>
-              <SelectItem value="delhi">Delhi/NCR</SelectItem>
-              <SelectItem value="bangalore">Bangalore</SelectItem>
+              <SelectItem value="Mumbai">Mumbai</SelectItem>
+              <SelectItem value="Delhi NCR">Delhi NCR</SelectItem>
+              <SelectItem value="Bangalore">Bangalore</SelectItem>
               <SelectItem value="hyderabad">Hyderabad</SelectItem>
               <SelectItem value="chennai">Chennai</SelectItem>
               <SelectItem value="kolkata">Kolkata</SelectItem>

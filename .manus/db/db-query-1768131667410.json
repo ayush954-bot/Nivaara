@@ -1,0 +1,76 @@
+{
+  "query": "SELECT id, title, location, area FROM properties LIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, location, area FROM properties LIMIT 15;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "location": "Pune - East Zone",
+      "area": "Kharadi"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "location": "Pune - West Zone",
+      "area": "Hinjewadi"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "location": "Pune - East Zone",
+      "area": "Wagholi"
+    },
+    {
+      "id": "4",
+      "title": "Commercial Shop in Viman Nagar",
+      "location": "Pune - East Zone",
+      "area": "Viman Nagar"
+    },
+    {
+      "id": "5",
+      "title": "Residential Plot in Baner",
+      "location": "Pune - West Zone",
+      "area": "Baner"
+    },
+    {
+      "id": "6",
+      "title": "Luxury Villa in Mumbai Suburbs",
+      "location": "Mumbai",
+      "area": "Powai"
+    },
+    {
+      "id": "7",
+      "title": "Modern Apartment in Dubai Marina",
+      "location": "Dubai, UAE",
+      "area": "Dubai Marina"
+    },
+    {
+      "id": "8",
+      "title": "Commercial Space in Bangalore",
+      "location": "Bangalore",
+      "area": "Whitefield"
+    },
+    {
+      "id": "30001",
+      "title": "2 BHK Flat in Vishal Leela, Kharadi",
+      "location": "Kharadi",
+      "area": "1001"
+    },
+    {
+      "id": "30002",
+      "title": "4 BHK Luxury Apartment in Mahindra IvyLush, Kharadi",
+      "location": "Kharadi",
+      "area": "2540"
+    },
+    {
+      "id": "60001",
+      "title": "5 Acre Premium Land in Purandar - Near New Pune International Airport",
+      "location": "Purandar",
+      "area": "217800"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tlocation\tarea\n1\tLuxury 3BHK Apartment in Kharadi\tPune - East Zone\tKharadi\n2\tPremium Office Space in Hinjewadi\tPune - West Zone\tHinjewadi\n3\tUnder Construction 2BHK in Wagholi\tPune - East Zone\tWagholi\n4\tCommercial Shop in Viman Nagar\tPune - East Zone\tViman Nagar\n5\tResidential Plot in Baner\tPune - West Zone\tBaner\n6\tLuxury Villa in Mumbai Suburbs\tMumbai\tPowai\n7\tModern Apartment in Dubai Marina\tDubai, UAE\tDubai Marina\n8\tCommercial Space in Bangalore\tBangalore\tWhitefield\n30001\t2 BHK Flat in Vishal Leela, Kharadi\tKharadi\t1001\n30002\t4 BHK Luxury Apartment in Mahindra IvyLush, Kharadi\tKharadi\t2540\n60001\t5 Acre Premium Land in Purandar - Near New Pune International Airport\tPurandar\t217800\n",
+  "stderr": "",
+  "execution_time_ms": 1597
+}

@@ -20,9 +20,11 @@ export default function Properties() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Read zone parameter from URL and set location filter
+  // Read zone or location parameter from URL and set location filter
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    
+    // Check for zone parameter (from zone map clicks)
     const zone = params.get('zone');
     if (zone) {
       const zoneMap: Record<string, string> = {
@@ -35,6 +37,12 @@ export default function Properties() {
       if (mappedLocation) {
         setLocationFilter(mappedLocation);
       }
+    }
+    
+    // Check for location parameter (from homepage search)
+    const locationParam = params.get('location');
+    if (locationParam && locationParam !== 'all') {
+      setLocationFilter(locationParam);
     }
   }, [location]);
 
