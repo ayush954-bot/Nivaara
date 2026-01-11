@@ -654,3 +654,9 @@
 - [x] Fix East and West Pune zones visibility
 - [x] Adjust absolute positioning to show all 4 zones
 - [x] Test on laptop/desktop viewport
+
+
+## Zone Property Viewing Fix
+- [x] Fix "View Properties in [Zone]" button functionality
+- [x] Implement navigation to properties page with zone filter
+- [x] Test property filtering by zone

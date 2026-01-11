@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,9 +15,28 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
 export default function Properties() {
+  const [location] = useLocation();
   const [locationFilter, setLocationFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  // Read zone parameter from URL and set location filter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const zone = params.get('zone');
+    if (zone) {
+      const zoneMap: Record<string, string> = {
+        'east-pune': 'Pune - East Zone',
+        'west-pune': 'Pune - West Zone',
+        'north-pune': 'Pune - North Zone',
+        'south-pune': 'Pune - South Zone',
+      };
+      const mappedLocation = zoneMap[zone];
+      if (mappedLocation) {
+        setLocationFilter(mappedLocation);
+      }
+    }
+  }, [location]);
 
   // Fetch properties from database
   const { data: properties = [], isLoading } = trpc.properties.search.useQuery({

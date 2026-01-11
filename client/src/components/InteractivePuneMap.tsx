@@ -148,9 +148,12 @@ export default function InteractivePuneMap() {
                   <div className="text-xl font-bold text-gray-900">{selectedZone.priceRange}</div>
                 </div>
 
-                <button className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+                <a 
+                  href={`/properties?zone=${selectedZone.id}`}
+                  className="block w-full bg-primary text-white py-3 rounded-lg font-semibold text-center hover:bg-primary/90 transition-colors"
+                >
                   View Properties in {selectedZone.name}
-                </button>
+                </a>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-center">
