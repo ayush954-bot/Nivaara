@@ -48,6 +48,13 @@ export default function Properties() {
     }
   }, [location]);
 
+  // Reset BHK filter when switching to non-residential property types
+  useEffect(() => {
+    if (typeFilter !== "all" && typeFilter !== "Flat" && typeFilter !== "Rental") {
+      setBhkFilter("all");
+    }
+  }, [typeFilter]);
+
   // Parse budget filter to min/max price in lakhs (1L = 100000)
   const getBudgetRange = (budget: string): { minPrice?: number; maxPrice?: number } => {
     if (budget === "all") return {};
@@ -187,21 +194,24 @@ export default function Properties() {
               </Select>
             </div>
 
-            <div className="flex-1 w-full md:w-auto">
-              <Select value={bhkFilter} onValueChange={setBhkFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="BHK" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All BHK</SelectItem>
-                  <SelectItem value="1">1 BHK</SelectItem>
-                  <SelectItem value="2">2 BHK</SelectItem>
-                  <SelectItem value="3">3 BHK</SelectItem>
-                  <SelectItem value="4">4 BHK</SelectItem>
-                  <SelectItem value="5">5+ BHK</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Only show BHK filter for Flat and Rental property types */}
+            {(typeFilter === "all" || typeFilter === "Flat" || typeFilter === "Rental") && (
+              <div className="flex-1 w-full md:w-auto">
+                <Select value={bhkFilter} onValueChange={setBhkFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="BHK" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All BHK</SelectItem>
+                    <SelectItem value="1">1 BHK</SelectItem>
+                    <SelectItem value="2">2 BHK</SelectItem>
+                    <SelectItem value="3">3 BHK</SelectItem>
+                    <SelectItem value="4">4 BHK</SelectItem>
+                    <SelectItem value="5">5+ BHK</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         </div>
       </section>

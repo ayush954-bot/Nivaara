@@ -78,6 +78,19 @@ export default function PropertyForm() {
     }
   }, [property]);
 
+  // Auto-clear bedrooms/bathrooms when switching to non-residential property types
+  useEffect(() => {
+    if (formData.propertyType !== "Flat" && formData.propertyType !== "Rental") {
+      if (formData.bedrooms || formData.bathrooms) {
+        setFormData(prev => ({
+          ...prev,
+          bedrooms: "",
+          bathrooms: "",
+        }));
+      }
+    }
+  }, [formData.propertyType]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -278,31 +291,40 @@ export default function PropertyForm() {
               <h3 className="text-lg font-semibold">Property Details</h3>
 
               <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="bedrooms">Bedrooms</Label>
-                  <Input
-                    id="bedrooms"
-                    type="number"
-                    value={formData.bedrooms}
-                    onChange={(e) =>
-                      setFormData({ ...formData, bedrooms: e.target.value })
-                    }
-                    placeholder="e.g., 3"
-                  />
-                </div>
+                {/* Only show bedrooms/bathrooms for Flat and Rental types */}
+                {(formData.propertyType === "Flat" || formData.propertyType === "Rental") && (
+                  <>
+                    <div>
+                      <Label htmlFor="bedrooms">Bedrooms *</Label>
+                      <Input
+                        id="bedrooms"
+                        type="number"
+                        value={formData.bedrooms}
+                        onChange={(e) =>
+                          setFormData({ ...formData, bedrooms: e.target.value })
+                        }
+                        placeholder="e.g., 3"
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Required for Flat/Rental properties
+                      </p>
+                    </div>
 
-                <div>
-                  <Label htmlFor="bathrooms">Bathrooms</Label>
-                  <Input
-                    id="bathrooms"
-                    type="number"
-                    value={formData.bathrooms}
-                    onChange={(e) =>
-                      setFormData({ ...formData, bathrooms: e.target.value })
-                    }
-                    placeholder="e.g., 2"
-                  />
-                </div>
+                    <div>
+                      <Label htmlFor="bathrooms">Bathrooms</Label>
+                      <Input
+                        id="bathrooms"
+                        type="number"
+                        value={formData.bathrooms}
+                        onChange={(e) =>
+                          setFormData({ ...formData, bathrooms: e.target.value })
+                        }
+                        placeholder="e.g., 2"
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div>
                   <Label htmlFor="area_sqft">Area (sq ft)</Label>

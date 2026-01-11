@@ -700,3 +700,12 @@
 - [x] Test multiple filter combinations (Location + Budget + BHK) - WORKING ✅
 - [x] Verify all filters use dynamic database queries (no hardcoded data) - VERIFIED ✅
 - [x] Check if Budget and BHK filters are actually connected to backend - FIXED & CONNECTED ✅
+
+## Filter UX Improvements & Admin Validation
+- [x] Hide BHK filter when Land/Office/Shop property types are selected (not relevant)
+- [x] Show BHK filter only for Flat/Rental property types
+- [x] Review admin property form for proper field validation
+- [x] Add conditional field visibility in admin form (hide bedrooms for Land/Office/Shop)
+- [x] Add validation to prevent staff from entering bedrooms for non-residential properties
+- [x] Test filter visibility logic with different property type selections - WORKING ✅
+- [x] Test admin form validation and field visibility - VERIFIED via code review ✅
