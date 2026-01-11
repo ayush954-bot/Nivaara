@@ -18,7 +18,6 @@ export default function Properties() {
   const [location] = useLocation();
   const [locationFilter, setLocationFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [bhkFilter, setBhkFilter] = useState("all");
 
@@ -79,7 +78,6 @@ export default function Properties() {
   const { data: properties = [], isLoading } = trpc.properties.search.useQuery({
     location: locationFilter !== "all" ? locationFilter : undefined,
     propertyType: typeFilter !== "all" ? typeFilter : undefined,
-    status: statusFilter !== "all" ? statusFilter : undefined,
     minPrice: budgetRange.minPrice,
     maxPrice: budgetRange.maxPrice,
     bedrooms: bedroomsValue,
@@ -159,19 +157,6 @@ export default function Properties() {
                   <SelectItem value="Office">Office</SelectItem>
                   <SelectItem value="Land">Land</SelectItem>
                   <SelectItem value="Rental">Rental</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex-1 w-full md:w-auto">
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="Ready">Ready to Move</SelectItem>
-                  <SelectItem value="Under-Construction">Under Construction</SelectItem>
                 </SelectContent>
               </Select>
             </div>
