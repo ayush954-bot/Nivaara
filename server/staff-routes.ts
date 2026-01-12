@@ -35,7 +35,7 @@ staffRouter.post("/api/staff/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid username or password" });
     }
 
-    // Create JWT token
+    // Create JWT token with 30-minute expiration
     const token = jwt.sign(
       {
         staffId: staff.id,
@@ -44,15 +44,15 @@ staffRouter.post("/api/staff/login", async (req, res) => {
         role: staff.role,
       } as StaffTokenPayload,
       JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "30m" }
     );
 
-    // Set HTTP-only cookie
+    // Set HTTP-only cookie with 30-minute expiration
     res.cookie(STAFF_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 30 * 60 * 1000, // 30 minutes
     });
 
     res.json({

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/hooks/useAuth";
+import { useSessionTimeout } from "@/hooks/useSessionTimeout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -14,10 +15,16 @@ import {
   Star,
   AlertCircle,
   Upload,
+  LogOut,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useLocation } from "wouter";
 
 export default function AdminDashboard() {
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
+  
+  // Enable session timeout for staff users
+  useSessionTimeout(user?.type || null);
   const { data: properties = [], refetch: refetchProperties } = trpc.admin.properties.list.useQuery(undefined, {
     enabled: canManageProperties,
   });
@@ -93,13 +100,37 @@ export default function AdminDashboard() {
 
   const newInquiries = inquiries.filter(i => i.status === "new").length;
 
+  const [, setLocation] = useLocation();
+
+  const handleLogout = async () => {
+    if (user.type === 'staff') {
+      // Staff logout
+      try {
+        await fetch('/api/staff/logout', { method: 'POST' });
+        toast.success('Logged out successfully');
+        setLocation('/staff/login');
+      } catch (error) {
+        toast.error('Logout failed');
+      }
+    } else {
+      // Admin OAuth logout
+      window.location.href = '/api/oauth/logout';
+    }
+  };
+
   return (
     <div className="container py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">{user.type === 'staff' ? 'Property Management' : 'Admin Dashboard'}</h1>
-        <p className="text-muted-foreground">
-          Welcome back, {user.name || (user.type === 'admin' ? user.email : user.username)}
-        </p>
+      <div className="mb-8 flex justify-between items-start">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">{user.type === 'staff' ? 'Property Management' : 'Admin Dashboard'}</h1>
+          <p className="text-muted-foreground">
+            Welcome back, {user.name || (user.type === 'admin' ? user.email : user.username)}
+          </p>
+        </div>
+        <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
+          <LogOut className="h-4 w-4" />
+          Logout
+        </Button>
       </div>
 
       {/* Stats Overview */}

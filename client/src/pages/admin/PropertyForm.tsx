@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/hooks/useAuth";
+import { useSessionTimeout } from "@/hooks/useSessionTimeout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,9 @@ export default function PropertyForm() {
   const isEdit = !!propertyId;
 
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
+  
+  // Enable session timeout for staff users
+  useSessionTimeout(user?.type || null);
   const { data: property } = trpc.properties.getById.useQuery(
     { id: propertyId! },
     { enabled: isEdit && !!propertyId }

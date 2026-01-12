@@ -846,3 +846,10 @@
 
 ## Update Placeholder Image (Jan 12, 2026)
 - [x] Use same default image from properties page as placeholder for featured properties ✅
+
+
+## Staff Logout & Session Timeout (Jan 12, 2026)
+- [x] Add logout button in staff dashboard/header ✅
+- [x] Implement 30-minute session timeout for staff JWT tokens ✅
+- [x] Add auto-logout when session expires ✅
+- [x] Test logout functionality and timeout behavior ✅
