@@ -111,7 +111,7 @@ export default function PropertyDetail() {
       {/* Hero Image */}
       <div className="relative h-[400px] md:h-[500px] overflow-hidden">
         <img
-          src={property.imageUrl || "/images/placeholder-property.jpg"}
+          src={property.imageUrl || "/images/hero-building.jpg"}
           alt={property.title}
           className="w-full h-full object-cover"
         />

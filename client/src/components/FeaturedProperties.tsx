@@ -122,7 +122,7 @@ export default function FeaturedProperties() {
                   <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 group">
                     <div className="relative overflow-hidden">
                       <img
-                        src={property.imageUrl || "/images/placeholder-property.jpg"}
+                        src={property.imageUrl || "/images/hero-building.jpg"}
                         alt={property.title}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                       />
