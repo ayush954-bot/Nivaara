@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/hooks/useAuth";
-import { useSessionTimeout } from "@/hooks/useSessionTimeout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -22,9 +21,6 @@ import { useLocation } from "wouter";
 
 export default function AdminDashboard() {
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
-  
-  // Enable session timeout for staff users (only after auth is loaded)
-  useSessionTimeout(!authLoading && user ? user.type : null);
   const { data: properties = [], refetch: refetchProperties } = trpc.admin.properties.list.useQuery(undefined, {
     enabled: canManageProperties,
   });

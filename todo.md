@@ -863,3 +863,14 @@
 - [x] Fix React error #310 (useSyncExternalStore) in staff login/dashboard ✅
 - [x] Fix useSessionTimeout hook causing render errors - Moved to conditional render ✅
 - [x] Prevent hook from being called before authentication completes ✅
+
+
+## Staff Login URL Redirect (Jan 12, 2026)
+- [x] Investigate why staff login redirects to /admin/dashboard - CORRECT BEHAVIOR
+- [x] Verify if this is correct behavior or needs separate staff dashboard route - CORRECT
+
+## CRITICAL: Remove useSessionTimeout Hook (Jan 12, 2026)
+- [x] Remove useSessionTimeout hook from Dashboard component ✅
+- [x] Remove useSessionTimeout hook from PropertyForm component ✅
+- [x] Implement session timeout on server-side only (JWT expiration handles it) ✅
+- [x] Remove useSessionTimeout.ts file ✅
