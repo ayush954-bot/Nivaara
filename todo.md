@@ -857,3 +857,9 @@
 
 ## Update Phone Number (Jan 12, 2026)
 - [x] Update "Call Now" phone number in property detail page to +91 9764515697 ✅
+
+
+## CRITICAL: Staff Login Error (Jan 12, 2026)
+- [x] Fix React error #310 (useSyncExternalStore) in staff login/dashboard ✅
+- [x] Fix useSessionTimeout hook causing render errors ✅
+- [x] Prevent automatic redirect to /admin/dashboard before authentication ✅

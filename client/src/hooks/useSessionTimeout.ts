@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useLocation } from "wouter";
 import { toast } from "sonner";
 
 /**
@@ -7,8 +6,8 @@ import { toast } from "sonner";
  * Automatically logs out staff after 30 minutes of inactivity
  */
 export function useSessionTimeout(userType: "staff" | "admin" | null) {
-  const [, setLocation] = useLocation();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const warningShownRef = useRef(false);
 
   useEffect(() => {
@@ -21,14 +20,17 @@ export function useSessionTimeout(userType: "staff" | "admin" | null) {
     const WARNING_TIME = 28 * 60 * 1000; // Show warning at 28 minutes
 
     const resetTimeout = () => {
-      // Clear existing timeout
+      // Clear existing timeouts
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+      }
+      if (warningTimeoutRef.current) {
+        clearTimeout(warningTimeoutRef.current);
       }
       warningShownRef.current = false;
 
       // Set warning timeout (2 minutes before expiry)
-      setTimeout(() => {
+      warningTimeoutRef.current = setTimeout(() => {
         if (!warningShownRef.current) {
           warningShownRef.current = true;
           toast.warning("Your session will expire in 2 minutes due to inactivity");
@@ -40,10 +42,11 @@ export function useSessionTimeout(userType: "staff" | "admin" | null) {
         try {
           await fetch("/api/staff/logout", { method: "POST" });
           toast.error("Session expired. Please login again.");
-          setLocation("/staff/login");
+          // Use window.location for navigation to avoid hook issues
+          window.location.href = "/staff/login";
         } catch (error) {
           console.error("Auto-logout failed:", error);
-          setLocation("/staff/login");
+          window.location.href = "/staff/login";
         }
       }, SESSION_TIMEOUT);
     };
@@ -62,9 +65,12 @@ export function useSessionTimeout(userType: "staff" | "admin" | null) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (warningTimeoutRef.current) {
+        clearTimeout(warningTimeoutRef.current);
+      }
       events.forEach((event) => {
         document.removeEventListener(event, resetTimeout);
       });
     };
-  }, [userType, setLocation]);
+  }, [userType]);
 }
