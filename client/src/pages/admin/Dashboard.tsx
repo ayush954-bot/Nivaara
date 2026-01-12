@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Upload,
   LogOut,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
@@ -189,6 +190,14 @@ export default function AdminDashboard() {
                   Add Property
                 </Link>
               </Button>
+              {user.type === 'admin' && (
+                <Button asChild variant="secondary">
+                  <Link href="/admin/staff">
+                    <Users className="h-4 w-4 mr-2" />
+                    Manage Staff
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </CardHeader>

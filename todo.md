@@ -888,3 +888,10 @@
 - [x] Fix /api/login endpoint returning 404 - Changed to getLoginUrl() ✅
 - [x] Add missing /api/oauth/logout route ✅
 - [x] Test OAuth login/logout flow end-to-end ✅
+
+
+## OAuth Redirect & Staff Management (Jan 12, 2026)
+- [x] Fix OAuth callback to redirect admin to /admin/dashboard instead of homepage ✅
+- [x] Add staff management UI for admin users (view all staff, add, delete) ✅
+- [x] Ensure only admin (OAuth users) can access staff management ✅
+- [x] Test admin login flow and staff management features ✅
