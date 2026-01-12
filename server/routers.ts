@@ -36,6 +36,10 @@ export const appRouter = router({
       return await db.getFeaturedProperties();
     }),
     
+    getLocations: publicProcedure.query(async () => {
+      return await db.getUniqueLocations();
+    }),
+    
     search: publicProcedure
       .input(
         z.object({

@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { trpc } from "@/lib/trpc";
 
 interface LocationSelectProps {
   value: string;
@@ -21,57 +22,75 @@ export default function LocationSelect({
   placeholder = "Select Location",
   className,
 }: LocationSelectProps) {
+  // Fetch unique locations from database
+  const { data: locations = [], isLoading } = trpc.properties.getLocations.useQuery();
+
+  // Group locations intelligently
+  const groupedLocations = {
+    puneZones: [] as string[],
+    india: [] as string[],
+    international: [] as string[],
+  };
+
+  locations.forEach((location) => {
+    if (location.startsWith("Pune -")) {
+      groupedLocations.puneZones.push(location);
+    } else if (location.includes("UAE") || location.includes("Dubai") || location.includes("Abu Dhabi") || location.includes("Sharjah")) {
+      groupedLocations.international.push(location);
+    } else {
+      // Check if it's a Pune-related location (Purandar, Pimpri-Chinchwad, etc.)
+      const puneRelated = ["Purandar", "Pimpri-Chinchwad", "Pune"];
+      if (puneRelated.some(p => location.includes(p))) {
+        groupedLocations.puneZones.push(location);
+      } else {
+        groupedLocations.india.push(location);
+      }
+    }
+  });
+
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select value={value} onValueChange={onValueChange} disabled={isLoading}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={isLoading ? "Loading..." : placeholder} />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">All Locations</SelectItem>
         
         {/* Pune Zones Group */}
-        <SelectGroup>
-          <SelectLabel className="font-semibold text-primary">Pune Zones</SelectLabel>
-          <SelectItem value="Pune - East Zone">Pune - East Zone</SelectItem>
-          <SelectItem value="Pune - West Zone">Pune - West Zone</SelectItem>
-          <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
-          <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
-          <SelectItem value="Pune - Pimpri-Chinchwad">Pune - Pimpri-Chinchwad</SelectItem>
-          <SelectItem value="Purandar">Purandar</SelectItem>
-          <SelectItem value="Pune">Pune (General)</SelectItem>
-        </SelectGroup>
+        {groupedLocations.puneZones.length > 0 && (
+          <SelectGroup>
+            <SelectLabel className="font-semibold text-primary">Pune Zones</SelectLabel>
+            {groupedLocations.puneZones.map((location) => (
+              <SelectItem key={location} value={location}>
+                {location}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
         
-        {/* Major Indian Cities Group */}
-        <SelectGroup>
-          <SelectLabel className="font-semibold text-primary">India</SelectLabel>
-          <SelectItem value="Mumbai">Mumbai</SelectItem>
-          <SelectItem value="Delhi NCR">Delhi NCR</SelectItem>
-          <SelectItem value="Bangalore">Bangalore</SelectItem>
-          <SelectItem value="Hyderabad">Hyderabad</SelectItem>
-          <SelectItem value="Chennai">Chennai</SelectItem>
-          <SelectItem value="Kolkata">Kolkata</SelectItem>
-          <SelectItem value="Ahmedabad">Ahmedabad</SelectItem>
-          <SelectItem value="Surat">Surat</SelectItem>
-          <SelectItem value="Jaipur">Jaipur</SelectItem>
-          <SelectItem value="Lucknow">Lucknow</SelectItem>
-          <SelectItem value="Nagpur">Nagpur</SelectItem>
-          <SelectItem value="Indore">Indore</SelectItem>
-          <SelectItem value="Thane">Thane</SelectItem>
-          <SelectItem value="Bhopal">Bhopal</SelectItem>
-          <SelectItem value="Visakhapatnam">Visakhapatnam</SelectItem>
-          <SelectItem value="Patna">Patna</SelectItem>
-          <SelectItem value="Vadodara">Vadodara</SelectItem>
-          <SelectItem value="Ghaziabad">Ghaziabad</SelectItem>
-          <SelectItem value="Ludhiana">Ludhiana</SelectItem>
-        </SelectGroup>
+        {/* Indian Cities Group */}
+        {groupedLocations.india.length > 0 && (
+          <SelectGroup>
+            <SelectLabel className="font-semibold text-primary">India</SelectLabel>
+            {groupedLocations.india.map((location) => (
+              <SelectItem key={location} value={location}>
+                {location}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
         
         {/* International Group */}
-        <SelectGroup>
-          <SelectLabel className="font-semibold text-primary">International</SelectLabel>
-          <SelectItem value="Dubai, UAE">Dubai, UAE</SelectItem>
-          <SelectItem value="Abu Dhabi, UAE">Abu Dhabi, UAE</SelectItem>
-          <SelectItem value="Sharjah, UAE">Sharjah, UAE</SelectItem>
-        </SelectGroup>
+        {groupedLocations.international.length > 0 && (
+          <SelectGroup>
+            <SelectLabel className="font-semibold text-primary">International</SelectLabel>
+            {groupedLocations.international.map((location) => (
+              <SelectItem key={location} value={location}>
+                {location}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
       </SelectContent>
     </Select>
   );

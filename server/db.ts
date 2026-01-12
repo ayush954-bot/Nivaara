@@ -109,6 +109,22 @@ export async function getFeaturedProperties() {
   return db.select().from(properties).where(eq(properties.featured, true)).orderBy(desc(properties.createdAt));
 }
 
+export async function getUniqueLocations() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  // Get all distinct locations from properties
+  const result = await db.selectDistinct({ location: properties.location }).from(properties);
+  
+  // Extract and sort locations
+  const locations = result
+    .map(r => r.location)
+    .filter(loc => loc && loc.trim() !== '')
+    .sort();
+  
+  return locations;
+}
+
 export async function searchProperties(filters: {
   location?: string;
   propertyType?: string;

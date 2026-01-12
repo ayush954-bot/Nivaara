@@ -956,3 +956,10 @@
 - [x] Enhance phone number animation to be more visible (currently only golden color, no pulse) ✅
 - [x] Make phone icon pulse animation more prominent ✅
 - [x] Test both fixes work correctly ✅
+
+## Dynamic Location Filter (Jan 12, 2026)
+- [x] Create API endpoint to fetch unique locations from properties database ✅
+- [x] Update LocationSelect component to fetch and display dynamic locations ✅
+- [x] Group locations intelligently (Pune areas, other Indian cities, international) ✅
+- [x] Ensure custom locations added via PropertyForm appear automatically in filter ✅
+- [x] Test that new locations appear without code changes ✅
