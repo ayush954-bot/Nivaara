@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
+import { groupLocations } from "@/lib/locations";
 
 interface LocationSelectProps {
   value: string;
@@ -25,28 +26,8 @@ export default function LocationSelect({
   // Fetch unique locations from database
   const { data: locations = [], isLoading } = trpc.properties.getLocations.useQuery();
 
-  // Group locations intelligently
-  const groupedLocations = {
-    puneZones: [] as string[],
-    india: [] as string[],
-    international: [] as string[],
-  };
-
-  locations.forEach((location) => {
-    if (location.startsWith("Pune -")) {
-      groupedLocations.puneZones.push(location);
-    } else if (location.includes("UAE") || location.includes("Dubai") || location.includes("Abu Dhabi") || location.includes("Sharjah")) {
-      groupedLocations.international.push(location);
-    } else {
-      // Check if it's a Pune-related location (Purandar, Pimpri-Chinchwad, etc.)
-      const puneRelated = ["Purandar", "Pimpri-Chinchwad", "Pune"];
-      if (puneRelated.some(p => location.includes(p))) {
-        groupedLocations.puneZones.push(location);
-      } else {
-        groupedLocations.india.push(location);
-      }
-    }
-  });
+  // Use smart grouping function
+  const groupedLocations = groupLocations(locations);
 
   return (
     <Select value={value} onValueChange={onValueChange} disabled={isLoading}>

@@ -967,3 +967,11 @@
 ## Smart International User Message (Jan 12, 2026)
 - [x] Update message to always show country name for international users ✅
 - [x] Message: "Welcome from [Country]! We currently don't have properties in your area, however we'd love you to explore our other properties" ✅
+
+## Geolocation & Smart Location Grouping (Jan 12, 2026)
+- [x] Debug why Barcelona VPN not triggering international message ✅
+- [x] Switch from GPS-based to IP-based geolocation for VPN detection ✅
+- [x] Implement smart Pune area recognition (Kharadi, Baner, Hinjewadi, Wakad, Viman Nagar, etc.) ✅
+- [x] Move Kharadi from "India" group to "Pune Zones" group ✅
+- [x] Create comprehensive list of Pune neighborhoods for proper categorization ✅
+- [x] Test international message with VPN from different countries ✅

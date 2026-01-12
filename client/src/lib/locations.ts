@@ -141,3 +141,92 @@ export function getAllLocationsWithAreas(): string[] {
     ...INTERNATIONAL_LOCATIONS.sort(),
   ];
 }
+
+// International location patterns
+const INTERNATIONAL_PATTERNS = [
+  "UAE",
+  "Dubai",
+  "Abu Dhabi",
+  "Sharjah",
+  "USA",
+  "UK",
+  "Singapore",
+  "Canada",
+  "Australia",
+  "Europe",
+  "London",
+  "New York",
+  "Toronto",
+];
+
+export interface GroupedLocations {
+  puneZones: string[];
+  india: string[];
+  international: string[];
+}
+
+/**
+ * Intelligently categorizes a location into Pune Zones, India, or International
+ */
+export function categorizeLocation(location: string): "pune" | "india" | "international" {
+  const locationLower = location.toLowerCase();
+  
+  // Check if it's an international location
+  if (INTERNATIONAL_PATTERNS.some(pattern => locationLower.includes(pattern.toLowerCase()))) {
+    return "international";
+  }
+  
+  // Check if location starts with "Pune" or is in PUNE_AREAS
+  if (locationLower.startsWith("pune") || locationLower === "purandar") {
+    return "pune";
+  }
+  
+  // Check if it's a known Pune area
+  const isPuneArea = PUNE_AREAS.some(area => {
+    const areaLower = area.toLowerCase();
+    return locationLower === areaLower || 
+           locationLower.includes(areaLower) || 
+           areaLower.includes(locationLower);
+  });
+  
+  if (isPuneArea) {
+    return "pune";
+  }
+  
+  // Default to India for other Indian cities
+  return "india";
+}
+
+/**
+ * Groups an array of locations into Pune Zones, India, and International
+ */
+export function groupLocations(locations: string[]): GroupedLocations {
+  const grouped: GroupedLocations = {
+    puneZones: [],
+    india: [],
+    international: [],
+  };
+
+  locations.forEach((location) => {
+    const category = categorizeLocation(location);
+    
+    switch (category) {
+      case "pune":
+        grouped.puneZones.push(location);
+        break;
+      case "international":
+        grouped.international.push(location);
+        break;
+      case "india":
+        grouped.india.push(location);
+        break;
+    }
+  });
+
+  // Sort each group alphabetically
+  grouped.puneZones.sort();
+  grouped.india.sort();
+  grouped.international.sort();
+
+  return grouped;
+}
