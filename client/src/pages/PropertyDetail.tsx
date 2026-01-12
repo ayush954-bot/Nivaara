@@ -223,7 +223,7 @@ export default function PropertyDetail() {
                       size="lg"
                       asChild
                     >
-                      <a href="tel:+919876543210">
+                      <a href="tel:+919764515697">
                         <Phone className="h-5 w-5 mr-2" />
                         Call Now
                       </a>

@@ -853,3 +853,7 @@
 - [x] Implement 30-minute session timeout for staff JWT tokens ✅
 - [x] Add auto-logout when session expires ✅
 - [x] Test logout functionality and timeout behavior ✅
+
+
+## Update Phone Number (Jan 12, 2026)
+- [x] Update "Call Now" phone number in property detail page to +91 9764515697 ✅
