@@ -835,3 +835,10 @@
 - [x] Fix button overflow in property cards (View/Edit/Delete buttons cut off on right side) ✅
 - [x] Fix persistent "Access Denied" error when clicking Edit or Delete buttons on properties ✅
 - [x] Verify staff authentication is working for all property actions ✅
+
+
+## New Issues - Featured Properties & Detail Page (Jan 12, 2026)
+- [x] Add default placeholder image for properties without images in featured section ✅
+- [x] Create property detail page route (404 error when clicking "View Details") ✅
+- [x] Test featured properties display with and without images ✅
+- [x] Test property detail page with all property types ✅
