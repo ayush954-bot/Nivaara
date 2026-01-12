@@ -37,6 +37,8 @@ export default function LocationSelect({
           <SelectItem value="Pune - North Zone">Pune - North Zone</SelectItem>
           <SelectItem value="Pune - South Zone">Pune - South Zone</SelectItem>
           <SelectItem value="Pune - Pimpri-Chinchwad">Pune - Pimpri-Chinchwad</SelectItem>
+          <SelectItem value="Purandar">Purandar</SelectItem>
+          <SelectItem value="Pune">Pune (General)</SelectItem>
         </SelectGroup>
         
         {/* Major Indian Cities Group */}

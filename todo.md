@@ -948,3 +948,11 @@
 - [x] For India users: Show all properties (no location detection message) ✅
 - [x] For international users: Show informational message if properties exist in their country ✅
 - [x] Keep location detection API but only use for display message, not filtering ✅
+
+## Purandar Filter & Phone Animation Fix (Jan 12, 2026)
+- [x] Check how Purandar location appears in location filter dropdown ✅
+- [x] Add Purandar to location options if missing ✅
+- [x] Verify Purandar properties are filterable ✅
+- [x] Enhance phone number animation to be more visible (currently only golden color, no pulse) ✅
+- [x] Make phone icon pulse animation more prominent ✅
+- [x] Test both fixes work correctly ✅

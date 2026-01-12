@@ -55,8 +55,12 @@ export default function Header() {
               href="tel:+919764515697"
               className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-all border-l border-border pl-6 relative group"
             >
-              <Phone className="h-4 w-4 animate-pulse" />
-              <span className="hidden xl:inline bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent">+91 9764515697</span>
+              <div className="relative">
+                <Phone className="h-4 w-4 animate-pulse" />
+                {/* Pulsing ring effect */}
+                <span className="absolute inset-0 rounded-full bg-primary/30 animate-ping"></span>
+              </div>
+              <span className="hidden xl:inline bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent animate-pulse">+91 9764515697</span>
               {/* Subtle glow effect */}
               <span className="absolute inset-0 bg-primary/10 rounded-md blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10"></span>
             </a>
