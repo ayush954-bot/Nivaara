@@ -925,3 +925,12 @@
 - [x] Ensure consistent spelling across all properties ✅
 - [x] Update existing properties to use standardized locations ✅
 - [x] Make filters work accurately with standardized data ✅
+
+
+## Corrections - User Feedback (Jan 12, 2026)
+- [x] Remove floating call button from bottom-right corner ✅
+- [x] Add call button with phone number (+91 9764515697) in header after FAQ ✅
+- [x] Add WhatsApp icon/button next to call button in header ✅
+- [x] Restore inquiry form (should not have been replaced) - Never replaced, still intact ✅
+- [x] Fix location auto-detection to only show country and city (not pre-fill entire location field) - Already correct ✅
+- [x] Ensure filters work with auto-detected location - Working correctly ✅

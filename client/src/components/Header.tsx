@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { APP_LOGO, APP_TITLE } from "@/const";
 
 export default function Header() {
@@ -36,7 +37,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden lg:flex items-center space-x-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -48,10 +49,31 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            
+            {/* Call Button */}
+            <a
+              href="tel:+919764515697"
+              className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors border-l border-border pl-6"
+            >
+              <Phone className="h-4 w-4" />
+              <span className="hidden xl:inline">+91 9764515697</span>
+            </a>
+            
+            {/* WhatsApp Button */}
+            <a
+              href="https://wa.me/919764515697?text=Hi%2C%20I%27m%20interested%20in%20your%20properties"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm font-medium text-green-600 hover:text-green-700 transition-colors"
+              title="Chat on WhatsApp"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span className="hidden xl:inline">WhatsApp</span>
+            </a>
           </nav>
 
           {/* CTA Button */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Button asChild>
               <Link href="/contact">Get Started</Link>
             </Button>
@@ -59,7 +81,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -87,6 +109,25 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
+              {/* Call and WhatsApp in Mobile */}
+              <div className="flex gap-3 mt-4 pt-4 border-t border-border">
+                <a
+                  href="tel:+919764515697"
+                  className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors py-2 px-4 border border-border rounded-md"
+                >
+                  <Phone className="h-4 w-4" />
+                  <span>Call Now</span>
+                </a>
+                <a
+                  href="https://wa.me/919764515697?text=Hi%2C%20I%27m%20interested%20in%20your%20properties"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-green-600 hover:text-green-700 transition-colors py-2 px-4 border border-green-600 rounded-md"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
               <Button asChild className="mt-2">
                 <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
                   Get Started
