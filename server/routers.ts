@@ -109,7 +109,7 @@ export const appRouter = router({
           z.object({
             title: z.string().min(1),
             description: z.string().min(1),
-            propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental"]),
+            propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]),
             status: z.enum(["Under-Construction", "Ready"]),
             location: z.string().min(1),
             area: z.string().optional(),
@@ -140,7 +140,7 @@ export const appRouter = router({
             id: z.number(),
             title: z.string().min(1).optional(),
             description: z.string().min(1).optional(),
-            propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental"]).optional(),
+            propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]).optional(),
             status: z.enum(["Under-Construction", "Ready"]).optional(),
             location: z.string().min(1).optional(),
             area: z.string().optional(),
@@ -197,7 +197,7 @@ export const appRouter = router({
               z.object({
                 title: z.string().min(1),
                 description: z.string().min(1),
-                propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental"]),
+                propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]),
                 status: z.enum(["Under-Construction", "Ready"]),
                 location: z.string().min(1),
                 price: z.number(),

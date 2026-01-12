@@ -895,3 +895,33 @@
 - [x] Add staff management UI for admin users (view all staff, add, delete) ✅
 - [x] Ensure only admin (OAuth users) can access staff management ✅
 - [x] Test admin login flow and staff management features ✅
+
+
+## New Features - User Requested (Jan 12, 2026)
+
+### 1. Bank Auction Property Type
+- [x] Add "Bank Auction" to property type enum in database schema ✅
+- [x] Update PropertyForm to include Bank Auction option ✅
+- [x] Update property type filters on homepage and properties page ✅
+- [x] Test Bank Auction properties in all filters and searches ✅
+
+### 2. Professional Floating Call Button
+- [x] Create professional "Call Now" floating button for homepage ✅
+- [x] Make it mobile-responsive and non-intrusive ✅
+- [x] Add smooth animations/pulsing effect ✅
+- [x] Position in bottom-right corner (not blocking content) ✅
+- [x] Link to phone number +91 9764515697 ✅
+
+### 3. Auto-Detect User Location
+- [x] Implement browser geolocation API ✅
+- [x] Auto-detect user's city/country ✅
+- [x] Pre-fill location filter on homepage ✅
+- [x] Handle permission denied gracefully ✅
+- [x] Show loading state while detecting ✅
+
+### 4. Standardize Location Input
+- [x] Create predefined list of Indian cities and international locations ✅
+- [x] Replace free-text city/area input with dropdown/autocomplete ✅
+- [x] Ensure consistent spelling across all properties ✅
+- [x] Update existing properties to use standardized locations ✅
+- [x] Make filters work accurately with standardized data ✅

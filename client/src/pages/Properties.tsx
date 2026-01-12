@@ -122,6 +122,7 @@ export default function Properties() {
                   <SelectItem value="Office">Office</SelectItem>
                   <SelectItem value="Land">Land</SelectItem>
                   <SelectItem value="Rental">Rental</SelectItem>
+                  <SelectItem value="Bank Auction">Bank Auction</SelectItem>
                 </SelectContent>
               </Select>
             </div>

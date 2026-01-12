@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,9 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
 import LocationSelect from "@/components/LocationSelect";
+import { useGeolocation } from "@/hooks/useGeolocation";
 
 interface PropertySearchProps {
   variant?: "hero" | "compact";
@@ -18,12 +19,26 @@ interface PropertySearchProps {
 
 export default function PropertySearch({ variant = "hero" }: PropertySearchProps) {
   const [, setLocation] = useLocation();
+  const { city, country, isLoading: geoLoading } = useGeolocation();
   const [searchParams, setSearchParams] = useState({
     location: "",
     propertyType: "",
     budget: "",
     bedrooms: "",
   });
+
+  // Auto-fill location when geolocation is detected
+  useEffect(() => {
+    if (city && !searchParams.location) {
+      // Try to match detected city with our location options
+      // For Indian cities, use city name directly
+      // For international, use country name
+      const detectedLocation = country === "India" ? city : country;
+      if (detectedLocation) {
+        setSearchParams(prev => ({ ...prev, location: detectedLocation }));
+      }
+    }
+  }, [city, country, searchParams.location]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -78,12 +93,12 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="apartment">Apartment</SelectItem>
-              <SelectItem value="villa">Villa/House</SelectItem>
-              <SelectItem value="land">Land/Plot</SelectItem>
-              <SelectItem value="commercial">Commercial</SelectItem>
-              <SelectItem value="office">Office Space</SelectItem>
-              <SelectItem value="shop">Shop/Showroom</SelectItem>
+              <SelectItem value="Flat">Flat/Apartment</SelectItem>
+              <SelectItem value="Shop">Shop</SelectItem>
+              <SelectItem value="Office">Office</SelectItem>
+              <SelectItem value="Land">Land/Plot</SelectItem>
+              <SelectItem value="Rental">Rental</SelectItem>
+              <SelectItem value="Bank Auction">Bank Auction</SelectItem>
             </SelectContent>
           </Select>
         </div>

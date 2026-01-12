@@ -1,0 +1,1 @@
+ALTER TABLE `properties` MODIFY COLUMN `propertyType` enum('Flat','Shop','Office','Land','Rental','Bank Auction') NOT NULL;

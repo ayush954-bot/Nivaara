@@ -16,6 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, AlertCircle } from "lucide-react";
+import { getAllLocationsWithAreas } from "@/lib/locations";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -44,7 +45,7 @@ export default function PropertyForm() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    propertyType: "Flat" as "Flat" | "Shop" | "Office" | "Land" | "Rental",
+    propertyType: "Flat" as "Flat" | "Shop" | "Office" | "Land" | "Rental" | "Bank Auction",
     status: "Ready" as "Under-Construction" | "Ready",
     location: "",
     area: "",
@@ -199,6 +200,7 @@ export default function PropertyForm() {
                       <SelectItem value="Office">Office</SelectItem>
                       <SelectItem value="Land">Land/Plot</SelectItem>
                       <SelectItem value="Rental">Rental</SelectItem>
+                      <SelectItem value="Bank Auction">Bank Auction</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -231,27 +233,42 @@ export default function PropertyForm() {
 
               <div>
                 <Label htmlFor="location">City/Location *</Label>
-                <Input
-                  id="location"
+                <Select
                   value={formData.location}
-                  onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, location: value })
                   }
-                  placeholder="e.g., Pune, Mumbai, Dubai"
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {getAllLocationsWithAreas().map((location) => (
+                      <SelectItem key={location} value={location}>
+                        {location}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Select from predefined locations to ensure consistency
+                </p>
               </div>
 
               <div>
-                <Label htmlFor="area">Specific Area</Label>
+                <Label htmlFor="area">Additional Area Details (Optional)</Label>
                 <Input
                   id="area"
                   value={formData.area}
                   onChange={(e) =>
                     setFormData({ ...formData, area: e.target.value })
                   }
-                  placeholder="e.g., Kharadi, Viman Nagar"
+                  placeholder="e.g., Near Airport, Sector 5"
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add extra location details if needed
+                </p>
               </div>
             </div>
 

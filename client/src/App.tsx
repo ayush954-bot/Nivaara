@@ -15,6 +15,7 @@ import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Locations from "./pages/Locations";
 import ChatWidget from "./components/ChatWidget";
+import FloatingCallButton from "./components/FloatingCallButton";
 import AdminDashboard from "./pages/admin/Dashboard";
 import PropertyForm from "./pages/admin/PropertyForm";
 import BulkImport from "./pages/admin/BulkImport";
@@ -49,6 +50,7 @@ function Router() {
       </main>
       <Footer />
       <ChatWidget />
+      <FloatingCallButton />
     </div>
   );
 }
