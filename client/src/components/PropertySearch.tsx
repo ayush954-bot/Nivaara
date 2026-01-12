@@ -27,18 +27,8 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
     bedrooms: "",
   });
 
-  // Auto-fill location when geolocation is detected
-  useEffect(() => {
-    if (city && !searchParams.location) {
-      // Try to match detected city with our location options
-      // For Indian cities, use city name directly
-      // For international, use country name
-      const detectedLocation = country === "India" ? city : country;
-      if (detectedLocation) {
-        setSearchParams(prev => ({ ...prev, location: detectedLocation }));
-      }
-    }
-  }, [city, country, searchParams.location]);
+  // Show informational message for international users (no auto-filtering)
+  const showInternationalMessage = country && country !== "India";
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -54,6 +44,16 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
 
   return (
     <div className={`${isHero ? "bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8" : "bg-card rounded-lg shadow-md p-4"}`}>
+      {/* International User Message */}
+      {showInternationalMessage && country && (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-2">
+          <MapPin className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-foreground">
+            <span className="font-semibold">Welcome from {country}!</span> We have properties in your area. Explore our international listings or contact us for personalized assistance.
+          </p>
+        </div>
+      )}
+      
       <div className="flex items-center gap-2 mb-4">
         <Search className="h-5 w-5 text-primary" />
         <h3 className={`${isHero ? "text-xl" : "text-lg"} font-semibold text-foreground`}>

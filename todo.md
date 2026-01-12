@@ -942,3 +942,9 @@
 - [x] Add "Other/Custom Location" option in PropertyForm location dropdown ✅
 - [x] Allow staff to enter custom location if not in predefined list ✅
 - [x] Ensure custom locations work with filters ✅
+
+## Location Detection Update (Jan 12, 2026)
+- [x] Remove auto-filtering of properties based on detected location ✅
+- [x] For India users: Show all properties (no location detection message) ✅
+- [x] For international users: Show informational message if properties exist in their country ✅
+- [x] Keep location detection API but only use for display message, not filtering ✅
