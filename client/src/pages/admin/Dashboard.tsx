@@ -23,8 +23,8 @@ import { useLocation } from "wouter";
 export default function AdminDashboard() {
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
   
-  // Enable session timeout for staff users
-  useSessionTimeout(user?.type || null);
+  // Enable session timeout for staff users (only after auth is loaded)
+  useSessionTimeout(!authLoading && user ? user.type : null);
   const { data: properties = [], refetch: refetchProperties } = trpc.admin.properties.list.useQuery(undefined, {
     enabled: canManageProperties,
   });

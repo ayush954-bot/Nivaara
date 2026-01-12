@@ -26,8 +26,8 @@ export default function PropertyForm() {
 
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
   
-  // Enable session timeout for staff users
-  useSessionTimeout(user?.type || null);
+  // Enable session timeout for staff users (only after auth is loaded)
+  useSessionTimeout(!authLoading && user ? user.type : null);
   const { data: property } = trpc.properties.getById.useQuery(
     { id: propertyId! },
     { enabled: isEdit && !!propertyId }

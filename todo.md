@@ -861,5 +861,5 @@
 
 ## CRITICAL: Staff Login Error (Jan 12, 2026)
 - [x] Fix React error #310 (useSyncExternalStore) in staff login/dashboard ✅
-- [x] Fix useSessionTimeout hook causing render errors ✅
-- [x] Prevent automatic redirect to /admin/dashboard before authentication ✅
+- [x] Fix useSessionTimeout hook causing render errors - Moved to conditional render ✅
+- [x] Prevent hook from being called before authentication completes ✅
