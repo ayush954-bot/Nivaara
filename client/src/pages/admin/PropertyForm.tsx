@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,7 +23,7 @@ export default function PropertyForm() {
   const propertyId = params.id ? parseInt(params.id) : null;
   const isEdit = !!propertyId;
 
-  const { data: user } = trpc.auth.me.useQuery();
+  const { user, canManageProperties, isLoading: authLoading } = useAuth();
   const { data: property } = trpc.properties.getById.useQuery(
     { id: propertyId! },
     { enabled: isEdit && !!propertyId }
@@ -108,7 +109,11 @@ export default function PropertyForm() {
     }
   };
 
-  if (!user || user.role !== "admin") {
+  if (authLoading) {
+    return <div className="container py-16 text-center">Loading...</div>;
+  }
+
+  if (!canManageProperties) {
     return (
       <div className="container py-16">
         <Card className="max-w-md mx-auto">

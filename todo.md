@@ -829,3 +829,9 @@
 - [x] Change "Admin Dashboard" text to "Property Management" for staff users ✅
 - [x] Fix "Access Denied" error when staff tries to add/edit/delete properties ✅
 - [x] Update admin role (OAuth users) to have all staff permissions plus staff management ✅
+
+
+## Remaining Issues - Jan 12, 2026 (Second Report)
+- [x] Fix button overflow in property cards (View/Edit/Delete buttons cut off on right side) ✅
+- [x] Fix persistent "Access Denied" error when clicking Edit or Delete buttons on properties ✅
+- [x] Verify staff authentication is working for all property actions ✅

@@ -181,7 +181,7 @@ export default function AdminDashboard() {
               {properties.map((property) => (
                 <div
                   key={property.id}
-                  className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary/50 transition-colors"
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border rounded-lg hover:bg-secondary/50 transition-colors"
                 >
                   {property.imageUrl && (
                     <img
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                       className="w-24 h-24 object-cover rounded"
                     />
                   )}
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold">{property.title}</h3>
                       {property.featured && (
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
                       ₹{Number(property.price).toLocaleString("en-IN")}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-shrink-0">
                     <Button variant="outline" size="sm" asChild>
                       <Link href={`/properties/${property.id}`}>
                         <Eye className="h-4 w-4" />
