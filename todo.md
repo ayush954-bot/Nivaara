@@ -881,3 +881,10 @@
 - [x] Check tRPC client setup for SSR/hydration issues ✅
 - [x] Fix useSyncExternalStore error at root cause - Moved useLocation hook before early returns ✅
 - [x] Verify staff login works end-to-end - NO ERRORS! ✅
+
+
+## OAuth Login 404 Error (Jan 12, 2026)
+- [x] Check OAuth login route configuration ✅
+- [x] Fix /api/login endpoint returning 404 - Changed to getLoginUrl() ✅
+- [x] Add missing /api/oauth/logout route ✅
+- [x] Test OAuth login/logout flow end-to-end ✅

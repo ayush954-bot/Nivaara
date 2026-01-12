@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Lock, User, AlertCircle, LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 export default function StaffLogin() {
   const [location, setLocation] = useLocation();
@@ -55,8 +56,8 @@ export default function StaffLogin() {
   };
 
   const handleOAuthLogin = () => {
-    // Redirect to OAuth login endpoint
-    window.location.href = "/api/login";
+    // Redirect to Manus OAuth portal
+    window.location.href = getLoginUrl();
   };
 
   if (authLoading) {

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
+import { getLoginUrl } from "@/const";
 
 export default function AdminDashboard() {
   // ALL HOOKS MUST BE AT THE TOP - BEFORE ANY CONDITIONAL RETURNS
@@ -58,7 +59,7 @@ export default function AdminDashboard() {
             </p>
             <div className="space-y-2">
               <Button asChild className="w-full">
-                <a href="/api/oauth/login">Sign In as Admin (Owner)</a>
+                <a href={getLoginUrl()}>Sign In as Admin (Owner)</a>
               </Button>
               <Button asChild variant="outline" className="w-full">
                 <Link href="/staff/login">Sign In as Staff</Link>

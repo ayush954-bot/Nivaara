@@ -10,6 +10,12 @@ function getQueryParam(req: Request, key: string): string | undefined {
 }
 
 export function registerOAuthRoutes(app: Express) {
+  // OAuth logout route
+  app.get("/api/oauth/logout", async (req: Request, res: Response) => {
+    res.clearCookie(COOKIE_NAME);
+    res.redirect(302, "/");
+  });
+
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
     const state = getQueryParam(req, "state");
