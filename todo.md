@@ -874,3 +874,10 @@
 - [x] Remove useSessionTimeout hook from PropertyForm component ✅
 - [x] Implement session timeout on server-side only (JWT expiration handles it) ✅
 - [x] Remove useSessionTimeout.ts file ✅
+
+
+## CRITICAL: React Error #310 Still Persisting (Jan 12, 2026)
+- [x] Test staff login in browser to reproduce error ✅
+- [x] Check tRPC client setup for SSR/hydration issues ✅
+- [x] Fix useSyncExternalStore error at root cause - Moved useLocation hook before early returns ✅
+- [x] Verify staff login works end-to-end - NO ERRORS! ✅

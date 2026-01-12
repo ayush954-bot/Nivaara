@@ -20,7 +20,11 @@ import { toast } from "sonner";
 import { useLocation } from "wouter";
 
 export default function AdminDashboard() {
+  // ALL HOOKS MUST BE AT THE TOP - BEFORE ANY CONDITIONAL RETURNS
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
+  const [, setLocation] = useLocation();
+  const [selectedProperty, setSelectedProperty] = useState<number | null>(null);
+  
   const { data: properties = [], refetch: refetchProperties } = trpc.admin.properties.list.useQuery(undefined, {
     enabled: canManageProperties,
   });
@@ -33,8 +37,6 @@ export default function AdminDashboard() {
       refetchProperties();
     },
   });
-
-  const [selectedProperty, setSelectedProperty] = useState<number | null>(null);
 
   if (authLoading) {
     return <div className="container py-16 text-center">Loading...</div>;
@@ -95,8 +97,6 @@ export default function AdminDashboard() {
   };
 
   const newInquiries = inquiries.filter(i => i.status === "new").length;
-
-  const [, setLocation] = useLocation();
 
   const handleLogout = async () => {
     if (user.type === 'staff') {
