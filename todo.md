@@ -934,3 +934,11 @@
 - [x] Restore inquiry form (should not have been replaced) - Never replaced, still intact ✅
 - [x] Fix location auto-detection to only show country and city (not pre-fill entire location field) - Already correct ✅
 - [x] Ensure filters work with auto-detected location - Working correctly ✅
+
+
+## Phone Number Visibility & Custom Locations (Jan 12, 2026)
+- [x] Add animation or highlighting to phone number in header to draw attention ✅
+- [x] Make phone number more prominent/visible ✅
+- [x] Add "Other/Custom Location" option in PropertyForm location dropdown ✅
+- [x] Allow staff to enter custom location if not in predefined list ✅
+- [x] Ensure custom locations work with filters ✅

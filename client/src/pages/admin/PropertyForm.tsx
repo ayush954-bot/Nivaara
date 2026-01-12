@@ -59,8 +59,14 @@ export default function PropertyForm() {
     featured: false,
   });
 
+  const [showCustomLocation, setShowCustomLocation] = useState(false);
+  const [customLocation, setCustomLocation] = useState("");
+
   useEffect(() => {
     if (property) {
+      const allLocations = getAllLocationsWithAreas();
+      const isCustomLocation = !allLocations.includes(property.location);
+      
       setFormData({
         title: property.title,
         description: property.description,
@@ -77,6 +83,12 @@ export default function PropertyForm() {
         imageUrl: property.imageUrl || "",
         featured: property.featured,
       });
+      
+      // If editing a property with custom location, show custom input
+      if (isCustomLocation) {
+        setShowCustomLocation(true);
+        setCustomLocation(property.location);
+      }
     }
   }, [property]);
 
@@ -233,27 +245,68 @@ export default function PropertyForm() {
 
               <div>
                 <Label htmlFor="location">City/Location *</Label>
-                <Select
-                  value={formData.location}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, location: value })
-                  }
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select location" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
-                    {getAllLocationsWithAreas().map((location) => (
-                      <SelectItem key={location} value={location}>
-                        {location}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Select from predefined locations to ensure consistency
-                </p>
+                {!showCustomLocation ? (
+                  <>
+                    <Select
+                      value={formData.location}
+                      onValueChange={(value) => {
+                        if (value === "__custom__") {
+                          setShowCustomLocation(true);
+                          setFormData({ ...formData, location: "" });
+                        } else {
+                          setFormData({ ...formData, location: value });
+                        }
+                      }}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select location" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px]">
+                        {getAllLocationsWithAreas().map((location) => (
+                          <SelectItem key={location} value={location}>
+                            {location}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="__custom__" className="font-semibold text-primary">
+                          ➕ Add Custom Location
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Select from predefined locations or add a custom one
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex gap-2">
+                      <Input
+                        id="customLocation"
+                        value={customLocation}
+                        onChange={(e) => {
+                          setCustomLocation(e.target.value);
+                          setFormData({ ...formData, location: e.target.value });
+                        }}
+                        placeholder="Enter custom location (e.g., Nashik, Aurangabad)"
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          setShowCustomLocation(false);
+                          setCustomLocation("");
+                          setFormData({ ...formData, location: "" });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                    <p className="text-xs text-amber-600 mt-1">
+                      ⚠️ Custom location entered. Make sure spelling is correct for filters to work properly.
+                    </p>
+                  </>
+                )}
               </div>
 
               <div>
