@@ -963,3 +963,7 @@
 - [x] Group locations intelligently (Pune areas, other Indian cities, international) ✅
 - [x] Ensure custom locations added via PropertyForm appear automatically in filter ✅
 - [x] Test that new locations appear without code changes ✅
+
+## Smart International User Message (Jan 12, 2026)
+- [x] Update message to always show country name for international users ✅
+- [x] Message: "Welcome from [Country]! We currently don't have properties in your area, however we'd love you to explore our other properties" ✅

@@ -49,7 +49,7 @@ export default function PropertySearch({ variant = "hero" }: PropertySearchProps
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-2">
           <MapPin className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-foreground">
-            <span className="font-semibold">Welcome from {country}!</span> We have properties in your area. Explore our international listings or contact us for personalized assistance.
+            <span className="font-semibold">Welcome from {country}!</span> We currently don't have properties in your area, however we'd love you to explore our other properties.
           </p>
         </div>
       )}
