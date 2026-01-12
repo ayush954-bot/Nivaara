@@ -124,11 +124,12 @@ export const appRouter = router({
           })
         )
         .mutation(async ({ input, ctx }) => {
-          const isAdmin = ctx.user?.role === "admin";
-          const isPropertyManager = ctx.staff?.role === "property_manager";
+          // Allow OAuth admin users OR staff with property_manager role
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
           
-          if (!isAdmin && !isPropertyManager) {
-            throw new Error("Unauthorized: Admin or property manager access required");
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required to manage properties.");
           }
           return await db.createProperty(input as any);
         }),
@@ -154,11 +155,12 @@ export const appRouter = router({
           })
         )
         .mutation(async ({ input, ctx }) => {
-          const isAdmin = ctx.user?.role === "admin";
-          const isPropertyManager = ctx.staff?.role === "property_manager";
+          // Allow OAuth admin users OR staff with property_manager role
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
           
-          if (!isAdmin && !isPropertyManager) {
-            throw new Error("Unauthorized: Admin or property manager access required");
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required to manage properties.");
           }
           const { id, ...updates } = input;
           return await db.updateProperty(id, updates as any);
@@ -167,22 +169,23 @@ export const appRouter = router({
       delete: publicProcedure
         .input(z.object({ id: z.number() }))
         .mutation(async ({ input, ctx }) => {
-          const isAdmin = ctx.user?.role === "admin";
-          const isPropertyManager = ctx.staff?.role === "property_manager";
+          // Allow OAuth admin users OR staff with property_manager role
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
           
-          if (!isAdmin && !isPropertyManager) {
-            throw new Error("Unauthorized: Admin or property manager access required");
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required to manage properties.");
           }
           return await db.deleteProperty(input.id);
         }),
 
       list: publicProcedure.query(async ({ ctx }) => {
-        // Check if user is admin (OAuth) OR staff with property_manager role
-        const isAdmin = ctx.user?.role === "admin";
-        const isPropertyManager = ctx.staff?.role === "property_manager";
+        // Allow OAuth admin users OR staff with property_manager role
+        const isOAuthAdmin = ctx.user?.role === "admin";
+        const isStaffPropertyManager = ctx.staff?.role === "property_manager";
         
-        if (!isAdmin && !isPropertyManager) {
-          throw new Error("Unauthorized: Admin or property manager access required");
+        if (!isOAuthAdmin && !isStaffPropertyManager) {
+          throw new Error("Admin access is required to manage properties.");
         }
         return await db.getAllProperties();
       }),
@@ -208,11 +211,12 @@ export const appRouter = router({
           })
         )
         .mutation(async ({ input, ctx }) => {
-          const isAdmin = ctx.user?.role === "admin";
-          const isPropertyManager = ctx.staff?.role === "property_manager";
+          // Allow OAuth admin users OR staff with property_manager role
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
           
-          if (!isAdmin && !isPropertyManager) {
-            throw new Error("Unauthorized: Admin or property manager access required");
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required to manage properties.");
           }
           return await db.bulkImportProperties(input.properties);
         }),
@@ -221,11 +225,12 @@ export const appRouter = router({
     // Inquiry Management
     inquiries: router({
       list: publicProcedure.query(async ({ ctx }) => {
-        const isAdmin = ctx.user?.role === "admin";
-        const isPropertyManager = ctx.staff?.role === "property_manager";
+        // Allow OAuth admin users OR staff with property_manager role
+        const isOAuthAdmin = ctx.user?.role === "admin";
+        const isStaffPropertyManager = ctx.staff?.role === "property_manager";
         
-        if (!isAdmin && !isPropertyManager) {
-          throw new Error("Unauthorized: Admin or property manager access required");
+        if (!isOAuthAdmin && !isStaffPropertyManager) {
+          throw new Error("Admin access is required to manage properties.");
         }
         return await db.getAllInquiries();
       }),
@@ -238,11 +243,12 @@ export const appRouter = router({
           })
         )
         .mutation(async ({ input, ctx }) => {
-          const isAdmin = ctx.user?.role === "admin";
-          const isPropertyManager = ctx.staff?.role === "property_manager";
+          // Allow OAuth admin users OR staff with property_manager role
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
           
-          if (!isAdmin && !isPropertyManager) {
-            throw new Error("Unauthorized: Admin or property manager access required");
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required to manage properties.");
           }
           return await db.updateInquiryStatus(input.id, input.status);
         }),

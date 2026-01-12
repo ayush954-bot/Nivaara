@@ -96,7 +96,7 @@ export default function AdminDashboard() {
   return (
     <div className="container py-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
+        <h1 className="text-4xl font-bold mb-2">{user.type === 'staff' ? 'Property Management' : 'Admin Dashboard'}</h1>
         <p className="text-muted-foreground">
           Welcome back, {user.name || (user.type === 'admin' ? user.email : user.username)}
         </p>
@@ -146,9 +146,9 @@ export default function AdminDashboard() {
       {/* Properties Management */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col gap-4">
             <CardTitle>Properties Management</CardTitle>
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Button asChild variant="outline">
                 <Link href="/admin/properties/bulk-import">
                   <Upload className="h-4 w-4 mr-2" />

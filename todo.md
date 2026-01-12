@@ -822,3 +822,10 @@
 - [x] Verify staff role has proper permissions - Updated all endpoints ✅
 - [ ] Test property management with staff account
 - [ ] Test mobile dashboard layout
+
+
+## Critical Fixes - User Reported Issues (Jan 12, 2026)
+- [x] Fix button alignment on mobile dashboard (buttons overlapping in screenshot) ✅
+- [x] Change "Admin Dashboard" text to "Property Management" for staff users ✅
+- [x] Fix "Access Denied" error when staff tries to add/edit/delete properties ✅
+- [x] Update admin role (OAuth users) to have all staff permissions plus staff management ✅
