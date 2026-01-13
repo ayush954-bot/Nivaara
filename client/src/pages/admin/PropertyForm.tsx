@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, AlertCircle } from "lucide-react";
 import { getAllLocationsWithAreas } from "@/lib/locations";
-import MapLocationPicker from "@/components/MapLocationPicker";
+import LocationAutocomplete from "@/components/LocationAutocomplete";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -62,7 +62,7 @@ export default function PropertyForm() {
     featured: false,
   });
 
-  const [showMapPicker, setShowMapPicker] = useState(false);
+
 
   useEffect(() => {
     if (property) {
@@ -88,10 +88,7 @@ export default function PropertyForm() {
         featured: property.featured,
       });
       
-      // If editing a property with map coordinates, show map picker
-      if (property.latitude && property.longitude) {
-        setShowMapPicker(true);
-      }
+
     }
   }, [property]);
 
@@ -248,70 +245,21 @@ export default function PropertyForm() {
 
               <div>
                 <Label htmlFor="location">City/Location *</Label>
-                {!showMapPicker ? (
-                  <>
-                    <Select
-                      value={formData.location}
-                      onValueChange={(value) => {
-                        if (value === "__map__") {
-                          setShowMapPicker(true);
-                        } else {
-                          setFormData({ ...formData, location: value });
-                        }
-                      }}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select location" />
-                      </SelectTrigger>
-                      <SelectContent className="max-h-[300px]">
-                        {getAllLocationsWithAreas().map((location) => (
-                          <SelectItem key={location} value={location}>
-                            {location}
-                          </SelectItem>
-                        ))}
-                        <SelectItem value="__map__" className="font-semibold text-primary">
-                          📍 Pick from Map
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Select from predefined locations or pick from map
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <MapLocationPicker
-                      value={
-                        formData.latitude && formData.longitude
-                          ? {
-                              address: formData.location,
-                              lat: formData.latitude,
-                              lng: formData.longitude,
-                            }
-                          : undefined
-                      }
-                      onChange={(location) => {
-                        setFormData({
-                          ...formData,
-                          location: location.address,
-                          latitude: location.lat,
-                          longitude: location.lng,
-                        });
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setShowMapPicker(false);
-                      }}
-                      className="mt-2"
-                    >
-                      Use Dropdown Instead
-                    </Button>
-                  </>
-                )}
+                <LocationAutocomplete
+                  value={formData.location}
+                  onChange={(location, lat, lon) => {
+                    setFormData({
+                      ...formData,
+                      location,
+                      latitude: lat || null,
+                      longitude: lon || null,
+                    });
+                  }}
+                  placeholder="Type to search location (e.g., Kharadi, Pune)"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Start typing to see location suggestions
+                </p>
               </div>
 
               <div>

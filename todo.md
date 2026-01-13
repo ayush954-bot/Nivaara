@@ -985,3 +985,12 @@
 - [x] Update database schema to add lat/lng fields to properties table ✅
 - [x] Enable future features: map view of properties, distance-based search, "near me" ✅
 - [x] Test map picker in PropertyForm for adding/editing properties ✅
+
+## Location Autocomplete (Jan 13, 2026)
+- [x] Replace map picker with autocomplete/autosuggest input ✅
+- [x] Show location suggestions as user types (like Google Maps) ✅
+- [x] Fetch suggestions from geocoding API (Nominatim) ✅
+- [x] Allow selecting from dropdown suggestions ✅
+- [x] Auto-fill coordinates when location is selected ✅
+- [x] Keep simple and user-friendly (no full map needed) ✅
+- [x] Test autocomplete functionality ✅
