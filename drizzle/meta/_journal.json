@@ -29,6 +29,13 @@
       "when": 1768188534097,
       "tag": "0003_material_electro",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1768194066267,
+      "tag": "0004_light_siren",
+      "breakpoints": true
     }
   ]
 }

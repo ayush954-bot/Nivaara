@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, AlertCircle } from "lucide-react";
 import { getAllLocationsWithAreas } from "@/lib/locations";
+import MapLocationPicker from "@/components/MapLocationPicker";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -48,6 +49,8 @@ export default function PropertyForm() {
     propertyType: "Flat" as "Flat" | "Shop" | "Office" | "Land" | "Rental" | "Bank Auction",
     status: "Ready" as "Under-Construction" | "Ready",
     location: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
     area: "",
     price: "",
     priceLabel: "",
@@ -59,8 +62,7 @@ export default function PropertyForm() {
     featured: false,
   });
 
-  const [showCustomLocation, setShowCustomLocation] = useState(false);
-  const [customLocation, setCustomLocation] = useState("");
+  const [showMapPicker, setShowMapPicker] = useState(false);
 
   useEffect(() => {
     if (property) {
@@ -73,6 +75,8 @@ export default function PropertyForm() {
         propertyType: property.propertyType,
         status: property.status,
         location: property.location,
+        latitude: property.latitude ? parseFloat(property.latitude.toString()) : null,
+        longitude: property.longitude ? parseFloat(property.longitude.toString()) : null,
         area: property.area || "",
         price: property.price.toString(),
         priceLabel: property.priceLabel || "",
@@ -84,10 +88,9 @@ export default function PropertyForm() {
         featured: property.featured,
       });
       
-      // If editing a property with custom location, show custom input
-      if (isCustomLocation) {
-        setShowCustomLocation(true);
-        setCustomLocation(property.location);
+      // If editing a property with map coordinates, show map picker
+      if (property.latitude && property.longitude) {
+        setShowMapPicker(true);
       }
     }
   }, [property]);
@@ -245,14 +248,13 @@ export default function PropertyForm() {
 
               <div>
                 <Label htmlFor="location">City/Location *</Label>
-                {!showCustomLocation ? (
+                {!showMapPicker ? (
                   <>
                     <Select
                       value={formData.location}
                       onValueChange={(value) => {
-                        if (value === "__custom__") {
-                          setShowCustomLocation(true);
-                          setFormData({ ...formData, location: "" });
+                        if (value === "__map__") {
+                          setShowMapPicker(true);
                         } else {
                           setFormData({ ...formData, location: value });
                         }
@@ -268,43 +270,46 @@ export default function PropertyForm() {
                             {location}
                           </SelectItem>
                         ))}
-                        <SelectItem value="__custom__" className="font-semibold text-primary">
-                          ➕ Add Custom Location
+                        <SelectItem value="__map__" className="font-semibold text-primary">
+                          📍 Pick from Map
                         </SelectItem>
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Select from predefined locations or add a custom one
+                      Select from predefined locations or pick from map
                     </p>
                   </>
                 ) : (
                   <>
-                    <div className="flex gap-2">
-                      <Input
-                        id="customLocation"
-                        value={customLocation}
-                        onChange={(e) => {
-                          setCustomLocation(e.target.value);
-                          setFormData({ ...formData, location: e.target.value });
-                        }}
-                        placeholder="Enter custom location (e.g., Nashik, Aurangabad)"
-                        required
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          setShowCustomLocation(false);
-                          setCustomLocation("");
-                          setFormData({ ...formData, location: "" });
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                    <p className="text-xs text-amber-600 mt-1">
-                      ⚠️ Custom location entered. Make sure spelling is correct for filters to work properly.
-                    </p>
+                    <MapLocationPicker
+                      value={
+                        formData.latitude && formData.longitude
+                          ? {
+                              address: formData.location,
+                              lat: formData.latitude,
+                              lng: formData.longitude,
+                            }
+                          : undefined
+                      }
+                      onChange={(location) => {
+                        setFormData({
+                          ...formData,
+                          location: location.address,
+                          latitude: location.lat,
+                          longitude: location.lng,
+                        });
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowMapPicker(false);
+                      }}
+                      className="mt-2"
+                    >
+                      Use Dropdown Instead
+                    </Button>
                   </>
                 )}
               </div>

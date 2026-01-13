@@ -35,6 +35,8 @@ export const properties = mysqlTable("properties", {
   propertyType: mysqlEnum("propertyType", ["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]).notNull(),
   status: mysqlEnum("status", ["Under-Construction", "Ready"]).notNull(),
   location: varchar("location", { length: 255 }).notNull(), // e.g., "Pune - East Zone", "Mumbai", "Dubai"
+  latitude: decimal("latitude", { precision: 10, scale: 8 }), // Latitude coordinate
+  longitude: decimal("longitude", { precision: 11, scale: 8 }), // Longitude coordinate
   area: varchar("area", { length: 255 }), // Specific area like "Kharadi", "Viman Nagar"
   price: decimal("price", { precision: 15, scale: 2 }).notNull(),
   priceLabel: varchar("priceLabel", { length: 100 }), // e.g., "₹45L - ₹65L", "$500K+"

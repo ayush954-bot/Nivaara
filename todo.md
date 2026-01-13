@@ -975,3 +975,13 @@
 - [x] Move Kharadi from "India" group to "Pune Zones" group ✅
 - [x] Create comprehensive list of Pune neighborhoods for proper categorization ✅
 - [x] Test international message with VPN from different countries ✅
+
+## Map-Based Location Picker (Jan 12, 2026)
+- [x] Replace custom text location input with interactive map picker ✅
+- [x] Research map providers (Google Maps API vs OpenStreetMap/Leaflet) ✅
+- [x] Implement map component with search and click-to-pin functionality ✅
+- [x] Auto-fill address details from selected map location ✅
+- [x] Store latitude/longitude coordinates in database ✅
+- [x] Update database schema to add lat/lng fields to properties table ✅
+- [x] Enable future features: map view of properties, distance-based search, "near me" ✅
+- [x] Test map picker in PropertyForm for adding/editing properties ✅
