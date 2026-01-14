@@ -994,3 +994,10 @@
 - [x] Auto-fill coordinates when location is selected ✅
 - [x] Keep simple and user-friendly (no full map needed) ✅
 - [x] Test autocomplete functionality ✅
+
+## Smart Pune Zone Parsing (Jan 14, 2026)
+- [x] Parse location strings to extract area names (e.g., "Kharadi, Pune" → "Kharadi") ✅
+- [x] Automatically categorize locations containing "Pune" as Pune Zones ✅
+- [x] Handle various address formats from autocomplete (e.g., "Kharadi, Pune, Maharashtra") ✅
+- [x] Ensure consistent grouping regardless of how location is entered ✅
+- [x] Test with different location formats ✅

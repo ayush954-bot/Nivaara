@@ -167,6 +167,7 @@ export interface GroupedLocations {
 
 /**
  * Intelligently categorizes a location into Pune Zones, India, or International
+ * Handles full addresses like "Kharadi, Pune" or "Kharadi, Pune, Maharashtra"
  */
 export function categorizeLocation(location: string): "pune" | "india" | "international" {
   const locationLower = location.toLowerCase();
@@ -176,12 +177,12 @@ export function categorizeLocation(location: string): "pune" | "india" | "intern
     return "international";
   }
   
-  // Check if location starts with "Pune" or is in PUNE_AREAS
-  if (locationLower.startsWith("pune") || locationLower === "purandar") {
+  // Check if location contains "pune" anywhere (e.g., "Kharadi, Pune" or "Pune - East Zone")
+  if (locationLower.includes("pune") || locationLower === "purandar") {
     return "pune";
   }
   
-  // Check if it's a known Pune area
+  // Check if it's a known Pune area (even without "Pune" in the name)
   const isPuneArea = PUNE_AREAS.some(area => {
     const areaLower = area.toLowerCase();
     return locationLower === areaLower || 
