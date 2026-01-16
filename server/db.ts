@@ -127,6 +127,7 @@ export async function getUniqueLocations() {
 
 export async function searchProperties(filters: {
   location?: string;
+  zone?: string;
   propertyType?: string;
   status?: string;
   minPrice?: number;
@@ -139,6 +140,9 @@ export async function searchProperties(filters: {
   const conditions = [];
   if (filters.location && filters.location !== "all") {
     conditions.push(like(properties.location, `%${filters.location}%`));
+  }
+  if (filters.zone) {
+    conditions.push(eq(properties.zone, filters.zone as any));
   }
   if (filters.propertyType && filters.propertyType !== "all") {
     conditions.push(eq(properties.propertyType, filters.propertyType as any));

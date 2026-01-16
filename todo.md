@@ -1001,3 +1001,20 @@
 - [x] Handle various address formats from autocomplete (e.g., "Kharadi, Pune, Maharashtra") ✅
 - [x] Ensure consistent grouping regardless of how location is entered ✅
 - [x] Test with different location formats ✅
+
+## Automatic Zone Assignment (Jan 14, 2026)
+- [ ] Add zone field to properties database schema (east_pune, west_pune, north_pune, south_pune)
+- [ ] Create zone detection logic based on location and PUNE_AREAS mapping
+- [ ] Auto-assign zone in PropertyForm when location is selected
+- [ ] Update homepage zone tabs to show real property counts per zone
+- [ ] Make zone tabs clickable to filter properties by zone
+- [ ] Handle properties outside Pune zones gracefully
+- [ ] Test zone assignment with different Pune locations
+
+## Automatic Zone Assignment (Jan 14, 2026)
+- [x] Add zone field to properties database schema ✅
+- [x] Create zone detection logic based on PUNE_AREAS mapping ✅
+- [x] Update PropertyForm to auto-detect and assign zone when location is selected ✅
+- [x] Update homepage zone tabs to show real property counts from database ✅
+- [x] Enable filtering properties by zone when clicking zone tabs ✅
+- [x] Test zone assignment with various Pune locations ✅

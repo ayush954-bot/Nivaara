@@ -16,7 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, AlertCircle } from "lucide-react";
-import { getAllLocationsWithAreas } from "@/lib/locations";
+import { getAllLocationsWithAreas, detectZone } from "@/lib/locations";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 
 export default function PropertyForm() {
@@ -51,6 +51,7 @@ export default function PropertyForm() {
     location: "",
     latitude: null as number | null,
     longitude: null as number | null,
+    zone: null as "east_pune" | "west_pune" | "north_pune" | "south_pune" | "other" | null,
     area: "",
     price: "",
     priceLabel: "",
@@ -77,6 +78,7 @@ export default function PropertyForm() {
         location: property.location,
         latitude: property.latitude ? parseFloat(property.latitude.toString()) : null,
         longitude: property.longitude ? parseFloat(property.longitude.toString()) : null,
+        zone: property.zone || detectZone(property.location),
         area: property.area || "",
         price: property.price.toString(),
         priceLabel: property.priceLabel || "",
@@ -248,11 +250,13 @@ export default function PropertyForm() {
                 <LocationAutocomplete
                   value={formData.location}
                   onChange={(location, lat, lon) => {
+                    const detectedZone = detectZone(location);
                     setFormData({
                       ...formData,
                       location,
                       latitude: lat || null,
                       longitude: lon || null,
+                      zone: detectedZone,
                     });
                   }}
                   placeholder="Type to search location (e.g., Kharadi, Pune)"

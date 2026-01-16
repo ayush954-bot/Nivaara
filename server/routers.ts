@@ -44,6 +44,7 @@ export const appRouter = router({
       .input(
         z.object({
           location: z.string().optional(),
+          zone: z.string().optional(),
           propertyType: z.string().optional(),
           status: z.string().optional(),
           minPrice: z.number().optional(),
@@ -116,6 +117,9 @@ export const appRouter = router({
             propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]),
             status: z.enum(["Under-Construction", "Ready"]),
             location: z.string().min(1),
+            latitude: z.number().nullable().optional(),
+            longitude: z.number().nullable().optional(),
+            zone: z.enum(["east_pune", "west_pune", "north_pune", "south_pune", "other"]).nullable().optional(),
             area: z.string().optional(),
             price: z.string(), // Will be converted to decimal
             priceLabel: z.string().optional(),
@@ -147,6 +151,9 @@ export const appRouter = router({
             propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]).optional(),
             status: z.enum(["Under-Construction", "Ready"]).optional(),
             location: z.string().min(1).optional(),
+            latitude: z.number().nullable().optional(),
+            longitude: z.number().nullable().optional(),
+            zone: z.enum(["east_pune", "west_pune", "north_pune", "south_pune", "other"]).nullable().optional(),
             area: z.string().optional(),
             price: z.string().optional(),
             priceLabel: z.string().optional(),

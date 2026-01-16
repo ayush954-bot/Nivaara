@@ -64,16 +64,15 @@ export default function InteractivePuneMap() {
       'south-pune': 0,
     };
 
-    // Count properties by zone
+    // Count properties by zone using the zone field from database
     allProperties.forEach((property) => {
-      const location = property.location?.toLowerCase() || '';
-      if (location.includes('east zone')) {
+      if (property.zone === 'east_pune') {
         zoneCounts['east-pune']++;
-      } else if (location.includes('west zone')) {
+      } else if (property.zone === 'west_pune') {
         zoneCounts['west-pune']++;
-      } else if (location.includes('north zone')) {
+      } else if (property.zone === 'north_pune') {
         zoneCounts['north-pune']++;
-      } else if (location.includes('south zone')) {
+      } else if (property.zone === 'south_pune') {
         zoneCounts['south-pune']++;
       }
     });
@@ -183,7 +182,7 @@ export default function InteractivePuneMap() {
                 </div>
 
                 <a 
-                  href={`/properties?zone=${selectedZone.id}`}
+                  href={`/properties?zone=${selectedZone.id.replace('-', '_')}`}
                   className="block w-full bg-primary text-white py-3 rounded-lg font-semibold text-center hover:bg-primary/90 transition-colors"
                 >
                   View Properties in {selectedZone.name}

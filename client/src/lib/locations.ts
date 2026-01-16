@@ -72,47 +72,66 @@ export const INDIAN_CITIES = [
   "Guwahati",
 ];
 
+// Zone mappings for Pune areas
+export const PUNE_ZONE_MAPPING = {
+  east_pune: [
+    "Kharadi",
+    "Viman Nagar",
+    "Wagholi",
+    "Hadapsar",
+    "Magarpatta",
+    "Kalyani Nagar",
+    "Koregaon Park",
+    "Mundhwa",
+    "Yerawada",
+    "Lohegaon",
+  ],
+  west_pune: [
+    "Hinjewadi",
+    "Wakad",
+    "Baner",
+    "Aundh",
+    "Pimple Saudagar",
+    "Pimple Nilakh",
+    "Balewadi",
+    "Hinjawadi",
+    "Pashan",
+  ],
+  north_pune: [
+    "Pimpri",
+    "Chinchwad",
+    "Akurdi",
+    "Nigdi",
+    "Bhosari",
+    "Chakan",
+  ],
+  south_pune: [
+    "Katraj",
+    "Undri",
+    "Kondhwa",
+    "NIBM",
+    "Wanowrie",
+    "Salisbury Park",
+    "Bibwewadi",
+    "Dhankawadi",
+  ],
+  central_pune: [
+    "Shivajinagar",
+    "Deccan",
+    "Camp",
+    "Kothrud",
+    "Karve Nagar",
+    "Erandwane",
+  ],
+};
+
+// Flatten all Pune areas for backward compatibility
 export const PUNE_AREAS = [
-  // East Pune
-  "Kharadi",
-  "Viman Nagar",
-  "Wagholi",
-  "Hadapsar",
-  "Magarpatta",
-  "Kalyani Nagar",
-  "Koregaon Park",
-  "Mundhwa",
-  
-  // West Pune
-  "Hinjewadi",
-  "Wakad",
-  "Baner",
-  "Aundh",
-  "Pimple Saudagar",
-  "Pimple Nilakh",
-  "Balewadi",
-  
-  // North Pune
-  "Pimpri",
-  "Chinchwad",
-  "Akurdi",
-  "Nigdi",
-  
-  // South Pune
-  "Katraj",
-  "Undri",
-  "Kondhwa",
-  "NIBM",
-  "Wanowrie",
-  "Salisbury Park",
-  
-  // Central Pune
-  "Shivajinagar",
-  "Deccan",
-  "Camp",
-  "Kothrud",
-  "Karve Nagar",
-  "Erandwane",
+  ...PUNE_ZONE_MAPPING.east_pune,
+  ...PUNE_ZONE_MAPPING.west_pune,
+  ...PUNE_ZONE_MAPPING.north_pune,
+  ...PUNE_ZONE_MAPPING.south_pune,
+  ...PUNE_ZONE_MAPPING.central_pune,
 ];
 
 export const INTERNATIONAL_LOCATIONS = [
@@ -196,6 +215,35 @@ export function categorizeLocation(location: string): "pune" | "india" | "intern
   
   // Default to India for other Indian cities
   return "india";
+}
+
+/**
+ * Detects the Pune zone from a location string
+ * Returns null if location is not in Pune or zone cannot be determined
+ */
+export function detectZone(location: string): "east_pune" | "west_pune" | "north_pune" | "south_pune" | "other" | null {
+  if (!location) return null;
+  
+  const locationLower = location.toLowerCase();
+  
+  // Check if it's a Pune location
+  if (!locationLower.includes("pune") && !PUNE_AREAS.some(area => locationLower.includes(area.toLowerCase()))) {
+    return null;
+  }
+  
+  // Check each zone
+  for (const [zone, areas] of Object.entries(PUNE_ZONE_MAPPING)) {
+    if (areas.some(area => locationLower.includes(area.toLowerCase()))) {
+      return zone as "east_pune" | "west_pune" | "north_pune" | "south_pune";
+    }
+  }
+  
+  // If it contains "pune" but no specific area matched, mark as "other"
+  if (locationLower.includes("pune")) {
+    return "other";
+  }
+  
+  return null;
 }
 
 /**

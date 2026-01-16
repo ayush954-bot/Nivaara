@@ -22,23 +22,17 @@ export default function Properties() {
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [bhkFilter, setBhkFilter] = useState("all");
 
-  // Read zone or location parameter from URL and set location filter
+  // State for zone filter
+  const [zoneFilter, setZoneFilter] = useState<string | undefined>(undefined);
+
+  // Read zone or location parameter from URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     
     // Check for zone parameter (from zone map clicks)
     const zone = params.get('zone');
     if (zone) {
-      const zoneMap: Record<string, string> = {
-        'east-pune': 'Pune - East Zone',
-        'west-pune': 'Pune - West Zone',
-        'north-pune': 'Pune - North Zone',
-        'south-pune': 'Pune - South Zone',
-      };
-      const mappedLocation = zoneMap[zone];
-      if (mappedLocation) {
-        setLocationFilter(mappedLocation);
-      }
+      setZoneFilter(zone);
     }
     
     // Check for location parameter (from homepage search)
@@ -78,6 +72,7 @@ export default function Properties() {
   // Fetch properties from database
   const { data: properties = [], isLoading } = trpc.properties.search.useQuery({
     location: locationFilter !== "all" ? locationFilter : undefined,
+    zone: zoneFilter,
     propertyType: typeFilter !== "all" ? typeFilter : undefined,
     minPrice: budgetRange.minPrice,
     maxPrice: budgetRange.maxPrice,
