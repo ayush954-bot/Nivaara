@@ -63,8 +63,7 @@ export default function LocationAutocomplete({
         `q=${encodeURIComponent(query)}&` +
         `format=json&` +
         `addressdetails=1&` +
-        `limit=5&` +
-        `countrycodes=in` // Prioritize India
+        `limit=5` // Support all countries including international locations
       );
       const data = await response.json();
       setSuggestions(data);
@@ -103,16 +102,21 @@ export default function LocationAutocomplete({
     else if (address.town) locationName = address.town;
     else if (address.city) locationName = address.city;
     
-    // Add city/state if suburb was selected
+    // Add city/state/country for better context
     if (address.suburb && address.city) {
       locationName += `, ${address.city}`;
     } else if (address.city && address.state) {
       locationName += `, ${address.state}`;
     }
     
+    // Add country for international locations (non-India)
+    if (address.country && address.country !== 'India') {
+      locationName += `, ${address.country}`;
+    }
+    
     // Fallback to display_name if address parsing fails
     if (!locationName) {
-      locationName = suggestion.display_name.split(',').slice(0, 2).join(',').trim();
+      locationName = suggestion.display_name.split(',').slice(0, 3).join(',').trim();
     }
 
     setInputValue(locationName);

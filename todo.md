@@ -1018,3 +1018,11 @@
 - [x] Update homepage zone tabs to show real property counts from database ✅
 - [x] Enable filtering properties by zone when clicking zone tabs ✅
 - [x] Test zone assignment with various Pune locations ✅
+
+## International Location Support (Jan 14, 2026)
+- [x] Remove India-only restriction from location autocomplete ✅
+- [x] Update location formatting to include country for international locations ✅
+- [x] Verify location autocomplete supports international locations (Dubai, UAE, etc.) ✅
+- [x] Test searching for Dubai in location autocomplete ✅
+- [x] Ensure international properties can be added without zone assignment ✅
+- [x] Test adding property in Dubai, UAE ✅
