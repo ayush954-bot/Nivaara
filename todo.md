@@ -1026,3 +1026,10 @@
 - [x] Test searching for Dubai in location autocomplete ✅
 - [x] Ensure international properties can be added without zone assignment ✅
 - [x] Test adding property in Dubai, UAE ✅
+
+## Property Creation Bug Fix (Jan 16, 2026)
+- [x] Debug why location autocomplete selection doesn't save properly
+- [x] Fix LocationAutocomplete onSelect to pass complete location data (name, lat, lng)
+- [x] Ensure PropertyForm properly receives and stores location coordinates
+- [x] Test property creation with autocomplete location selection
+- [x] Verify zone is automatically assigned based on location

@@ -110,6 +110,12 @@ export default function PropertyForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate that location has coordinates (user must select from dropdown)
+    if (!formData.latitude || !formData.longitude) {
+      alert("Please select a location from the dropdown suggestions. Type to search and click on a suggestion.");
+      return;
+    }
+
     const data = {
       ...formData,
       bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : undefined,
@@ -261,9 +267,18 @@ export default function PropertyForm() {
                   }}
                   placeholder="Type to search location (e.g., Kharadi, Pune)"
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Start typing to see location suggestions
-                </p>
+                {formData.latitude && formData.longitude ? (
+                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Location coordinates captured (Lat: {formData.latitude.toFixed(4)}, Lon: {formData.longitude.toFixed(4)})
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-600 mt-1">
+                    ⚠️ Please select a location from the dropdown suggestions (coordinates required)
+                  </p>
+                )}
               </div>
 
               <div>

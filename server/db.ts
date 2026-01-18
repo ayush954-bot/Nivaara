@@ -170,8 +170,9 @@ export async function searchProperties(filters: {
 export async function createProperty(property: InsertProperty) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(properties).values(property);
-  return result;
+  await db.insert(properties).values(property);
+  // Return the property data that was inserted (without fetching from DB)
+  return { ...property, id: 0, createdAt: new Date(), updatedAt: new Date() };
 }
 
 export async function updateProperty(id: number, property: Partial<InsertProperty>) {

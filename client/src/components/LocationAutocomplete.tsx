@@ -80,7 +80,8 @@ export default function LocationAutocomplete({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
-    onChange(newValue); // Update parent immediately for typing
+    // Don't call onChange here - only update parent when user selects from dropdown
+    // This prevents wiping out latitude/longitude during typing
 
     // Debounce API calls
     if (debounceTimer.current) {
