@@ -1033,3 +1033,12 @@
 - [x] Ensure PropertyForm properly receives and stores location coordinates
 - [x] Test property creation with autocomplete location selection
 - [x] Verify zone is automatically assigned based on location
+
+## Location Autocomplete Improvements (Jan 17, 2026)
+- [x] Fix location autocomplete to show all Indian areas (e.g., Janki Nagar Jabalpur not appearing)
+- [x] Force autocomplete results to always display in English (currently showing Hindi for some locations)
+- [x] Upgrade from OpenStreetMap to Google Places API for better Indian locality coverage
+- [x] Implement Google Places Autocomplete with session-based pricing
+- [x] Test autocomplete with various Indian cities and localities
+- [x] Verify Jabalpur areas appear in search results
+- [x] Ensure consistent English language across all location results
