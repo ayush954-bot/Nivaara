@@ -128,6 +128,7 @@ export const appRouter = router({
             area_sqft: z.number().optional(),
             builder: z.string().optional(),
             imageUrl: z.string().optional(),
+            videoUrl: z.string().optional(),
             featured: z.boolean().default(false),
           })
         )
@@ -162,6 +163,7 @@ export const appRouter = router({
             area_sqft: z.number().optional(),
             builder: z.string().optional(),
             imageUrl: z.string().optional(),
+            videoUrl: z.string().optional(),
             featured: z.boolean().optional(),
           })
         )

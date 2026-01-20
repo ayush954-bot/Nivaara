@@ -1042,3 +1042,13 @@
 - [x] Test autocomplete with various Indian cities and localities
 - [x] Verify Jabalpur areas appear in search results
 - [x] Ensure consistent English language across all location results
+
+## YouTube Video Embedding Feature (Jan 19, 2026)
+- [x] Add videoUrl field to properties database schema
+- [x] Update PropertyForm to include YouTube link input
+- [x] Create YouTubeEmbed component for embedded video player
+- [x] Update PropertyDetail page to display embedded videos
+- [ ] Update property cards to show video indicator icon
+- [x] Add video URL validation (accept various YouTube URL formats)
+- [x] Test with different YouTube URL formats (watch?v=, youtu.be/, embed/)
+- [x] Ensure videos play embedded without redirecting to YouTube

@@ -60,6 +60,7 @@ export default function PropertyForm() {
     area_sqft: "",
     builder: "",
     imageUrl: "",
+    videoUrl: "",
     featured: false,
   });
 
@@ -87,6 +88,7 @@ export default function PropertyForm() {
         area_sqft: property.area_sqft?.toString() || "",
         builder: property.builder || "",
         imageUrl: property.imageUrl || "",
+        videoUrl: property.videoUrl || "",
         featured: property.featured,
       });
       
@@ -430,6 +432,22 @@ export default function PropertyForm() {
                   />
                 </div>
               )}
+
+              <div>
+                <Label htmlFor="videoUrl">YouTube Video URL (Optional)</Label>
+                <Input
+                  id="videoUrl"
+                  type="url"
+                  value={formData.videoUrl}
+                  onChange={(e) =>
+                    setFormData({ ...formData, videoUrl: e.target.value })
+                  }
+                  placeholder="https://www.youtube.com/watch?v=..."
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Paste a YouTube video link for property tour/walkthrough. Video will be embedded on the property page.
+                </p>
+              </div>
             </div>
 
             {/* Featured */}

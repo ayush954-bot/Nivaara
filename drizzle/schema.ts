@@ -46,6 +46,7 @@ export const properties = mysqlTable("properties", {
   area_sqft: int("area_sqft"), // Property size in square feet
   builder: varchar("builder", { length: 255 }), // Builder/Developer name
   imageUrl: text("imageUrl"), // Primary image URL
+  videoUrl: text("videoUrl"), // YouTube video URL for property tour
   featured: boolean("featured").default(false).notNull(), // Featured properties
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import {
   Bed,
   Bath,
@@ -196,6 +197,16 @@ export default function PropertyDetail() {
                 </p>
               </CardContent>
             </Card>
+
+            {/* Video Tour */}
+            {property.videoUrl && (
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold mb-4">Video Tour</h2>
+                  <YouTubeEmbed url={property.videoUrl} title={`${property.title} - Property Tour`} />
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar - Contact Form */}

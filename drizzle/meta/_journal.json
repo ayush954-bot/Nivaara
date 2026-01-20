@@ -43,6 +43,13 @@
       "when": 1768443818072,
       "tag": "0005_soft_gateway",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1768797489777,
+      "tag": "0006_remarkable_maverick",
+      "breakpoints": true
     }
   ]
 }
