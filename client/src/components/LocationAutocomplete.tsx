@@ -58,7 +58,7 @@ export default function LocationAutocomplete({
         // Create autocomplete instance
         autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
           types: ['geocode', 'establishment'], // Include both addresses and places
-          componentRestrictions: { country: ['in', 'ae'] }, // India and UAE
+          // No country restrictions - show all global locations
           fields: ['formatted_address', 'geometry', 'name', 'address_components'],
         });
 

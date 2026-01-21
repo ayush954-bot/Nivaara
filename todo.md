@@ -1052,3 +1052,9 @@
 - [x] Add video URL validation (accept various YouTube URL formats)
 - [x] Test with different YouTube URL formats (watch?v=, youtu.be/, embed/)
 - [x] Ensure videos play embedded without redirecting to YouTube
+
+## International Location Autocomplete Fix (Jan 19, 2026)
+- [x] Remove country restrictions from Google Places Autocomplete
+- [x] Ensure Australia and other international countries appear in search results
+- [x] Test autocomplete with various international locations (Australia, Dubai, USA, UK)
+- [x] Verify no country is prioritized over others in search results
