@@ -1058,3 +1058,9 @@
 - [x] Ensure Australia and other international countries appear in search results
 - [x] Test autocomplete with various international locations (Australia, Dubai, USA, UK)
 - [x] Verify no country is prioritized over others in search results
+
+## Properties Page View Details Button Fix (Jan 19, 2026)
+- [x] Add "View Details" button to property cards on Properties page
+- [x] Ensure consistent card design between featured properties and all properties
+- [x] Test navigation from properties page to property detail page
+- [x] Verify button styling matches featured properties section

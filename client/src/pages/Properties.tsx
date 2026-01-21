@@ -223,7 +223,12 @@ export default function Properties() {
                             <IndianRupee className="h-5 w-5 mr-1" />
                             {property.priceLabel || `₹${(Number(property.price) / 100000).toFixed(0)}L`}
                           </div>
-                          <Button size="sm" asChild>
+                        </div>
+                        <div className="flex gap-2 mt-3">
+                          <Button size="sm" className="flex-1" asChild>
+                            <Link href={`/properties/${property.id}`}>View Details</Link>
+                          </Button>
+                          <Button size="sm" variant="outline" className="flex-1" asChild>
                             <Link href="/contact">Inquire</Link>
                           </Button>
                         </div>
