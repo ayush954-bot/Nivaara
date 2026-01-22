@@ -1,6 +1,6 @@
 import { eq, desc, and, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial } from "../drizzle/schema";
+import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -279,4 +279,74 @@ export async function createTestimonial(testimonial: InsertTestimonial) {
   if (!db) throw new Error("Database not available");
   const result = await db.insert(testimonials).values(testimonial);
   return result;
+}
+
+// Property Images queries
+export async function getPropertyImages(propertyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(propertyImages)
+    .where(eq(propertyImages.propertyId, propertyId))
+    .orderBy(propertyImages.displayOrder);
+}
+
+export async function getCoverImage(propertyId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(propertyImages)
+    .where(and(eq(propertyImages.propertyId, propertyId), eq(propertyImages.isCover, true)))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function addPropertyImage(image: InsertPropertyImage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // If this is marked as cover, unset other cover images for this property
+  if (image.isCover) {
+    await db
+      .update(propertyImages)
+      .set({ isCover: false })
+      .where(eq(propertyImages.propertyId, image.propertyId));
+  }
+  
+  const result = await db.insert(propertyImages).values(image);
+  return result;
+}
+
+export async function deletePropertyImage(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(propertyImages).where(eq(propertyImages.id, id));
+}
+
+export async function setCoverImage(propertyId: number, imageId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Unset all cover images for this property
+  await db
+    .update(propertyImages)
+    .set({ isCover: false })
+    .where(eq(propertyImages.propertyId, propertyId));
+  
+  // Set the specified image as cover
+  await db
+    .update(propertyImages)
+    .set({ isCover: true })
+    .where(eq(propertyImages.id, imageId));
+}
+
+export async function updateImageOrder(imageId: number, displayOrder: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(propertyImages)
+    .set({ displayOrder })
+    .where(eq(propertyImages.id, imageId));
 }

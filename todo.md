@@ -1064,3 +1064,18 @@
 - [x] Ensure consistent card design between featured properties and all properties
 - [x] Test navigation from properties page to property detail page
 - [x] Verify button styling matches featured properties section
+
+## Multi-Image Upload System (Jan 20, 2026)
+- [x] Create property_images database table (id, property_id, image_url, is_cover, display_order)
+- [x] Add image upload API endpoint with S3 storage integration
+- [x] Build multi-image upload component (simplified version without drag-and-drop)
+- [x] Implement cover image selection (star icon)
+- [x] Add image deletion functionality
+- [x] Integrate PropertyImageUpload component into PropertyForm
+- [x] Maintain backward compatibility with imageUrl field
+- [ ] Update createProperty to return new property ID
+- [ ] Link uploaded images to property in database after creation
+- [ ] Update PropertyDetail page to show image gallery/carousel
+- [ ] Update property cards to use cover image from property_images table
+- [ ] Add image reordering functionality (future enhancement)
+- [ ] Test complete workflow: upload, set cover, create property, view gallery

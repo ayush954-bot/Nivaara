@@ -6,10 +6,12 @@ import { z } from "zod";
 import * as db from "./db";
 import { notifyOwner } from "./_core/notification";
 import { sendInquiryNotification, sendInquiryConfirmation } from "./email";
+import { imageUploadRouter } from "./imageUpload";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
+  imageUpload: imageUploadRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
@@ -233,6 +235,64 @@ export const appRouter = router({
           }
           return await db.bulkImportProperties(input.properties);
         }),
+
+      // Property Images Management
+      images: router({
+        list: publicProcedure
+          .input(z.object({ propertyId: z.number() }))
+          .query(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.getPropertyImages(input.propertyId);
+          }),
+
+        add: publicProcedure
+          .input(
+            z.object({
+              propertyId: z.number(),
+              imageUrl: z.string(),
+              isCover: z.boolean().default(false),
+              displayOrder: z.number().default(0),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.addPropertyImage(input);
+          }),
+
+        delete: publicProcedure
+          .input(z.object({ id: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deletePropertyImage(input.id);
+          }),
+
+        setCover: publicProcedure
+          .input(z.object({ propertyId: z.number(), imageId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.setCoverImage(input.propertyId, input.imageId);
+          }),
+      }),
     }),
 
     // Inquiry Management

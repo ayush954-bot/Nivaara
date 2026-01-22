@@ -56,6 +56,22 @@ export type Property = typeof properties.$inferSelect;
 export type InsertProperty = typeof properties.$inferInsert;
 
 /**
+ * Property Images table - stores multiple images per property
+ */
+export const propertyImages = mysqlTable("property_images", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(), // Foreign key to properties table
+  imageUrl: text("imageUrl").notNull(), // S3 URL of the image
+  isCover: boolean("isCover").default(false).notNull(), // True if this is the cover/primary image
+  displayOrder: int("displayOrder").default(0).notNull(), // Order for displaying images (0 = first)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyImage = typeof propertyImages.$inferSelect;
+export type InsertPropertyImage = typeof propertyImages.$inferInsert;
+
+/**
  * Inquiries table - stores contact form submissions and property inquiries
  */
 export const inquiries = mysqlTable("inquiries", {

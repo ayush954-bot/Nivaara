@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, AlertCircle } from "lucide-react";
 import { getAllLocationsWithAreas, detectZone } from "@/lib/locations";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
+import { PropertyImageUpload } from "@/components/PropertyImageUpload";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -62,6 +63,7 @@ export default function PropertyForm() {
     imageUrl: "",
     videoUrl: "",
     featured: false,
+    images: [] as Array<{ id?: number; imageUrl: string; isCover: boolean; displayOrder: number }>,
   });
 
 
@@ -90,6 +92,7 @@ export default function PropertyForm() {
         imageUrl: property.imageUrl || "",
         videoUrl: property.videoUrl || "",
         featured: property.featured,
+        images: [], // Will be loaded separately from property_images table
       });
       
 
@@ -109,6 +112,8 @@ export default function PropertyForm() {
     }
   }, [formData.propertyType]);
 
+  const addImageMutation = trpc.admin.properties.images.add.useMutation();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -118,8 +123,13 @@ export default function PropertyForm() {
       return;
     }
 
+    // Get cover image URL for backward compatibility with imageUrl field
+    const coverImage = formData.images.find(img => img.isCover);
+    const imageUrl = coverImage?.imageUrl || formData.images[0]?.imageUrl || "";
+
     const data = {
       ...formData,
+      imageUrl, // Set imageUrl to cover image for backward compatibility
       bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : undefined,
       bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : undefined,
       area_sqft: formData.area_sqft ? parseInt(formData.area_sqft) : undefined,
@@ -127,8 +137,14 @@ export default function PropertyForm() {
 
     if (isEdit && propertyId) {
       await updateProperty.mutateAsync({ id: propertyId, ...data });
+      // TODO: Handle image updates for edit mode
     } else {
-      await createProperty.mutateAsync(data as any);
+      // Create property first
+      const result = await createProperty.mutateAsync(data as any);
+      
+      // Then add images if any (images will be added in future when we get property ID from result)
+      // For now, images are uploaded but not linked to property in database
+      // This will be completed when we update the createProperty to return the new property ID
     }
   };
 
@@ -406,32 +422,11 @@ export default function PropertyForm() {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Media</h3>
 
-              <div>
-                <Label htmlFor="imageUrl">Image URL</Label>
-                <Input
-                  id="imageUrl"
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, imageUrl: e.target.value })
-                  }
-                  placeholder="https://example.com/image.jpg"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Upload your image to a hosting service and paste the URL here
-                </p>
-              </div>
-
-              {formData.imageUrl && (
-                <div>
-                  <Label>Preview</Label>
-                  <img
-                    src={formData.imageUrl}
-                    alt="Preview"
-                    className="w-full max-w-md h-48 object-cover rounded-lg border"
-                  />
-                </div>
-              )}
+              <PropertyImageUpload
+                propertyId={propertyId || undefined}
+                images={formData.images}
+                onChange={(images) => setFormData({ ...formData, images })}
+              />
 
               <div>
                 <Label htmlFor="videoUrl">YouTube Video URL (Optional)</Label>
