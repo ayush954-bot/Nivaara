@@ -142,9 +142,17 @@ export default function PropertyForm() {
       // Create property first
       const result = await createProperty.mutateAsync(data as any);
       
-      // Then add images if any (images will be added in future when we get property ID from result)
-      // For now, images are uploaded but not linked to property in database
-      // This will be completed when we update the createProperty to return the new property ID
+      // Then add images to property_images table
+      if (result && result.id && formData.images.length > 0) {
+        for (const image of formData.images) {
+          await addImageMutation.mutateAsync({
+            propertyId: result.id,
+            imageUrl: image.imageUrl,
+            isCover: image.isCover,
+            displayOrder: image.displayOrder,
+          });
+        }
+      }
     }
   };
 

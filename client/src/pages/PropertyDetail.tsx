@@ -29,6 +29,11 @@ export default function PropertyDetail() {
     { enabled: !!propertyId }
   );
 
+  const { data: propertyImages = [] } = trpc.admin.properties.images.list.useQuery(
+    { propertyId: propertyId! },
+    { enabled: !!propertyId }
+  );
+
   const createInquiry = trpc.inquiries.create.useMutation({
     onSuccess: () => {
       toast.success("Inquiry submitted successfully! We'll contact you soon.");
@@ -47,6 +52,14 @@ export default function PropertyDetail() {
     phone: "",
     message: "",
   });
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Determine which images to display
+  const displayImages = propertyImages.length > 0 
+    ? propertyImages.map(img => img.imageUrl)
+    : property?.imageUrl 
+    ? [property.imageUrl] 
+    : ["/images/hero-building.jpg"];
 
   const handleInquirySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,12 +122,12 @@ export default function PropertyDetail() {
         </Button>
       </div>
 
-      {/* Hero Image */}
-      <div className="relative h-[400px] md:h-[500px] overflow-hidden">
+      {/* Image Gallery */}
+      <div className="relative h-[400px] md:h-[500px] overflow-hidden bg-black">
         <img
-          src={property.imageUrl || "/images/hero-building.jpg"}
-          alt={property.title}
-          className="w-full h-full object-cover"
+          src={displayImages[selectedImageIndex]}
+          alt={`${property.title} - Image ${selectedImageIndex + 1}`}
+          className="w-full h-full object-contain"
         />
         {property.featured && (
           <Badge className="absolute top-8 left-8 bg-primary text-primary-foreground flex items-center gap-1 text-base px-4 py-2">
@@ -122,7 +135,55 @@ export default function PropertyDetail() {
             Featured
           </Badge>
         )}
+        
+        {/* Image navigation arrows */}
+        {displayImages.length > 1 && (
+          <>
+            <button
+              onClick={() => setSelectedImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white p-3 rounded-full transition-colors"
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => setSelectedImageIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1))}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white p-3 rounded-full transition-colors"
+              aria-label="Next image"
+            >
+              →
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              {selectedImageIndex + 1} / {displayImages.length}
+            </div>
+          </>
+        )}
       </div>
+      
+      {/* Thumbnail strip */}
+      {displayImages.length > 1 && (
+        <div className="container py-4">
+          <div className="flex gap-2 overflow-x-auto">
+            {displayImages.map((img, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImageIndex(index)}
+                className={`flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 transition-all ${
+                  selectedImageIndex === index 
+                    ? "border-primary ring-2 ring-primary/20" 
+                    : "border-transparent hover:border-muted-foreground/30"
+                }`}
+              >
+                <img
+                  src={img}
+                  alt={`Thumbnail ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

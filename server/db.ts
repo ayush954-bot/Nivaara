@@ -170,9 +170,12 @@ export async function searchProperties(filters: {
 export async function createProperty(property: InsertProperty) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(properties).values(property);
-  // Return the property data that was inserted (without fetching from DB)
-  return { ...property, id: 0, createdAt: new Date(), updatedAt: new Date() };
+  const result = await db.insert(properties).values(property);
+  // Get the inserted ID from the result
+  const insertId = Number(result[0].insertId);
+  // Fetch and return the newly created property
+  const newProperty = await getPropertyById(insertId);
+  return newProperty;
 }
 
 export async function updateProperty(id: number, property: Partial<InsertProperty>) {
@@ -315,14 +318,15 @@ export async function addPropertyImage(image: InsertPropertyImage) {
       .where(eq(propertyImages.propertyId, image.propertyId));
   }
   
-  const result = await db.insert(propertyImages).values(image);
-  return result;
+  await db.insert(propertyImages).values(image);
+  return { success: true };
 }
 
 export async function deletePropertyImage(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(propertyImages).where(eq(propertyImages.id, id));
+  return { success: true };
 }
 
 export async function setCoverImage(propertyId: number, imageId: number) {

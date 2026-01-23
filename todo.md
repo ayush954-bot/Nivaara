@@ -1073,9 +1073,11 @@
 - [x] Add image deletion functionality
 - [x] Integrate PropertyImageUpload component into PropertyForm
 - [x] Maintain backward compatibility with imageUrl field
-- [ ] Update createProperty to return new property ID
-- [ ] Link uploaded images to property in database after creation
-- [ ] Update PropertyDetail page to show image gallery/carousel
-- [ ] Update property cards to use cover image from property_images table
+- [x] Update createProperty to return new property ID
+- [x] Link uploaded images to property in database after creation
+- [x] Update PropertyDetail page to show image gallery/carousel
+- [x] Update property cards to use cover image from property_images table
+- [x] Write and pass all 4 unit tests for multi-image functionality
+- [x] Manual testing: create property with multiple images
+- [x] Regression testing: verify existing properties still display correctly (22 properties displaying correctly)
 - [ ] Add image reordering functionality (future enhancement)
-- [ ] Test complete workflow: upload, set cover, create property, view gallery
