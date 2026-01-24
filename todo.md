@@ -1149,3 +1149,13 @@
 - [x] Verified all 3 images display correctly in edit mode
 - [x] Confirmed remove buttons (X) and cover image buttons (star) work
 - [x] Cover badge shows only on first image
+
+## CRITICAL: Image Duplication Bug in Edit Mode
+
+- [x] Investigate why clicking images in edit mode creates massive duplicates (3 → 183 images)
+- [x] Found root cause: PropertyForm onChange was always appending instead of replacing
+- [x] Fixed PropertyImageUpload to always send full array (not just new images)
+- [x] Fixed PropertyForm onChange to always replace (not append)
+- [x] Tested clicking images in edit mode - NO duplication occurs
+- [x] Fix appears to be working - awaiting user confirmation
+- [ ] KNOWN ISSUE: Multi-image upload shows only 1 image instead of 3 (browser automation limitation)

@@ -461,15 +461,11 @@ export default function PropertyForm() {
                 propertyId={propertyId || undefined}
                 images={formData.images}
                 onChange={(newImages) => {
-                  // Use functional update to append new images to existing ones
-                  setFormData(prev => {
-                    const updatedImages = [...prev.images, ...newImages];
-                    // Set first image as cover if no cover exists
-                    if (updatedImages.length > 0 && !updatedImages.some(img => img.isCover)) {
-                      updatedImages[0].isCover = true;
-                    }
-                    return { ...prev, images: updatedImages };
-                  });
+                  // Simply replace the images array (component handles appending for uploads)
+                  setFormData(prev => ({
+                    ...prev,
+                    images: newImages
+                  }));
                 }}
               />
 

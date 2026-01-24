@@ -84,10 +84,14 @@ export function PropertyImageUpload({
         toast.success(`${file.name} uploaded successfully`);
       }
       
-      // Update parent component with new images only
-      // Parent will handle merging with existing images using functional update
+      // Update parent component with full array (existing + new)
       if (newImages.length > 0) {
-        onChange(newImages);
+        const allImages = [...images, ...newImages];
+        // Set first image as cover if no cover exists
+        if (allImages.length > 0 && !allImages.some(img => img.isCover)) {
+          allImages[0].isCover = true;
+        }
+        onChange(allImages);
       }
     } catch (error) {
       console.error("Upload error:", error);
