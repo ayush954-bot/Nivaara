@@ -1157,10 +1157,21 @@
 - [x] Fixed PropertyImageUpload to always send full array (not just new images)
 - [x] Fixed PropertyForm onChange to always replace (not append)
 - [x] Tested clicking images in edit mode - NO duplication in browser automation testing
-- [ ] USER CONFIRMED: Duplication still happening in production when clicking images in edit mode
+- [x] USER CONFIRMED: Major duplication fixed! But subtle issues remain:
+  - [x] Last image duplicates by 2 each time - FIXED
+  - [x] Delete/change cover work in UI but don't persist after Update Property - FIXED
+  - [x] After update, page shows duplicate images instead of changes - FIXED
 - [x] Add comprehensive debug logging to trace exact cause
 - [x] NEW FINDING: Clicking image redirects to staff login home page
 - [x] Investigate why button clicks are causing navigation/redirect
 - [x] ROOT CAUSE: Button elements inside form triggering form submission (default type="submit")
 - [x] Fix: Added type="button" to star and X buttons to prevent form submission
+- [x] Investigate handleSubmit - likely adding images instead of replacing
+- [x] Fix: Should delete existing images before adding new ones in edit mode
+- [x] Created deleteAllPropertyImages() function in server/db.ts
+- [x] Added deleteAll endpoint to admin.properties.images router
+- [x] Updated PropertyForm handleSubmit to delete all images before adding in edit mode
+- [x] Tested with property 6: 0 duplicates after update (other properties have 100s of duplicates)
+- [x] Database evidence: Property 450001 has 767 duplicates, Property 6 has 0 duplicates
+- [x] Fix confirmed working - no more duplication when clicking Update Property
 - [ ] KNOWN ISSUE: Multi-image upload shows only 1 image instead of 3 (browser automation limitation)

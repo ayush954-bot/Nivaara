@@ -329,6 +329,13 @@ export async function deletePropertyImage(id: number) {
   return { success: true };
 }
 
+export async function deleteAllPropertyImages(propertyId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(propertyImages).where(eq(propertyImages.propertyId, propertyId));
+  return { success: true };
+}
+
 export async function setCoverImage(propertyId: number, imageId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

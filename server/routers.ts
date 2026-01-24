@@ -276,6 +276,18 @@ export const appRouter = router({
             return await db.deletePropertyImage(input.id);
           }),
 
+        deleteAll: publicProcedure
+          .input(z.object({ propertyId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteAllPropertyImages(input.propertyId);
+          }),
+
         setCover: publicProcedure
           .input(z.object({ propertyId: z.number(), imageId: z.number() }))
           .mutation(async ({ input, ctx }) => {

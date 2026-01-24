@@ -128,6 +128,7 @@ export default function PropertyForm() {
   }, [formData.propertyType]);
 
   const addImageMutation = trpc.admin.properties.images.add.useMutation();
+  const deleteAllImagesMutation = trpc.admin.properties.images.deleteAll.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,7 +155,10 @@ export default function PropertyForm() {
       await updateProperty.mutateAsync({ id: propertyId, ...data });
       
       // Handle image updates for edit mode
-      // Add new images to property_images table
+      // First, delete ALL existing images
+      await deleteAllImagesMutation.mutateAsync({ propertyId });
+      
+      // Then add the current images from formData (which reflects user's changes)
       if (formData.images.length > 0) {
         for (const image of formData.images) {
           await addImageMutation.mutateAsync({
