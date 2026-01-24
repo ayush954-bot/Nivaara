@@ -1108,3 +1108,15 @@
 - [x] Test with admin login - 3 images uploaded successfully
 - [x] Verify fix works for all users (admin/staff) - component used universally
 - [x] Clean up debug console.log statements
+
+## Staff Image Upload Authentication Bug
+
+- [x] Investigate why staff users get "failed to upload image" error
+- [x] Check if image upload tRPC procedure has admin-only restriction
+- [x] Fix authentication/authorization for staff image uploads
+- [x] Create authProcedure middleware that accepts both OAuth and staff
+- [x] Update imageUpload router to use authProcedure
+- [x] Fix redirect logic to send staff users to /staff/login instead of OAuth
+- [x] Write unit tests for staff image upload authentication
+- [x] Verify all tests pass (OAuth admin, staff, unauthenticated, non-admin)
+- [x] Fix error handling to preserve error messages

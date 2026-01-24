@@ -27,6 +27,19 @@ const requireUser = t.middleware(async opts => {
 
 export const protectedProcedure = t.procedure.use(requireUser);
 
+// Middleware that accepts either OAuth user or staff
+const requireAuth = t.middleware(async opts => {
+  const { ctx, next } = opts;
+
+  if (!ctx.user && !ctx.staff) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: UNAUTHED_ERR_MSG });
+  }
+
+  return next({ ctx });
+});
+
+export const authProcedure = t.procedure.use(requireAuth);
+
 export const adminProcedure = t.procedure.use(
   t.middleware(async opts => {
     const { ctx, next } = opts;

@@ -18,7 +18,17 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
-  window.location.href = getLoginUrl();
+  // Check if user is on staff-related page or has staff_token cookie
+  const isStaffContext = window.location.pathname.startsWith('/admin') || 
+                         document.cookie.includes('staff_token=');
+  
+  if (isStaffContext) {
+    // Redirect staff users to staff login
+    window.location.href = '/staff/login';
+  } else {
+    // Redirect OAuth users to Manus OAuth portal
+    window.location.href = getLoginUrl();
+  }
 };
 
 queryClient.getQueryCache().subscribe(event => {

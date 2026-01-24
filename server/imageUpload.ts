@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from "./_core/trpc";
+import { router, authProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
@@ -12,7 +12,7 @@ export const imageUploadRouter = router({
    * Input: base64 encoded image data
    * Output: S3 URL
    */
-  uploadImage: protectedProcedure
+  uploadImage: authProcedure
     .input(
       z.object({
         imageData: z.string(), // base64 encoded image
@@ -48,6 +48,10 @@ export const imageUploadRouter = router({
         };
       } catch (error) {
         console.error("Image upload error:", error);
+        // Re-throw the original error if it's already an Error instance
+        if (error instanceof Error) {
+          throw error;
+        }
         throw new Error("Failed to upload image");
       }
     }),
