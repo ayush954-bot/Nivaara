@@ -137,7 +137,19 @@ export default function PropertyForm() {
 
     if (isEdit && propertyId) {
       await updateProperty.mutateAsync({ id: propertyId, ...data });
-      // TODO: Handle image updates for edit mode
+      
+      // Handle image updates for edit mode
+      // Add new images to property_images table
+      if (formData.images.length > 0) {
+        for (const image of formData.images) {
+          await addImageMutation.mutateAsync({
+            propertyId: propertyId,
+            imageUrl: image.imageUrl,
+            isCover: image.isCover,
+            displayOrder: image.displayOrder,
+          });
+        }
+      }
     } else {
       // Create property first
       const result = await createProperty.mutateAsync(data as any);

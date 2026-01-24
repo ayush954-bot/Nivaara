@@ -1120,3 +1120,14 @@
 - [x] Write unit tests for staff image upload authentication
 - [x] Verify all tests pass (OAuth admin, staff, unauthenticated, non-admin)
 - [x] Fix error handling to preserve error messages
+
+## Property Detail Page Image Display Bug
+
+- [x] Investigate why property detail page only shows cover image
+- [x] Found root cause: PropertyForm handleSubmit had TODO comment for edit mode
+- [x] Fix PropertyForm to save images when editing properties (not just creating)
+- [x] Test uploading 3 images to existing property
+- [x] Verify all 3 images save to database (property_images table)
+- [x] Test property detail page displays all 3 images with navigation
+- [x] Verify image carousel works (arrows, counter "1/3", thumbnails)
+- [x] Confirm fix works for both create and edit modes
