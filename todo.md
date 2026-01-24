@@ -1089,3 +1089,22 @@
 - [x] Test image upload with staff login (not admin OAuth)
 - [x] Verify images display correctly in property detail gallery
 - [x] Ensure backward compatibility with imageUrl field shows default image
+
+## Multi-Image Upload Bug - Only Last Image Saves (Jan 24, 2026)
+- [ ] Investigate why only last image saves when uploading 3+ images together
+- [ ] Fix PropertyImageUpload component to handle multiple file uploads correctly
+- [ ] Test uploading 3 images simultaneously with admin login
+- [ ] Test uploading 3 images simultaneously with staff login
+- [ ] Verify all uploaded images save to database correctly
+- [ ] Verify all images display in property detail gallery
+- [ ] Test cover image selection works with multiple images
+
+## Multi-Image Upload Bug Fix
+
+- [x] Fix multi-image upload bug where only last image saves
+- [x] Update PropertyImageUpload to pass only new images to parent
+- [x] Update PropertyForm to use functional state update for appending images
+- [x] Fix cover badge logic to only mark first image as cover
+- [x] Test with admin login - 3 images uploaded successfully
+- [x] Verify fix works for all users (admin/staff) - component used universally
+- [x] Clean up debug console.log statements

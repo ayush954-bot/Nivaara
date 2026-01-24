@@ -29,13 +29,16 @@ export function PropertyImageUpload({
 
   const uploadImage = trpc.imageUpload.uploadImage.useMutation();
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setUploading(true);
 
     try {
+      // Accumulate new images in local array to avoid overwriting
+      const newImages: PropertyImage[] = [];
+      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
@@ -68,15 +71,23 @@ export function PropertyImageUpload({
           mimeType: file.type,
         });
 
-        // Add to images array
+        // Add to local array
+        // Note: isCover will be set to false for all new images
+        // Parent component will handle setting the first image as cover
         const newImage: PropertyImage = {
           imageUrl: result.url,
-          isCover: images.length === 0, // First image is cover by default
-          displayOrder: images.length,
+          isCover: false,
+          displayOrder: images.length + newImages.length,
         };
 
-        onChange([...images, newImage]);
+        newImages.push(newImage);
         toast.success(`${file.name} uploaded successfully`);
+      }
+      
+      // Update parent component with new images only
+      // Parent will handle merging with existing images using functional update
+      if (newImages.length > 0) {
+        onChange(newImages);
       }
     } catch (error) {
       console.error("Upload error:", error);
@@ -119,7 +130,7 @@ export function PropertyImageUpload({
             type="file"
             accept="image/*"
             multiple
-            onChange={handleFileSelect}
+            onChange={handleFileChange}
             disabled={uploading}
             className="cursor-pointer"
           />
