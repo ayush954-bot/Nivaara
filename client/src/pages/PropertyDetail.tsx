@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getPropertyBadge, getBadgeColorClass } from "@/lib/badgeUtils";
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -30,6 +31,11 @@ export default function PropertyDetail() {
   );
 
   const { data: propertyImages = [] } = trpc.admin.properties.images.list.useQuery(
+    { propertyId: propertyId! },
+    { enabled: !!propertyId }
+  );
+
+  const { data: propertyVideos = [] } = trpc.admin.properties.videos.list.useQuery(
     { propertyId: propertyId! },
     { enabled: !!propertyId }
   );
@@ -81,6 +87,18 @@ export default function PropertyDetail() {
     return `₹${num.toLocaleString("en-IN")}`;
   };
 
+  const extractYouTubeId = (url: string): string => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : '';
+  };
+
+  const extractVimeoId = (url: string): string => {
+    const regExp = /vimeo.*\/(\d+)/i;
+    const match = url.match(regExp);
+    return match ? match[1] : '';
+  };
+
   if (isLoading) {
     return (
       <div className="container py-16">
@@ -129,12 +147,27 @@ export default function PropertyDetail() {
           alt={`${property.title} - Image ${selectedImageIndex + 1}`}
           className="w-full h-full object-contain"
         />
-        {property.featured && (
-          <Badge className="absolute top-8 left-8 bg-primary text-primary-foreground flex items-center gap-1 text-base px-4 py-2">
-            <Star className="h-4 w-4 fill-current" />
-            Featured
-          </Badge>
-        )}
+        {/* Badge Display */}
+        {(() => {
+          const badgeText = getPropertyBadge(property);
+          if (badgeText) {
+            return (
+              <Badge className={`absolute top-8 left-8 text-base px-4 py-2 ${getBadgeColorClass(badgeText)}`}>
+                {badgeText}
+              </Badge>
+            );
+          }
+          // Fallback to Featured badge if no other badge
+          if (property.featured) {
+            return (
+              <Badge className="absolute top-8 left-8 bg-primary text-primary-foreground flex items-center gap-1 text-base px-4 py-2">
+                <Star className="h-4 w-4 fill-current" />
+                Featured
+              </Badge>
+            );
+          }
+          return null;
+        })()}
         
         {/* Image navigation arrows */}
         {displayImages.length > 1 && (
@@ -259,12 +292,60 @@ export default function PropertyDetail() {
               </CardContent>
             </Card>
 
-            {/* Video Tour */}
-            {property.videoUrl && (
+            {/* Video Gallery */}
+            {propertyVideos.length > 0 && (
               <Card>
                 <CardContent className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">Video Tour</h2>
-                  <YouTubeEmbed url={property.videoUrl} title={`${property.title} - Property Tour`} />
+                  <h2 className="text-2xl font-bold mb-4">
+                    {propertyVideos.length === 1 ? 'Video Tour' : 'Video Gallery'}
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {propertyVideos.map((video, index) => (
+                      <div key={video.id || index} className="space-y-2">
+                        {video.videoType === 'youtube' && (
+                          <div className="aspect-video rounded-lg overflow-hidden">
+                            <iframe
+                              src={`https://www.youtube.com/embed/${extractYouTubeId(video.videoUrl)}`}
+                              title={`${property.title} - Video ${index + 1}`}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
+                        {video.videoType === 'vimeo' && (
+                          <div className="aspect-video rounded-lg overflow-hidden">
+                            <iframe
+                              src={`https://player.vimeo.com/video/${extractVimeoId(video.videoUrl)}`}
+                              title={`${property.title} - Video ${index + 1}`}
+                              allow="autoplay; fullscreen; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
+                        {(video.videoType === 'virtual_tour' || video.videoType === 'other') && (
+                          <div className="aspect-video rounded-lg overflow-hidden">
+                            <iframe
+                              src={video.videoUrl}
+                              title={`${property.title} - Video ${index + 1}`}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <Badge variant="outline">
+                            {video.videoType === 'youtube' && 'YouTube'}
+                            {video.videoType === 'vimeo' && 'Vimeo'}
+                            {video.videoType === 'virtual_tour' && 'Virtual Tour'}
+                            {video.videoType === 'other' && 'Video'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             )}

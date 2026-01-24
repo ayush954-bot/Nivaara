@@ -535,7 +535,7 @@ export default function PropertyForm() {
               <div>
                 <Label htmlFor="badge">Property Badge (Optional)</Label>
                 <Select
-                  value={formData.badge}
+                  value={formData.badge || "none"}
                   onValueChange={(value) =>
                     setFormData({ ...formData, badge: value === "none" ? "" : value })
                   }

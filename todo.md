@@ -1248,3 +1248,27 @@
 - [x] Verify cleanup results and count remaining images (25 images remain, 0 duplicates)
 - [x] Test affected properties still display correctly (homepage verified)
 - [ ] Save checkpoint after cleanup
+
+## Bug Fixes - Videos and Badges
+
+### Issues Reported
+1. Videos not displaying on PropertyDetail page even though property has 2 YouTube URLs
+2. Badges not visible on property cards or feature property images
+3. Selected badge (e.g., "Price Reduced") not persisting when editing property again
+
+### Tasks
+- [x] Fix badge persistence: Load badge value from property data in PropertyForm
+- [x] Fixed Select component to handle null values (default to "none")
+- [x] Added badge field to update mutation schema in routers.ts
+- [x] Fix badge display on FeaturedProperties carousel cards - Already implemented
+- [x] Fix badge display on Properties page cards - Already implemented
+- [x] Fix badge display on PropertyDetail page hero image - Implemented
+- [x] Add video embeds to PropertyDetail page (YouTube, Vimeo, Virtual Tour) - Implemented
+- [x] Create beautiful video gallery section with responsive embeds - Implemented
+- [x] Test badge selection and persistence with staff login - WORKING PERFECTLY
+- [x] Test video display with multiple video types - Both YouTube videos embedded correctly
+- [x] Verify overall page looks beautiful with images, videos, and badges - BEAUTIFUL!
+- [x] Badge "Price Reduced" displays on hero image (red badge, top-left)
+- [x] Badge persists when editing property again (dropdown shows "Price Reduced")
+- [x] Videos display in professional 2-column grid with thumbnails and play buttons
+- [x] All fixes verified working on property detail page
