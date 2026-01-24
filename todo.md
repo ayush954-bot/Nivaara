@@ -1232,3 +1232,19 @@
 - [x] Test edge cases (30 days, 31 days, null values)
 - [ ] Test on mobile and desktop (needs actual device)
 - [ ] Save checkpoint with all features
+
+## Database Cleanup - Duplicate Images
+
+### Issue
+- Properties 450001, 480002, 480003 have 700+ duplicate images
+- Caused by old bug before delete-then-add fix was implemented
+- Wasting storage space and slowing down queries
+
+### Tasks
+- [x] Analyze exact duplicate patterns in property_images table
+- [x] Create cleanup script to identify duplicates (same propertyId + imageUrl)
+- [x] Keep only one copy of each unique image (lowest id or earliest createdAt)
+- [x] Delete all duplicate entries (825 total deleted in 2 runs)
+- [x] Verify cleanup results and count remaining images (25 images remain, 0 duplicates)
+- [x] Test affected properties still display correctly (homepage verified)
+- [ ] Save checkpoint after cleanup
