@@ -32,6 +32,15 @@ export default function PropertyForm() {
     { enabled: isEdit && !!propertyId }
   );
 
+  // Fetch existing images for edit mode
+  const { data: existingImages = [], isLoading: imagesLoading } = trpc.admin.properties.images.list.useQuery(
+    { propertyId: propertyId! },
+    { enabled: isEdit && !!propertyId }
+  );
+
+  console.log('[PropertyForm] Edit mode:', isEdit, 'PropertyId:', propertyId);
+  console.log('[PropertyForm] existingImages:', existingImages, 'Loading:', imagesLoading);
+
   const createProperty = trpc.admin.properties.create.useMutation({
     onSuccess: () => {
       setLocation("/admin/dashboard");
@@ -69,6 +78,7 @@ export default function PropertyForm() {
 
 
   useEffect(() => {
+    console.log('[PropertyForm useEffect] property:', property, 'existingImages:', existingImages);
     if (property) {
       const allLocations = getAllLocationsWithAreas();
       const isCustomLocation = !allLocations.includes(property.location);
@@ -92,12 +102,17 @@ export default function PropertyForm() {
         imageUrl: property.imageUrl || "",
         videoUrl: property.videoUrl || "",
         featured: property.featured,
-        images: [], // Will be loaded separately from property_images table
+        images: existingImages.map(img => ({
+          id: img.id,
+          imageUrl: img.imageUrl,
+          isCover: img.isCover,
+          displayOrder: img.displayOrder
+        })),
       });
       
 
     }
-  }, [property]);
+  }, [property, existingImages]);
 
   // Auto-clear bedrooms/bathrooms when switching to non-residential property types
   useEffect(() => {

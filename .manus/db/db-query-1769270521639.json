@@ -1,0 +1,34 @@
+{
+  "query": "SELECT propertyId, COUNT(*) as image_count FROM property_images GROUP BY propertyId;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT propertyId, COUNT(*) as image_count FROM property_images GROUP BY propertyId;",
+  "rows": [
+    {
+      "propertyId": "420006",
+      "image_count": "2"
+    },
+    {
+      "propertyId": "390001",
+      "image_count": "3"
+    },
+    {
+      "propertyId": "420004",
+      "image_count": "3"
+    },
+    {
+      "propertyId": "420008",
+      "image_count": "3"
+    },
+    {
+      "propertyId": "420002",
+      "image_count": "1"
+    },
+    {
+      "propertyId": "450001",
+      "image_count": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "propertyId\timage_count\n420006\t2\n390001\t3\n420004\t3\n420008\t3\n420002\t1\n450001\t3\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}

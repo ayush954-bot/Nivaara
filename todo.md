@@ -1131,3 +1131,21 @@
 - [x] Test property detail page displays all 3 images with navigation
 - [x] Verify image carousel works (arrows, counter "1/3", thumbnails)
 - [x] Confirm fix works for both create and edit modes
+
+## Property Edit Mode - Existing Images Not Displayed (Jan 24, 2026)
+
+- [ ] Investigate why existing images don't show when editing a property
+- [ ] Fix PropertyForm to fetch existing images from database in edit mode
+- [ ] Display existing images in PropertyImageUpload component
+- [ ] Test image removal functionality in edit mode
+- [ ] Verify images persist correctly after editing other property fields
+
+## Property Edit Mode - Existing Images Not Loading
+
+- [x] Investigate why existing images don't show in edit mode
+- [x] Added tRPC query to fetch existing images: admin.properties.images.list
+- [x] Fixed useEffect to populate formData.images when existingImages loads
+- [x] Tested with property 450002 (Test Property for Image Loading)
+- [x] Verified all 3 images display correctly in edit mode
+- [x] Confirmed remove buttons (X) and cover image buttons (star) work
+- [x] Cover badge shows only on first image
