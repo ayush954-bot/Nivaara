@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
 import { Link } from "wouter";
+import { getPropertyBadge, getBadgeColorClass } from "@/lib/badgeUtils";
 
 export default function Properties() {
   const [location] = useLocation();
@@ -186,11 +187,23 @@ export default function Properties() {
                 {properties.map((property) => (
                   <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div
-                      className="h-48 bg-cover bg-center"
+                      className="h-48 bg-cover bg-center relative"
                       style={{
                         backgroundImage: `url(${property.imageUrl || "/images/hero-building.jpg"})`,
                       }}
-                    />
+                    >
+                      {(() => {
+                        const badgeText = getPropertyBadge(property);
+                        if (badgeText) {
+                          return (
+                            <Badge className={`absolute top-3 left-3 ${getBadgeColorClass(badgeText)}`}>
+                              {badgeText}
+                            </Badge>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
                     <CardHeader>
                       <div className="flex justify-between items-start mb-2">
                         <Badge variant={property.status === "Ready" ? "default" : "secondary"}>

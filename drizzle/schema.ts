@@ -47,6 +47,7 @@ export const properties = mysqlTable("properties", {
   builder: varchar("builder", { length: 255 }), // Builder/Developer name
   imageUrl: text("imageUrl"), // Primary image URL
   videoUrl: text("videoUrl"), // YouTube video URL for property tour
+  badge: varchar("badge", { length: 100 }), // Custom badge text (e.g., "Big Discount", "Special Offer", "New")
   featured: boolean("featured").default(false).notNull(), // Featured properties
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -70,6 +71,22 @@ export const propertyImages = mysqlTable("property_images", {
 
 export type PropertyImage = typeof propertyImages.$inferSelect;
 export type InsertPropertyImage = typeof propertyImages.$inferInsert;
+
+/**
+ * Property Videos table - stores multiple video links per property
+ */
+export const propertyVideos = mysqlTable("property_videos", {
+  id: int("id").autoincrement().primaryKey(),
+  propertyId: int("propertyId").notNull(), // Foreign key to properties table
+  videoUrl: text("videoUrl").notNull(), // YouTube, Vimeo, or other video URL
+  videoType: mysqlEnum("videoType", ["youtube", "vimeo", "virtual_tour", "other"]).default("youtube").notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(), // Order for displaying videos (0 = first)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PropertyVideo = typeof propertyVideos.$inferSelect;
+export type InsertPropertyVideo = typeof propertyVideos.$inferInsert;
 
 /**
  * Inquiries table - stores contact form submissions and property inquiries

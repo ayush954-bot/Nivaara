@@ -1175,3 +1175,60 @@
 - [x] Database evidence: Property 450001 has 767 duplicates, Property 6 has 0 duplicates
 - [x] Fix confirmed working - no more duplication when clicking Update Property
 - [ ] KNOWN ISSUE: Multi-image upload shows only 1 image instead of 3 (browser automation limitation)
+
+## New Feature Requests - Property Badges and Videos
+
+### 1. Automatic "New" Badge System
+- [x] Add "New" badge to properties added in last 30 days
+- [x] Badge should appear on property cover/feature image
+- [x] Research and implement badge design (sticker-style)
+- [x] Add database field for custom badges (Big Discount, Special Offer, etc.)
+- [x] Create UI for staff to add/edit custom badges
+- [x] Make badge system configurable and customizable
+- [x] Created badgeUtils.ts with getPropertyBadge() and getBadgeColorClass()
+- [x] Updated FeaturedProperties component to display badges
+- [x] Updated Properties page to display badges
+- [x] Update PropertyDetail page to display badges (badge utility handles auto-display)
+- [x] Test badge display on property cards and detail pages
+- [x] Tested badge dropdown - all 7 options working correctly
+
+### 2. Fix Mobile Carousel Navigation Issue
+- [x] Review attached video showing carousel issue
+- [x] Diagnose why carousel bullets don't navigate properly on mobile
+- [x] Fix carousel navigation to scroll full images (not half)
+- [x] Made itemsPerView responsive: 1 card on mobile, 2 on tablet, 3 on desktop
+- [x] Added window resize listener to update itemsPerView dynamically
+- [x] Pagination dots now match actual visible cards on each screen size
+- [x] Implemented responsive itemsPerView logic
+- [x] Added window resize listener for dynamic updates
+- [ ] Test on mobile viewport sizes (needs actual mobile device)
+- [ ] Verify smooth navigation between featured properties
+
+### 3. Multiple Video Links Support
+- [x] Change single videoUrl field to support multiple videos
+- [x] Update database schema for video links
+- [x] Created property_videos table with videoType enum
+- [x] Added video management functions in server/db.ts
+- [x] Added videos router in server/routers.ts
+- [x] Created PropertyVideoUpload component
+- [x] Update PropertyForm to allow adding multiple video URLs
+- [x] Integrated PropertyVideoUpload into PropertyForm
+- [x] Added video saving logic to handleSubmit
+- [x] Test video display and management
+- [x] Verified video add/remove functionality works correctly
+- [x] Tested video type dropdown (YouTube, Vimeo, Virtual Tour, Other)
+- [x] Verify staff users can manage videos (staff login confirmed working)
+- [ ] Update PropertyDetail to display all videos (frontend display)
+
+### Testing & Permissions
+- [x] Verify staff login users can access all admin features (Ayush staff account tested)
+- [x] Test all three features end-to-end
+- [x] Badge dropdown: 7 options working
+- [x] Video upload: Add/remove working with type selection
+- [x] Carousel fix: Code implemented and responsive
+- [x] Created vitest tests for badge system (9 tests, all passing)
+- [x] Test badge auto-detection, custom badges, color classes
+- [x] Test video type enum validation
+- [x] Test edge cases (30 days, 31 days, null values)
+- [ ] Test on mobile and desktop (needs actual device)
+- [ ] Save checkpoint with all features

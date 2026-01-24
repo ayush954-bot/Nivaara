@@ -300,6 +300,59 @@ export const appRouter = router({
             return await db.setCoverImage(input.propertyId, input.imageId);
           }),
       }),
+
+      // Property Videos Management
+      videos: router({
+        list: publicProcedure
+          .input(z.object({ propertyId: z.number() }))
+          .query(async ({ input }) => {
+            // Public endpoint - anyone can view property videos
+            return await db.listPropertyVideos(input.propertyId);
+          }),
+
+        add: publicProcedure
+          .input(
+            z.object({
+              propertyId: z.number(),
+              videoUrl: z.string(),
+              videoType: z.enum(["youtube", "vimeo", "virtual_tour", "other"]).default("youtube"),
+              displayOrder: z.number().default(0),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.addPropertyVideo(input);
+          }),
+
+        delete: publicProcedure
+          .input(z.object({ id: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deletePropertyVideo(input.id);
+          }),
+
+        deleteAll: publicProcedure
+          .input(z.object({ propertyId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteAllPropertyVideos(input.propertyId);
+          }),
+      }),
     }),
 
     // Inquiry Management

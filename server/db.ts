@@ -1,6 +1,6 @@
 import { eq, desc, and, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage } from "../drizzle/schema";
+import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage, propertyVideos, InsertPropertyVideo } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -360,4 +360,47 @@ export async function updateImageOrder(imageId: number, displayOrder: number) {
     .update(propertyImages)
     .set({ displayOrder })
     .where(eq(propertyImages.id, imageId));
+}
+
+/**
+ * Property Videos functions
+ */
+export async function listPropertyVideos(propertyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(propertyVideos)
+    .where(eq(propertyVideos.propertyId, propertyId))
+    .orderBy(propertyVideos.displayOrder);
+}
+
+export async function addPropertyVideo(video: InsertPropertyVideo) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(propertyVideos).values(video);
+  return { success: true };
+}
+
+export async function deletePropertyVideo(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(propertyVideos).where(eq(propertyVideos.id, id));
+  return { success: true };
+}
+
+export async function deleteAllPropertyVideos(propertyId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(propertyVideos).where(eq(propertyVideos.propertyId, propertyId));
+  return { success: true };
+}
+
+export async function updateVideoOrder(videoId: number, displayOrder: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(propertyVideos)
+    .set({ displayOrder })
+    .where(eq(propertyVideos.id, videoId));
 }

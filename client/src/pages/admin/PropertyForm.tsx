@@ -19,6 +19,7 @@ import { ArrowLeft, Save, AlertCircle } from "lucide-react";
 import { getAllLocationsWithAreas, detectZone } from "@/lib/locations";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import { PropertyImageUpload } from "@/components/PropertyImageUpload";
+import { PropertyVideoUpload } from "@/components/PropertyVideoUpload";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -38,8 +39,15 @@ export default function PropertyForm() {
     { enabled: isEdit && !!propertyId }
   );
 
+  // Fetch existing videos for edit mode
+  const { data: existingVideos = [] } = trpc.admin.properties.videos.list.useQuery(
+    { propertyId: propertyId! },
+    { enabled: isEdit && !!propertyId }
+  );
+
   console.log('[PropertyForm] Edit mode:', isEdit, 'PropertyId:', propertyId);
   console.log('[PropertyForm] existingImages:', existingImages, 'Loading:', imagesLoading);
+  console.log('[PropertyForm] existingVideos:', existingVideos);
 
   const createProperty = trpc.admin.properties.create.useMutation({
     onSuccess: () => {
@@ -71,8 +79,10 @@ export default function PropertyForm() {
     builder: "",
     imageUrl: "",
     videoUrl: "",
+    badge: "",
     featured: false,
     images: [] as Array<{ id?: number; imageUrl: string; isCover: boolean; displayOrder: number }>,
+    videos: [] as Array<{ id?: number; videoUrl: string; videoType: "youtube" | "vimeo" | "virtual_tour" | "other"; displayOrder: number }>,
   });
 
 
@@ -101,6 +111,7 @@ export default function PropertyForm() {
         builder: property.builder || "",
         imageUrl: property.imageUrl || "",
         videoUrl: property.videoUrl || "",
+        badge: property.badge || "",
         featured: property.featured,
         images: existingImages.map(img => ({
           id: img.id,
@@ -108,11 +119,17 @@ export default function PropertyForm() {
           isCover: img.isCover,
           displayOrder: img.displayOrder
         })),
+        videos: existingVideos.map(video => ({
+          id: video.id,
+          videoUrl: video.videoUrl,
+          videoType: video.videoType,
+          displayOrder: video.displayOrder
+        })),
       });
       
 
     }
-  }, [property, existingImages]);
+  }, [property, existingImages, existingVideos]);
 
   // Auto-clear bedrooms/bathrooms when switching to non-residential property types
   useEffect(() => {
@@ -129,6 +146,8 @@ export default function PropertyForm() {
 
   const addImageMutation = trpc.admin.properties.images.add.useMutation();
   const deleteAllImagesMutation = trpc.admin.properties.images.deleteAll.useMutation();
+  const addVideoMutation = trpc.admin.properties.videos.add.useMutation();
+  const deleteAllVideosMutation = trpc.admin.properties.videos.deleteAll.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,6 +188,19 @@ export default function PropertyForm() {
           });
         }
       }
+
+      // Handle video updates for edit mode
+      await deleteAllVideosMutation.mutateAsync({ propertyId });
+      if (formData.videos.length > 0) {
+        for (const video of formData.videos) {
+          await addVideoMutation.mutateAsync({
+            propertyId: propertyId,
+            videoUrl: video.videoUrl,
+            videoType: video.videoType,
+            displayOrder: video.displayOrder,
+          });
+        }
+      }
     } else {
       // Create property first
       const result = await createProperty.mutateAsync(data as any);
@@ -181,6 +213,18 @@ export default function PropertyForm() {
             imageUrl: image.imageUrl,
             isCover: image.isCover,
             displayOrder: image.displayOrder,
+          });
+        }
+      }
+
+      // Then add videos to property_videos table
+      if (result && result.id && formData.videos.length > 0) {
+        for (const video of formData.videos) {
+          await addVideoMutation.mutateAsync({
+            propertyId: result.id,
+            videoUrl: video.videoUrl,
+            videoType: video.videoType,
+            displayOrder: video.displayOrder,
           });
         }
       }
@@ -478,19 +522,39 @@ export default function PropertyForm() {
                 }}
               />
 
+              <PropertyVideoUpload
+                videos={formData.videos}
+                onChange={(newVideos) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    videos: newVideos
+                  }));
+                }}
+              />
+
               <div>
-                <Label htmlFor="videoUrl">YouTube Video URL (Optional)</Label>
-                <Input
-                  id="videoUrl"
-                  type="url"
-                  value={formData.videoUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, videoUrl: e.target.value })
+                <Label htmlFor="badge">Property Badge (Optional)</Label>
+                <Select
+                  value={formData.badge}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, badge: value === "none" ? "" : value })
                   }
-                  placeholder="https://www.youtube.com/watch?v=..."
-                />
+                >
+                  <SelectTrigger id="badge">
+                    <SelectValue placeholder="Select badge or leave empty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Badge</SelectItem>
+                    <SelectItem value="New">New</SelectItem>
+                    <SelectItem value="Big Discount">Big Discount</SelectItem>
+                    <SelectItem value="Special Offer">Special Offer</SelectItem>
+                    <SelectItem value="Hot Deal">Hot Deal</SelectItem>
+                    <SelectItem value="Price Reduced">Price Reduced</SelectItem>
+                    <SelectItem value="Exclusive">Exclusive</SelectItem>
+                  </SelectContent>
+                </Select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Paste a YouTube video link for property tour/walkthrough. Video will be embedded on the property page.
+                  Add a badge sticker to highlight this property. "New" badge is automatically shown for properties added in the last 30 days.
                 </p>
               </div>
             </div>
