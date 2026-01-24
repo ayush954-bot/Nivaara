@@ -1158,7 +1158,9 @@
 - [x] Fixed PropertyForm onChange to always replace (not append)
 - [x] Tested clicking images in edit mode - NO duplication in browser automation testing
 - [ ] USER CONFIRMED: Duplication still happening in production when clicking images in edit mode
-- [ ] Add comprehensive debug logging to trace exact cause
-- [ ] Identify which click handler is causing duplication
-- [ ] Fix the duplication bug permanently
+- [x] Add comprehensive debug logging to trace exact cause
+- [x] NEW FINDING: Clicking image redirects to staff login home page
+- [x] Investigate why button clicks are causing navigation/redirect
+- [x] ROOT CAUSE: Button elements inside form triggering form submission (default type="submit")
+- [x] Fix: Added type="button" to star and X buttons to prevent form submission
 - [ ] KNOWN ISSUE: Multi-image upload shows only 1 image instead of 3 (browser automation limitation)

@@ -170,6 +170,7 @@ export function PropertyImageUpload({
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <Button
+                  type="button"
                   size="sm"
                   variant={image.isCover ? "default" : "secondary"}
                   onClick={() => handleSetCover(index)}
@@ -178,6 +179,7 @@ export function PropertyImageUpload({
                   <Star className={`h-4 w-4 ${image.isCover ? "fill-current" : ""}`} />
                 </Button>
                 <Button
+                  type="button"
                   size="sm"
                   variant="destructive"
                   onClick={() => handleRemoveImage(index)}
