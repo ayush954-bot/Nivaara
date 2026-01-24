@@ -104,6 +104,9 @@ export function PropertyImageUpload({
   };
 
   const handleRemoveImage = (index: number) => {
+    console.log('[PropertyImageUpload] handleRemoveImage called');
+    console.log('[PropertyImageUpload] index:', index);
+    console.log('[PropertyImageUpload] Current images.length:', images.length);
     const newImages = images.filter((_, i) => i !== index);
     // If removed image was cover, make first image cover
     if (images[index].isCover && newImages.length > 0) {
@@ -113,14 +116,19 @@ export function PropertyImageUpload({
     newImages.forEach((img, i) => {
       img.displayOrder = i;
     });
+    console.log('[PropertyImageUpload] Calling onChange with newImages.length:', newImages.length);
     onChange(newImages);
   };
 
   const handleSetCover = (index: number) => {
+    console.log('[PropertyImageUpload] handleSetCover called');
+    console.log('[PropertyImageUpload] index:', index);
+    console.log('[PropertyImageUpload] Current images.length:', images.length);
     const newImages = images.map((img, i) => ({
       ...img,
       isCover: i === index,
     }));
+    console.log('[PropertyImageUpload] Calling onChange with newImages.length:', newImages.length);
     onChange(newImages);
   };
 

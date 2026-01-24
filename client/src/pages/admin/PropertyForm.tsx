@@ -461,11 +461,16 @@ export default function PropertyForm() {
                 propertyId={propertyId || undefined}
                 images={formData.images}
                 onChange={(newImages) => {
+                  console.log('[PropertyForm] onChange called with newImages.length:', newImages.length);
                   // Simply replace the images array (component handles appending for uploads)
-                  setFormData(prev => ({
-                    ...prev,
-                    images: newImages
-                  }));
+                  setFormData(prev => {
+                    console.log('[PropertyForm] prev.images.length:', prev.images.length);
+                    console.log('[PropertyForm] Setting images to newImages.length:', newImages.length);
+                    return {
+                      ...prev,
+                      images: newImages
+                    };
+                  });
                 }}
               />
 

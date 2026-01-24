@@ -1156,6 +1156,9 @@
 - [x] Found root cause: PropertyForm onChange was always appending instead of replacing
 - [x] Fixed PropertyImageUpload to always send full array (not just new images)
 - [x] Fixed PropertyForm onChange to always replace (not append)
-- [x] Tested clicking images in edit mode - NO duplication occurs
-- [x] Fix appears to be working - awaiting user confirmation
+- [x] Tested clicking images in edit mode - NO duplication in browser automation testing
+- [ ] USER CONFIRMED: Duplication still happening in production when clicking images in edit mode
+- [ ] Add comprehensive debug logging to trace exact cause
+- [ ] Identify which click handler is causing duplication
+- [ ] Fix the duplication bug permanently
 - [ ] KNOWN ISSUE: Multi-image upload shows only 1 image instead of 3 (browser automation limitation)
