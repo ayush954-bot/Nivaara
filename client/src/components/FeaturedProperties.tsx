@@ -13,7 +13,7 @@ import {
   ChevronRight,
   Star,
 } from "lucide-react";
-import { getPropertyBadge, getBadgeColorClass } from "@/lib/badgeUtils";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function FeaturedProperties() {
   const { data: featuredProperties = [] } = trpc.properties.featured.useQuery();
@@ -147,22 +147,20 @@ export default function FeaturedProperties() {
                         alt={property.title}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      {(() => {
-                        const badgeText = getPropertyBadge(property);
-                        if (badgeText) {
-                          return (
-                            <Badge className={`absolute top-4 left-4 ${getBadgeColorClass(badgeText)}`}>
-                              {badgeText}
-                            </Badge>
-                          );
-                        }
-                        // Fallback to Featured badge if no other badge
-                        return (
-                          <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
+                      {/* Stacked Badges */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-2">
+                        {getPropertyBadges(property).map((badge, idx) => (
+                          <Badge key={idx} className={`${badge.colorClass} shadow-md`}>
+                            {badge.text}
+                          </Badge>
+                        ))}
+                        {/* Fallback to Featured badge if no other badges */}
+                        {getPropertyBadges(property).length === 0 && (
+                          <Badge className="bg-primary text-primary-foreground shadow-md">
                             Featured
                           </Badge>
-                        );
-                      })()}
+                        )}
+                      </div>
                     </div>
 
                     <CardContent className="p-6">

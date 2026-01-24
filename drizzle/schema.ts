@@ -47,7 +47,8 @@ export const properties = mysqlTable("properties", {
   builder: varchar("builder", { length: 255 }), // Builder/Developer name
   imageUrl: text("imageUrl"), // Primary image URL
   videoUrl: text("videoUrl"), // YouTube video URL for property tour
-  badge: varchar("badge", { length: 100 }), // Custom badge text (e.g., "Big Discount", "Special Offer", "New")
+  badge: varchar("badge", { length: 100 }), // Predefined badge (e.g., "Big Discount", "Special Offer", "Price Reduced")
+  customBadgeText: varchar("customBadgeText", { length: 25 }), // Free-text custom badge (max 25 chars)
   featured: boolean("featured").default(false).notNull(), // Featured properties
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

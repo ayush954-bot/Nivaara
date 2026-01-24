@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
 import { Link } from "wouter";
-import { getPropertyBadge, getBadgeColorClass } from "@/lib/badgeUtils";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function Properties() {
   const [location] = useLocation();
@@ -193,12 +193,16 @@ export default function Properties() {
                       }}
                     >
                       {(() => {
-                        const badgeText = getPropertyBadge(property);
-                        if (badgeText) {
+                        const badges = getPropertyBadges(property);
+                        if (badges.length > 0) {
                           return (
-                            <Badge className={`absolute top-3 left-3 ${getBadgeColorClass(badgeText)}`}>
-                              {badgeText}
-                            </Badge>
+                            <div className="absolute top-3 left-3 flex flex-col gap-2">
+                              {badges.map((badge, idx) => (
+                                <Badge key={idx} className={`${badge.colorClass} shadow-md`}>
+                                  {badge.text}
+                                </Badge>
+                              ))}
+                            </div>
                           );
                         }
                         return null;

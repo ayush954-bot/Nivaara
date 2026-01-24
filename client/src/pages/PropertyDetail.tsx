@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getPropertyBadge, getBadgeColorClass } from "@/lib/badgeUtils";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -149,21 +149,16 @@ export default function PropertyDetail() {
         />
         {/* Badge Display */}
         {(() => {
-          const badgeText = getPropertyBadge(property);
-          if (badgeText) {
+          const badges = getPropertyBadges(property);
+          if (badges.length > 0) {
             return (
-              <Badge className={`absolute top-8 left-8 text-base px-4 py-2 ${getBadgeColorClass(badgeText)}`}>
-                {badgeText}
-              </Badge>
-            );
-          }
-          // Fallback to Featured badge if no other badge
-          if (property.featured) {
-            return (
-              <Badge className="absolute top-8 left-8 bg-primary text-primary-foreground flex items-center gap-1 text-base px-4 py-2">
-                <Star className="h-4 w-4 fill-current" />
-                Featured
-              </Badge>
+              <div className="absolute top-8 left-8 flex flex-col gap-3">
+                {badges.map((badge, idx) => (
+                  <Badge key={idx} className={`${badge.colorClass} text-base px-4 py-2 shadow-lg`}>
+                    {badge.text}
+                  </Badge>
+                ))}
+              </div>
             );
           }
           return null;

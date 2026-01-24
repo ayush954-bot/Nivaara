@@ -2,24 +2,27 @@
  * Badge utility functions for property badges
  */
 
+export interface PropertyBadge {
+  text: string;
+  colorClass: string;
+}
+
 /**
- * Get the display badge for a property
- * Priority: Custom badge > Auto "New" badge > No badge
+ * Get all badges for a property (supports multiple stacked badges)
+ * Returns array of badges: [Auto "New" badge, Predefined badge, Custom badge text]
  * 
- * @param property Property object with badge and createdAt fields
- * @returns Badge text to display, or empty string if no badge
+ * @param property Property object with badge, customBadgeText, and createdAt fields
+ * @returns Array of badge objects to display
  */
-export function getPropertyBadge(property: {
+export function getPropertyBadges(property: {
   badge?: string | null;
+  customBadgeText?: string | null;
   createdAt: string | Date;
   status?: string;
-}): string {
-  // If custom badge is set, use it
-  if (property.badge) {
-    return property.badge;
-  }
+}): PropertyBadge[] {
+  const badges: PropertyBadge[] = [];
 
-  // Auto-detect "New" badge for properties added in last 30 days
+  // 1. Auto-detect "New" badge for properties added in last 30 days
   const createdDate = typeof property.createdAt === 'string' 
     ? new Date(property.createdAt) 
     : property.createdAt;
@@ -29,15 +32,29 @@ export function getPropertyBadge(property: {
   );
 
   if (daysSinceCreated <= 30) {
-    return "New";
+    badges.push({
+      text: "New",
+      colorClass: "bg-green-600 text-white"
+    });
   }
 
-  // For under-construction properties, show "New Launch" if no other badge
-  if (property.status === "Under-Construction") {
-    return "New Launch";
+  // 2. Add predefined badge if set
+  if (property.badge) {
+    badges.push({
+      text: property.badge,
+      colorClass: getBadgeColorClass(property.badge)
+    });
   }
 
-  return "";
+  // 3. Add custom badge text if set
+  if (property.customBadgeText && property.customBadgeText.trim()) {
+    badges.push({
+      text: property.customBadgeText.trim(),
+      colorClass: "bg-orange-600 text-white" // Custom badges use orange
+    });
+  }
+
+  return badges;
 }
 
 /**
@@ -56,6 +73,20 @@ export function getBadgeColorClass(badgeText: string): string {
     return "bg-purple-600 text-white";
   }
   
-  // Default: primary color
-  return "bg-primary text-primary-foreground";
+  // Default: blue for predefined badges
+  return "bg-blue-600 text-white";
+}
+
+/**
+ * Legacy function for backward compatibility
+ * Returns first badge text or empty string
+ */
+export function getPropertyBadge(property: {
+  badge?: string | null;
+  customBadgeText?: string | null;
+  createdAt: string | Date;
+  status?: string;
+}): string {
+  const badges = getPropertyBadges(property);
+  return badges.length > 0 ? badges[0].text : "";
 }

@@ -71,6 +71,13 @@
       "when": 1769281192390,
       "tag": "0009_hot_flatman",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1769283998059,
+      "tag": "0010_wide_sheva_callister",
+      "breakpoints": true
     }
   ]
 }

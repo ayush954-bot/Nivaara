@@ -80,6 +80,7 @@ export default function PropertyForm() {
     imageUrl: "",
     videoUrl: "",
     badge: "",
+    customBadgeText: "",
     featured: false,
     images: [] as Array<{ id?: number; imageUrl: string; isCover: boolean; displayOrder: number }>,
     videos: [] as Array<{ id?: number; videoUrl: string; videoType: "youtube" | "vimeo" | "virtual_tour" | "other"; displayOrder: number }>,
@@ -112,6 +113,7 @@ export default function PropertyForm() {
         imageUrl: property.imageUrl || "",
         videoUrl: property.videoUrl || "",
         badge: property.badge || "",
+        customBadgeText: property.customBadgeText || "",
         featured: property.featured,
         images: existingImages.map(img => ({
           id: img.id,
@@ -554,7 +556,24 @@ export default function PropertyForm() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Add a badge sticker to highlight this property. "New" badge is automatically shown for properties added in the last 30 days.
+                  Select a predefined badge. "New" badge is automatically shown for properties added in the last 30 days.
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="customBadgeText">Custom Badge Text (Optional)</Label>
+                <Input
+                  id="customBadgeText"
+                  value={formData.customBadgeText}
+                  onChange={(e) => {
+                    const value = e.target.value.slice(0, 25); // Limit to 25 characters
+                    setFormData({ ...formData, customBadgeText: value });
+                  }}
+                  placeholder="e.g., Bank Auction, Owner Motivated"
+                  maxLength={25}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add custom badge text (max 25 characters). This will display along with the predefined badge and automatic "New" badge if applicable.
                 </p>
               </div>
             </div>

@@ -1272,3 +1272,32 @@
 - [x] Badge persists when editing property again (dropdown shows "Price Reduced")
 - [x] Videos display in professional 2-column grid with thumbnails and play buttons
 - [x] All fixes verified working on property detail page
+
+## Badge System Enhancement - Stacked Badges & Custom Text
+
+### Requirements
+- Show both "New" badge (automatic) AND custom badge together
+- Use stacked design (vertical) for professional look
+- Add free-text custom badge input field (max 25 characters)
+- Keep dropdown for common badges + add custom text input
+- Different colors for different badge types
+
+### Tasks
+- [x] Add customBadgeText field to properties schema (varchar 25)
+- [x] Push database schema changes
+- [x] Update PropertyForm to add custom badge text input
+- [x] Added customBadgeText input field with 25 char limit
+- [x] Added customBadgeText to update mutation schema
+- [x] Update badgeUtils.ts to return array of badges instead of single badge
+- [x] Created getPropertyBadges() function returning PropertyBadge[]
+- [x] Update FeaturedProperties to display stacked badges
+- [x] Update Properties page to display stacked badges
+- [x] Update PropertyDetail to display stacked badges
+- [x] Style badges with proper spacing, shadows, and colors
+- [x] Green for "New", Red for discounts, Purple for special, Orange for custom, Blue for others
+- [x] Test with combinations: New only, Custom only, Both together
+- [x] Tested with all three badges: New + Price Reduced + Limited Time
+- [x] All badges display perfectly stacked vertically
+- [x] Green "New", Red "Price Reduced", Orange "Limited Time"
+- [x] Test character limit enforcement (25 chars) - Working correctly
+- [ ] Save checkpoint with enhanced badge system

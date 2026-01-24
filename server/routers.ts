@@ -167,6 +167,7 @@ export const appRouter = router({
             imageUrl: z.string().optional(),
             videoUrl: z.string().optional(),
             badge: z.string().optional(),
+            customBadgeText: z.string().max(25).optional(),
             featured: z.boolean().optional(),
           })
         )

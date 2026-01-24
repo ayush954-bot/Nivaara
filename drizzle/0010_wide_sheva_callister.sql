@@ -1,0 +1,1 @@
+ALTER TABLE `properties` ADD `customBadgeText` varchar(25);
