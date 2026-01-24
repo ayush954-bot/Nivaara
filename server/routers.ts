@@ -240,13 +240,8 @@ export const appRouter = router({
       images: router({
         list: publicProcedure
           .input(z.object({ propertyId: z.number() }))
-          .query(async ({ input, ctx }) => {
-            const isOAuthAdmin = ctx.user?.role === "admin";
-            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
-            
-            if (!isOAuthAdmin && !isStaffPropertyManager) {
-              throw new Error("Admin access is required");
-            }
+          .query(async ({ input }) => {
+            // Public endpoint - anyone can view property images
             return await db.getPropertyImages(input.propertyId);
           }),
 

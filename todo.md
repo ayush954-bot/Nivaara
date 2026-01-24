@@ -1081,3 +1081,11 @@
 - [x] Manual testing: create property with multiple images
 - [x] Regression testing: verify existing properties still display correctly (22 properties displaying correctly)
 - [ ] Add image reordering functionality (future enhancement)
+
+## Critical Multi-Image Bugs (Jan 23, 2026)
+- [x] Fix image gallery not displaying images (showing black screen with broken thumbnails)
+- [x] Fix authentication redirect when staff uploads images (should not require Manus login)
+- [x] Add default placeholder image for properties without images
+- [x] Test image upload with staff login (not admin OAuth)
+- [x] Verify images display correctly in property detail gallery
+- [x] Ensure backward compatibility with imageUrl field shows default image

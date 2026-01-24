@@ -22,9 +22,12 @@ export const imageUploadRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-        // Validate user is admin
-        if (ctx.user.role !== "admin") {
-          throw new Error("Only admins can upload images");
+        // Validate user is admin (OAuth) or staff (property_manager)
+        const isOAuthAdmin = ctx.user?.role === "admin";
+        const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+        
+        if (!isOAuthAdmin && !isStaffPropertyManager) {
+          throw new Error("Only admins or property managers can upload images");
         }
 
         // Convert base64 to buffer
