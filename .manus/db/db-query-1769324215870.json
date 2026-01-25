@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE project_amenities \nSET imageUrl = CASE name\n  WHEN 'Swimming Pool' THEN '/images/amenities/swimming-pool.jpg'\n  WHEN 'Gymnasium' THEN '/images/amenities/gym.jpg'\n  WHEN 'Clubhouse' THEN '/images/amenities/clubhouse.jpg'\n  WHEN 'Children''s Play Area' THEN '/images/amenities/kids-play.jpg'\n  WHEN 'Landscaped Gardens' THEN '/images/amenities/garden-lounge.jpg'\n  ELSE imageUrl\nEND\nWHERE projectId = (SELECT id FROM projects WHERE slug = 'pride-purple-park-eden')\nAND name IN ('Swimming Pool', 'Gymnasium', 'Clubhouse', 'Children''s Play Area', 'Landscaped Gardens');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute UPDATE project_amenities \nSET imageUrl = CASE name\n  WHEN 'Swimming Pool' THEN '/images/amenities/swimming-pool.jpg'\n  WHEN 'Gymnasium' THEN '/images/amenities/gym.jpg'\n  WHEN 'Clubhouse' THEN '/images/amenities/clubhouse.jpg'\n  WHEN 'Children''s Play Area' THEN '/images/amenities/kids-play.jpg'\n  WHEN 'Landscaped Gardens' THEN '/images/amenities/garden-lounge.jpg'\n  ELSE imageUrl\nEND\nWHERE projectId = (SELECT id FROM projects WHERE slug = 'pride-purple-park-eden')\nAND name IN ('Swimming Pool', 'Gymnasium', 'Clubhouse', 'Children''s Play Area', 'Landscaped Gardens');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1566
+}

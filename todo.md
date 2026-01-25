@@ -1469,3 +1469,11 @@
 
 - [x] Fix breadcrumb still breaking on mobile (previous fix didn't work) ✅
 - [x] Add badge display to homepage featured projects section ✅
+
+
+## Critical Fixes (Jan 25, 2026 - User Report)
+
+- [x] Add badges to Projects listing page (same as detail page) ✅
+- [x] Fix breadcrumb alignment on mobile (still breaking to multiple lines) ✅
+- [x] Re-add amenity images to database (data lost again) ✅
+- [x] Fix builder logo visibility in builder tab ✅

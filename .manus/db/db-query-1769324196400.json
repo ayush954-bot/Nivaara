@@ -1,0 +1,70 @@
+{
+  "query": "SELECT pa.id, pa.name, pa.imageUrl, p.name as projectName \nFROM project_amenities pa \nJOIN projects p ON pa.projectId = p.id \nWHERE p.slug = 'pride-purple-park-eden';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT pa.id, pa.name, pa.imageUrl, p.name as projectName \nFROM project_amenities pa \nJOIN projects p ON pa.projectId = p.id \nWHERE p.slug = 'pride-purple-park-eden';",
+  "rows": [
+    {
+      "id": "60031",
+      "name": "Swimming Pool",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60032",
+      "name": "Gymnasium",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60033",
+      "name": "Clubhouse",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60034",
+      "name": "Children's Play Area",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60035",
+      "name": "Landscaped Gardens",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60036",
+      "name": "24/7 Security",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60037",
+      "name": "Power Backup",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60038",
+      "name": "Covered Parking",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60039",
+      "name": "Jogging Track",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    },
+    {
+      "id": "60040",
+      "name": "Indoor Games Room",
+      "imageUrl": "NULL",
+      "projectName": "Pride Purple Park Eden"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timageUrl\tprojectName\n60031\tSwimming Pool\tNULL\tPride Purple Park Eden\n60032\tGymnasium\tNULL\tPride Purple Park Eden\n60033\tClubhouse\tNULL\tPride Purple Park Eden\n60034\tChildren's Play Area\tNULL\tPride Purple Park Eden\n60035\tLandscaped Gardens\tNULL\tPride Purple Park Eden\n60036\t24/7 Security\tNULL\tPride Purple Park Eden\n60037\tPower Backup\tNULL\tPride Purple Park Eden\n60038\tCovered Parking\tNULL\tPride Purple Park Eden\n60039\tJogging Track\tNULL\tPride Purple Park Eden\n60040\tIndoor Games Room\tNULL\tPride Purple Park Eden\n",
+  "stderr": "",
+  "execution_time_ms": 1651
+}

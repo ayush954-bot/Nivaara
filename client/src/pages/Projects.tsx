@@ -22,6 +22,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { Link } from "wouter";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 // Header and Footer are already in App.tsx layout
 
 export default function Projects() {
@@ -228,14 +229,31 @@ export default function Projects() {
                           </div>
                         )}
                         
-                        {/* Status Badge */}
-                        <Badge className={`absolute top-3 left-3 ${getStatusColor(project.status)}`}>
+                        {/* Badges - Using badgeUtils */}
+                        {(() => {
+                          const badges = getPropertyBadges(project);
+                          if (badges.length > 0) {
+                            return (
+                              <div className="absolute top-3 left-3 flex flex-col gap-1">
+                                {badges.map((badge, idx) => (
+                                  <Badge key={idx} className={`${badge.colorClass} text-xs px-2 py-1 shadow-lg`}>
+                                    {badge.text}
+                                  </Badge>
+                                ))}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                        
+                        {/* Status Badge on right */}
+                        <Badge className={`absolute top-3 right-3 ${getStatusColor(project.status)}`}>
                           {project.status}
                         </Badge>
                         
                         {/* Featured Badge */}
                         {project.featured && (
-                          <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
+                          <Badge className="absolute bottom-3 right-3 bg-primary text-primary-foreground">
                             Featured
                           </Badge>
                         )}
