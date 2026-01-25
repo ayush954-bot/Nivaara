@@ -221,11 +221,13 @@ export default function AdminDashboard() {
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="properties" className="flex items-center gap-2">
                 <Building2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Property</span> Management
+                <span className="hidden sm:inline">Property</span>
+                <span className="sm:hidden">Properties</span>
               </TabsTrigger>
               <TabsTrigger value="projects" className="flex items-center gap-2">
                 <Layers className="h-4 w-4" />
-                <span className="hidden sm:inline">Project</span> Management
+                <span className="hidden sm:inline">Project</span>
+                <span className="sm:hidden">Projects</span>
               </TabsTrigger>
             </TabsList>
 
@@ -374,7 +376,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex gap-2 flex-shrink-0">
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={`/projects/${project.id}`}>
+                          <Link href={`/projects/${project.slug}`}>
                             <Eye className="h-4 w-4" />
                           </Link>
                         </Button>

@@ -1430,3 +1430,16 @@
 - [x] Add image upload option alongside URL inputs for all image fields ✅
 - [x] Add amenity images with beautiful display and upload option ✅
 - [x] Add brochure upload (PDF/image format) option ✅
+
+
+## Additional Fixes (Jan 25, 2026 - Second Report)
+
+- [x] Change project URL from /projects/1 to /projects/project-slug ✅
+- [x] Fix project form tabs layout (scattered on mobile) ✅
+- [x] Add "Property" and "Project" labels to dashboard Management tabs ✅
+- [x] Remove test properties from database ✅
+- [x] Fix price list mobile layout (configuration and price text wrapping) ✅
+- [x] Fix breadcrumb alignment (not in straight line) ✅
+- [x] Fix location "Coming Soon" display in projects ✅
+- [x] Add amenity images to Pride Purple project ✅
+- [x] Add badge management section to project form (like properties) ✅

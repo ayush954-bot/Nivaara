@@ -95,9 +95,9 @@ export default function ProjectDetail() {
   const [interestRate, setInterestRate] = useState(8.5);
   const [loanTenure, setLoanTenure] = useState(20);
 
-  // Fetch project details
-  const { data: project, isLoading, error } = trpc.projects.getById.useQuery(
-    { id: parseInt(id || "0") },
+  // Fetch project details by slug
+  const { data: project, isLoading, error } = trpc.projects.getBySlug.useQuery(
+    { slug: id || "" },
     { enabled: !!id }
   );
 
@@ -236,13 +236,13 @@ export default function ProjectDetail() {
       {/* Breadcrumb */}
       <div className="bg-secondary/30 py-4">
         <div className="container">
-          <div className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-muted-foreground hover:text-primary">Home</Link>
-            <span className="text-muted-foreground">/</span>
-            <Link href="/projects" className="text-muted-foreground hover:text-primary">Projects</Link>
-            <span className="text-muted-foreground">/</span>
-            <span className="text-foreground font-medium">{project.name}</span>
-          </div>
+          <nav className="flex items-center text-sm whitespace-nowrap overflow-x-auto">
+            <Link href="/" className="text-muted-foreground hover:text-primary flex-shrink-0">Home</Link>
+            <span className="text-muted-foreground mx-2 flex-shrink-0">/</span>
+            <Link href="/projects" className="text-muted-foreground hover:text-primary flex-shrink-0">Projects</Link>
+            <span className="text-muted-foreground mx-2 flex-shrink-0">/</span>
+            <span className="text-foreground font-medium truncate">{project.name}</span>
+          </nav>
         </div>
       </div>
 
@@ -542,20 +542,20 @@ export default function ProjectDetail() {
                       </CardHeader>
                       <CardContent>
                         <div className="overflow-x-auto">
-                          <table className="w-full">
+                          <table className="w-full min-w-[400px]">
                             <thead>
                               <tr className="border-b">
-                                <th className="text-left py-3 px-4 font-semibold">Configuration</th>
-                                <th className="text-left py-3 px-4 font-semibold">Area (sq.ft)</th>
-                                <th className="text-left py-3 px-4 font-semibold">Price</th>
+                                <th className="text-left py-3 px-2 sm:px-4 font-semibold whitespace-nowrap">Configuration</th>
+                                <th className="text-left py-3 px-2 sm:px-4 font-semibold whitespace-nowrap">Area (sq.ft)</th>
+                                <th className="text-left py-3 px-2 sm:px-4 font-semibold whitespace-nowrap">Price</th>
                               </tr>
                             </thead>
                             <tbody>
                               {project.floorPlans.map((plan: any) => (
                                 <tr key={plan.id} className="border-b hover:bg-secondary/30">
-                                  <td className="py-3 px-4">{plan.name}</td>
-                                  <td className="py-3 px-4">{plan.area}</td>
-                                  <td className="py-3 px-4 font-semibold text-primary">{formatPrice(plan.price)}</td>
+                                  <td className="py-3 px-2 sm:px-4 whitespace-nowrap">{plan.name}</td>
+                                  <td className="py-3 px-2 sm:px-4 whitespace-nowrap">{plan.area}</td>
+                                  <td className="py-3 px-2 sm:px-4 font-semibold text-primary whitespace-nowrap">{formatPrice(plan.price)}</td>
                                 </tr>
                               ))}
                             </tbody>

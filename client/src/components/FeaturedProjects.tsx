@@ -141,7 +141,7 @@ export default function FeaturedProjects() {
                   key={project.id}
                   className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-3"
                 >
-                  <Link href={`/projects/${project.id}`}>
+                  <Link href={`/projects/${project.slug}`}>
                     <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer group h-full">
                       {/* Project Image */}
                       <div className="relative h-52 bg-secondary overflow-hidden">

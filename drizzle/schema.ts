@@ -152,6 +152,7 @@ export type InsertStaff = typeof staff.$inferInsert;
 export const projects = mysqlTable("projects", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(), // e.g., "Pride Purple Park Eden"
+  slug: varchar("slug", { length: 255 }).notNull().unique(), // URL-friendly slug e.g., "pride-purple-park-eden"
   builderName: varchar("builderName", { length: 255 }).notNull(), // e.g., "Pride Group"
   description: text("description").notNull(), // Full project description
   location: varchar("location", { length: 255 }).notNull(), // e.g., "Kharadi"
@@ -177,6 +178,8 @@ export const projects = mysqlTable("projects", {
   builderEstablished: int("builderEstablished"), // Year builder was established
   builderProjects: int("builderProjects"), // Number of projects by builder
   featured: boolean("featured").default(false).notNull(), // Featured projects
+  badge: varchar("badge", { length: 50 }), // Predefined badge like "New", "Hot Deal"
+  customBadgeText: varchar("customBadgeText", { length: 50 }), // Custom badge text
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

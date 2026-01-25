@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, name, location, city, latitude, longitude FROM projects WHERE name LIKE '%Pride Purple%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, name, location, city, latitude, longitude FROM projects WHERE name LIKE '%Pride Purple%';",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Pride Purple Park Eden",
+      "location": "Kharadi",
+      "city": "Pune",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tlocation\tcity\tlatitude\tlongitude\n1\tPride Purple Park Eden\tKharadi\tPune\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1586
+}

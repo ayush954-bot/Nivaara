@@ -429,6 +429,8 @@ export const appRouter = router({
             builderEstablished: z.number().optional(),
             builderProjects: z.number().optional(),
             featured: z.boolean().default(false),
+            badge: z.string().optional(),
+            customBadgeText: z.string().optional(),
           })
         )
         .mutation(async ({ input, ctx }) => {
@@ -470,6 +472,8 @@ export const appRouter = router({
             builderEstablished: z.number().optional(),
             builderProjects: z.number().optional(),
             featured: z.boolean().optional(),
+            badge: z.string().optional(),
+            customBadgeText: z.string().optional(),
           })
         )
         .mutation(async ({ input, ctx }) => {
@@ -708,6 +712,12 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
         return await db.getProjectById(input.id);
+      }),
+    
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return await db.getProjectBySlug(input.slug);
       }),
     
     featured: publicProcedure.query(async () => {

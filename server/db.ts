@@ -468,6 +468,35 @@ export async function getProjectById(id: number) {
 }
 
 /**
+ * Get a single project by slug with all related data
+ */
+export async function getProjectBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(projects).where(eq(projects.slug, slug)).limit(1);
+  if (result.length === 0) return null;
+  
+  const project = result[0];
+  
+  // Fetch all related data
+  const [amenitiesList, floorPlansList, imagesList, videosList] = await Promise.all([
+    getProjectAmenities(project.id),
+    getProjectFloorPlans(project.id),
+    getProjectImages(project.id),
+    getProjectVideos(project.id),
+  ]);
+  
+  return {
+    ...project,
+    amenities: amenitiesList,
+    floorPlans: floorPlansList,
+    images: imagesList,
+    videos: videosList,
+  };
+}
+
+/**
  * Get featured projects
  * Pride Purple projects are shown first, then ordered by creation date
  */
@@ -623,6 +652,16 @@ export async function getProjectVideos(projectId: number) {
 /**
  * Create a new project
  */
+// Helper function to generate URL-friendly slug
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+}
+
 export async function createProject(data: {
   name: string;
   builderName: string;
@@ -650,12 +689,18 @@ export async function createProject(data: {
   builderEstablished?: number;
   builderProjects?: number;
   featured?: boolean;
+  badge?: string;
+  customBadgeText?: string;
 }) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
+  // Generate slug from project name
+  const slug = generateSlug(data.name);
+  
   const result = await db.insert(projects).values({
     name: data.name,
+    slug,
     builderName: data.builderName,
     description: data.description,
     location: data.location,
@@ -681,6 +726,8 @@ export async function createProject(data: {
     builderEstablished: data.builderEstablished,
     builderProjects: data.builderProjects,
     featured: data.featured ?? false,
+    badge: data.badge || null,
+    customBadgeText: data.customBadgeText || null,
   });
   return { id: result[0].insertId };
 }
@@ -715,6 +762,8 @@ export async function updateProject(id: number, data: Partial<{
   builderEstablished: number;
   builderProjects: number;
   featured: boolean;
+  badge: string;
+  customBadgeText: string;
 }>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

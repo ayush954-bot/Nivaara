@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE projects SET latitude = CASE id WHEN 1 THEN 18.5679 WHEN 2 THEN 18.5912 WHEN 3 THEN 18.6298 WHEN 4 THEN 18.4529 WHEN 5 THEN 18.5204 ELSE latitude END, longitude = CASE id WHEN 1 THEN 73.9143 WHEN 2 THEN 73.7389 WHEN 3 THEN 73.7997 WHEN 4 THEN 73.8567 WHEN 5 THEN 73.8567 ELSE longitude END;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute UPDATE projects SET latitude = CASE id WHEN 1 THEN 18.5679 WHEN 2 THEN 18.5912 WHEN 3 THEN 18.6298 WHEN 4 THEN 18.4529 WHEN 5 THEN 18.5204 ELSE latitude END, longitude = CASE id WHEN 1 THEN 73.9143 WHEN 2 THEN 73.7389 WHEN 3 THEN 73.7997 WHEN 4 THEN 73.8567 WHEN 5 THEN 73.8567 ELSE longitude END;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1517
+}

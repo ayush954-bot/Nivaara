@@ -151,6 +151,8 @@ export default function ProjectForm() {
     builderEstablished: "",
     builderProjects: "",
     featured: false,
+    badge: "",
+    customBadgeText: "",
   });
 
   // Related data state
@@ -196,6 +198,8 @@ export default function ProjectForm() {
         builderEstablished: project.builderEstablished?.toString() || "",
         builderProjects: project.builderProjects?.toString() || "",
         featured: project.featured,
+        badge: project.badge || "",
+        customBadgeText: project.customBadgeText || "",
       });
     }
   }, [project]);
@@ -394,12 +398,12 @@ export default function ProjectForm() {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 mb-6 h-auto gap-1">
-                <TabsTrigger value="basic" className="text-xs sm:text-sm px-2 py-2">Basic</TabsTrigger>
-                <TabsTrigger value="details" className="text-xs sm:text-sm px-2 py-2">Details</TabsTrigger>
-                <TabsTrigger value="builder" className="text-xs sm:text-sm px-2 py-2">Builder</TabsTrigger>
-                <TabsTrigger value="media" className="text-xs sm:text-sm px-2 py-2">Media</TabsTrigger>
-                <TabsTrigger value="amenities" className="text-xs sm:text-sm px-2 py-2 col-span-3 sm:col-span-1">Amenities</TabsTrigger>
+              <TabsList className="flex flex-wrap justify-center gap-1 mb-6 h-auto bg-muted p-1 rounded-lg">
+                <TabsTrigger value="basic" className="text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background">Basic</TabsTrigger>
+                <TabsTrigger value="details" className="text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background">Details</TabsTrigger>
+                <TabsTrigger value="builder" className="text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background">Builder</TabsTrigger>
+                <TabsTrigger value="media" className="text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background">Media</TabsTrigger>
+                <TabsTrigger value="amenities" className="text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background">Amenities</TabsTrigger>
               </TabsList>
 
               {/* Basic Info Tab */}
@@ -476,6 +480,48 @@ export default function ProjectForm() {
                       <Star className="h-4 w-4 text-amber-500" />
                       Featured Project
                     </Label>
+                  </div>
+
+                  {/* Badge Management */}
+                  <div className="space-y-2">
+                    <Label htmlFor="badge">Project Badge (Optional)</Label>
+                    <Select
+                      value={formData.badge || "none"}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, badge: value === "none" ? "" : value })
+                      }
+                    >
+                      <SelectTrigger id="badge">
+                        <SelectValue placeholder="Select badge or leave empty" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">No Badge</SelectItem>
+                        <SelectItem value="New">New</SelectItem>
+                        <SelectItem value="Big Discount">Big Discount</SelectItem>
+                        <SelectItem value="Special Offer">Special Offer</SelectItem>
+                        <SelectItem value="Hot Deal">Hot Deal</SelectItem>
+                        <SelectItem value="Premium">Premium</SelectItem>
+                        <SelectItem value="Best Seller">Best Seller</SelectItem>
+                        <SelectItem value="Limited Units">Limited Units</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="customBadgeText">Custom Badge Text (Optional)</Label>
+                    <Input
+                      id="customBadgeText"
+                      value={formData.customBadgeText}
+                      onChange={(e) => {
+                        const value = e.target.value.slice(0, 25);
+                        setFormData({ ...formData, customBadgeText: value });
+                      }}
+                      placeholder="e.g., Pre-Launch, Sold Out"
+                      maxLength={25}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Add custom badge text (max 25 characters)
+                    </p>
                   </div>
                 </div>
               </TabsContent>

@@ -212,7 +212,7 @@ export default function Projects() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projects.map((project: any) => (
-                  <Link key={project.id} href={`/projects/${project.id}`}>
+                  <Link key={project.id} href={`/projects/${project.slug}`}>
                     <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group h-full">
                       {/* Project Image */}
                       <div className="relative h-48 bg-secondary overflow-hidden">

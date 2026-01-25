@@ -1,0 +1,154 @@
+{
+  "query": "SELECT id, title FROM properties WHERE title LIKE '%test%' OR title LIKE '%Test%' OR title LIKE '%Multi-Image%' ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title FROM properties WHERE title LIKE '%test%' OR title LIKE '%Test%' OR title LIKE '%Multi-Image%' ORDER BY id;",
+  "rows": [
+    {
+      "id": "510001",
+      "title": "Test Property - Kharadi 3 BHK"
+    },
+    {
+      "id": "510002",
+      "title": "Test Property with Video"
+    },
+    {
+      "id": "510003",
+      "title": "Test Property with Images"
+    },
+    {
+      "id": "510004",
+      "title": "Test Property without Video"
+    },
+    {
+      "id": "510005",
+      "title": "Test Property - Manual Location"
+    },
+    {
+      "id": "510006",
+      "title": "Property for Image Test"
+    },
+    {
+      "id": "510007",
+      "title": "Test Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "id": "510008",
+      "title": "Test Property - With Zone"
+    },
+    {
+      "id": "510009",
+      "title": "Test Property - https://youtu.be/dQw4w9WgXcQ"
+    },
+    {
+      "id": "510010",
+      "title": "Test Property - https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "510011",
+      "title": "Property for Delete Test"
+    },
+    {
+      "id": "510012",
+      "title": "Multi-Image Property"
+    },
+    {
+      "id": "510013",
+      "title": "Test Property - Kharadi 3 BHK"
+    },
+    {
+      "id": "510014",
+      "title": "Test Property with Images"
+    },
+    {
+      "id": "510015",
+      "title": "Test Property with Video"
+    },
+    {
+      "id": "510016",
+      "title": "Test Property - Manual Location"
+    },
+    {
+      "id": "510017",
+      "title": "Property for Image Test"
+    },
+    {
+      "id": "510018",
+      "title": "Test Property without Video"
+    },
+    {
+      "id": "510019",
+      "title": "Test Property - With Zone"
+    },
+    {
+      "id": "510020",
+      "title": "Test Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "id": "510021",
+      "title": "Test Property - https://youtu.be/dQw4w9WgXcQ"
+    },
+    {
+      "id": "510022",
+      "title": "Property for Delete Test"
+    },
+    {
+      "id": "510023",
+      "title": "Test Property - https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "510024",
+      "title": "Multi-Image Property"
+    },
+    {
+      "id": "510025",
+      "title": "Test Property with Images"
+    },
+    {
+      "id": "510026",
+      "title": "Test Property - Kharadi 3 BHK"
+    },
+    {
+      "id": "510027",
+      "title": "Test Property with Video"
+    },
+    {
+      "id": "510028",
+      "title": "Property for Image Test"
+    },
+    {
+      "id": "510029",
+      "title": "Test Property - Manual Location"
+    },
+    {
+      "id": "510030",
+      "title": "Test Property without Video"
+    },
+    {
+      "id": "510031",
+      "title": "Test Property - With Zone"
+    },
+    {
+      "id": "510032",
+      "title": "Test Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "id": "510033",
+      "title": "Test Property - https://youtu.be/dQw4w9WgXcQ"
+    },
+    {
+      "id": "510034",
+      "title": "Property for Delete Test"
+    },
+    {
+      "id": "510035",
+      "title": "Test Property - https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      "id": "510036",
+      "title": "Multi-Image Property"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\n510001\tTest Property - Kharadi 3 BHK\n510002\tTest Property with Video\n510003\tTest Property with Images\n510004\tTest Property without Video\n510005\tTest Property - Manual Location\n510006\tProperty for Image Test\n510007\tTest Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ\n510008\tTest Property - With Zone\n510009\tTest Property - https://youtu.be/dQw4w9WgXcQ\n510010\tTest Property - https://www.youtube.com/embed/dQw4w9WgXcQ\n510011\tProperty for Delete Test\n510012\tMulti-Image Property\n510013\tTest Property - Kharadi 3 BHK\n510014\tTest Property with Images\n510015\tTest Property with Video\n510016\tTest Property - Manual Location\n510017\tProperty for Image Test\n510018\tTest Property without Video\n510019\tTest Property - With Zone\n510020\tTest Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ\n510021\tTest Property - https://youtu.be/dQw4w9WgXcQ\n510022\tProperty for Delete Test\n510023\tTest Property - https://www.youtube.com/embed/dQw4w9WgXcQ\n510024\tMulti-Image Property\n510025\tTest Property with Images\n510026\tTest Property - Kharadi 3 BHK\n510027\tTest Property with Video\n510028\tProperty for Image Test\n510029\tTest Property - Manual Location\n510030\tTest Property without Video\n510031\tTest Property - With Zone\n510032\tTest Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ\n510033\tTest Property - https://youtu.be/dQw4w9WgXcQ\n510034\tProperty for Delete Test\n510035\tTest Property - https://www.youtube.com/embed/dQw4w9WgXcQ\n510036\tMulti-Image Property\n",
+  "stderr": "",
+  "execution_time_ms": 1565
+}
