@@ -1301,3 +1301,116 @@
 - [x] Green "New", Red "Price Reduced", Orange "Limited Time"
 - [x] Test character limit enforcement (25 chars) - Working correctly
 - [ ] Save checkpoint with enhanced badge system
+
+## Projects Feature - Builder Projects System
+
+### Overview
+Create a comprehensive Projects system for builder projects (like Pride Purple Park Eden) with project listings, detailed project pages with tabs, admin management, and search/filter functionality.
+
+**Research Complete:**
+- Analyzed Pride Purple Park Eden website design
+- Analyzed Bhartiya Property website layout
+- Identified key features: tabbed interface, amenities grid, floor plans, builder info, RERA details, inquiry forms
+
+### Database Schema
+- [x] Create `projects` table (29 columns including name, builder, location, price range, status, RERA, dates, units, land area, towers, floors, configurations, coordinates, badges)
+- [x] Create `project_images` table (id, projectId, imageUrl, imageKey, isCover, displayOrder, createdAt)
+- [x] Create `project_videos` table (id, projectId, videoUrl, videoType, displayOrder, createdAt)
+- [x] Create `project_amenities` table (id, projectId, name, icon, category, displayOrder, createdAt)
+- [x] Create `project_floor_plans` table (id, projectId, name, bhk, carpetArea, builtUpArea, price, imageUrl, imageKey, displayOrder, createdAt)
+- [x] Create `builders` table (id, name, description, logo, foundedYear, completedProjects, ongoingProjects, website, createdAt, updatedAt)
+- [x] Add status enum: 'Upcoming', 'Under Construction', 'Ready to Move', 'Completed'
+- [x] Push database schema changes - Migration successful (0011_futuristic_lady_vermin.sql)
+
+### Backend - tRPC Routers
+- [ ] Create projects router with CRUD operations
+- [ ] Add getFeaturedProjects query
+- [ ] Add searchProjects query with filters (location, builder, status, budget, BHK)
+- [ ] Add getProjectById query with all related data
+- [ ] Create project_images router (add, delete, updateCover, reorder)
+- [ ] Create project_videos router (add, delete, reorder)
+- [ ] Create project_amenities router (add, delete, bulk add)
+- [ ] Create project_floor_plans router (add, delete, update)
+- [ ] Create builders router (CRUD operations)
+- [ ] Add database helper functions in server/db.ts
+
+### Admin - Project Management
+- [ ] Create ProjectForm component for add/edit projects
+- [ ] Add project basic details section (name, builder, location, price range, status)
+- [ ] Add project description and highlights section
+- [ ] Reuse PropertyImageUpload for project images
+- [ ] Reuse PropertyVideoUpload for project videos
+- [ ] Create AmenitiesManager component (add/remove amenities with icons)
+- [ ] Create FloorPlansManager component (add floor plans with images and details)
+- [ ] Add RERA and timeline section (RERA number, launch date, possession date)
+- [ ] Add units section (total units, available units)
+- [ ] Add featured checkbox
+- [ ] Add "Add Project" button to admin dashboard
+- [ ] Add edit/delete actions to project list in dashboard
+- [ ] Create BuilderForm component for managing builders
+- [ ] Add "Manage Builders" page in admin
+
+### Frontend - Projects Listing
+- [ ] Create Projects page (/projects) with grid layout
+- [ ] Add search bar with location, builder, budget filters
+- [ ] Add filter dropdowns (Status, BHK, Price Range)
+- [ ] Add sort options (Price, Launch Date, Name)
+- [ ] Create ProjectCard component showing image, name, builder, location, price, status
+- [ ] Add pagination for project list
+- [ ] Show "No projects found" empty state
+- [ ] Add loading skeletons
+
+### Frontend - Project Detail Page
+- [ ] Create ProjectDetail page (/projects/:id)
+- [ ] Design hero section with image gallery and key details
+- [ ] Create tabbed interface with:
+  * Overview tab (description, highlights, key features)
+  * Amenities tab (grid of amenities with icons)
+  * Floor Plans tab (floor plan cards with images, area, price)
+  * Builder Info tab (builder background, past projects, credentials)
+  * Location tab (map, connectivity, nearby landmarks)
+  * Gallery tab (all project images in grid)
+  * Videos tab (embedded videos)
+- [ ] Add "Send Inquiry" button with form
+- [ ] Add "Download Brochure" button (if available)
+- [ ] Show RERA number and timeline
+- [ ] Add social share buttons
+- [ ] Make tabs responsive (stack on mobile)
+
+### Homepage Integration
+- [ ] Add "Projects" tab to main navigation
+- [ ] Create FeaturedProjects component for homepage
+- [ ] Add "Explore Projects" section on homepage
+- [ ] Link Projects page from homepage CTA
+
+### Sample Data - Kharadi Projects
+- [ ] Research and create Pride Purple Park Eden project data
+- [ ] Create 3-4 other upcoming projects in Kharadi with realistic data
+- [ ] Add amenities for each project (clubhouse, gym, pool, etc.)
+- [ ] Add floor plans (2BHK, 3BHK) with sample images
+- [ ] Add builder information for each project
+- [ ] Upload project images (use search or generate placeholders)
+- [ ] Add project videos (YouTube links or virtual tours)
+
+### Testing & Quality Assurance
+- [ ] Test project CRUD operations (add, edit, delete)
+- [ ] Test image upload and management
+- [ ] Test video upload and management
+- [ ] Test amenities and floor plans management
+- [ ] Test search and filter functionality
+- [ ] Test project detail page tabs
+- [ ] Test responsive design on mobile
+- [ ] Verify no regression in existing features (properties, staff, etc.)
+- [ ] Test with staff login permissions
+- [ ] Write vitest tests for project routers
+
+### Documentation
+- [ ] Update README with Projects feature documentation
+- [ ] Document project schema and relationships
+- [ ] Add comments to complex components
+
+### Deployment
+- [ ] Save checkpoint with Projects feature
+- [ ] Verify all features working on dev server
+- [ ] Test published site with Projects
+

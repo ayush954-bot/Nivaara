@@ -1,6 +1,6 @@
 import { eq, desc, and, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage, propertyVideos, InsertPropertyVideo } from "../drizzle/schema";
+import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage, propertyVideos, InsertPropertyVideo, projects, InsertProject, builders, InsertBuilder, projectImages, InsertProjectImage, projectVideos, InsertProjectVideo, projectAmenities, InsertProjectAmenity, projectFloorPlans, InsertProjectFloorPlan } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -403,4 +403,298 @@ export async function updateVideoOrder(videoId: number, displayOrder: number) {
     .update(propertyVideos)
     .set({ displayOrder })
     .where(eq(propertyVideos.id, videoId));
+}
+
+
+/**
+ * ========================================
+ * PROJECTS FUNCTIONS
+ * ========================================
+ */
+
+/**
+ * Builders functions
+ */
+export async function listBuilders() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(builders).orderBy(desc(builders.createdAt));
+}
+
+export async function getBuilderById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(builders).where(eq(builders.id, id)).limit(1);
+  return result[0] || null;
+}
+
+export async function createBuilder(builder: InsertBuilder) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(builders).values(builder);
+  return { id: Number(result[0].insertId) };
+}
+
+export async function updateBuilder(id: number, builder: Partial<InsertBuilder>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(builders).set(builder).where(eq(builders.id, id));
+  return { success: true };
+}
+
+export async function deleteBuilder(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(builders).where(eq(builders.id, id));
+  return { success: true };
+}
+
+/**
+ * Projects functions
+ */
+export async function listProjects(filters?: {
+  city?: string;
+  status?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  builderName?: string;
+  search?: string;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  let query = db.select().from(projects);
+  const conditions = [];
+  
+  if (filters?.city) {
+    conditions.push(eq(projects.city, filters.city));
+  }
+  if (filters?.status) {
+    conditions.push(eq(projects.status, filters.status as any));
+  }
+  if (filters?.minPrice) {
+    conditions.push(sql`${projects.minPrice} >= ${filters.minPrice}`);
+  }
+  if (filters?.maxPrice) {
+    conditions.push(sql`${projects.maxPrice} <= ${filters.maxPrice}`);
+  }
+  if (filters?.builderName) {
+    conditions.push(like(projects.builderName, `%${filters.builderName}%`));
+  }
+  if (filters?.search) {
+    conditions.push(
+      sql`(${projects.name} LIKE ${`%${filters.search}%`} OR ${projects.location} LIKE ${`%${filters.search}%`})`
+    );
+  }
+  
+  if (conditions.length > 0) {
+    query = query.where(and(...conditions)) as any;
+  }
+  
+  return await query.orderBy(desc(projects.createdAt));
+}
+
+export async function getFeaturedProjects() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(projects)
+    .where(eq(projects.featured, true))
+    .orderBy(desc(projects.createdAt))
+    .limit(6);
+}
+
+export async function getProjectById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  return result[0] || null;
+}
+
+export async function createProject(project: InsertProject) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(projects).values(project);
+  return { id: Number(result[0].insertId) };
+}
+
+export async function updateProject(id: number, project: Partial<InsertProject>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(projects).set(project).where(eq(projects.id, id));
+  return { success: true };
+}
+
+export async function deleteProject(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Delete related data
+  await deleteAllProjectImages(id);
+  await deleteAllProjectVideos(id);
+  await deleteAllProjectAmenities(id);
+  await deleteAllProjectFloorPlans(id);
+  
+  await db.delete(projects).where(eq(projects.id, id));
+  return { success: true };
+}
+
+/**
+ * Project Images functions
+ */
+export async function listProjectImages(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(projectImages)
+    .where(eq(projectImages.projectId, projectId))
+    .orderBy(projectImages.displayOrder);
+}
+
+export async function addProjectImage(image: InsertProjectImage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (image.isCover) {
+    await db
+      .update(projectImages)
+      .set({ isCover: false })
+      .where(eq(projectImages.projectId, image.projectId));
+  }
+  
+  await db.insert(projectImages).values(image);
+  return { success: true };
+}
+
+export async function deleteProjectImage(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectImages).where(eq(projectImages.id, id));
+  return { success: true };
+}
+
+export async function deleteAllProjectImages(projectId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectImages).where(eq(projectImages.projectId, projectId));
+  return { success: true };
+}
+
+export async function setProjectCoverImage(projectId: number, imageId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db
+    .update(projectImages)
+    .set({ isCover: false })
+    .where(eq(projectImages.projectId, projectId));
+  
+  await db
+    .update(projectImages)
+    .set({ isCover: true })
+    .where(eq(projectImages.id, imageId));
+}
+
+/**
+ * Project Videos functions
+ */
+export async function listProjectVideos(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(projectVideos)
+    .where(eq(projectVideos.projectId, projectId))
+    .orderBy(projectVideos.displayOrder);
+}
+
+export async function addProjectVideo(video: InsertProjectVideo) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(projectVideos).values(video);
+  return { success: true };
+}
+
+export async function deleteProjectVideo(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectVideos).where(eq(projectVideos.id, id));
+  return { success: true };
+}
+
+export async function deleteAllProjectVideos(projectId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectVideos).where(eq(projectVideos.projectId, projectId));
+  return { success: true };
+}
+
+/**
+ * Project Amenities functions
+ */
+export async function listProjectAmenities(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(projectAmenities)
+    .where(eq(projectAmenities.projectId, projectId))
+    .orderBy(projectAmenities.displayOrder);
+}
+
+export async function addProjectAmenity(amenity: InsertProjectAmenity) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(projectAmenities).values(amenity);
+  return { success: true };
+}
+
+export async function deleteProjectAmenity(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectAmenities).where(eq(projectAmenities.id, id));
+  return { success: true };
+}
+
+export async function deleteAllProjectAmenities(projectId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectAmenities).where(eq(projectAmenities.projectId, projectId));
+  return { success: true };
+}
+
+/**
+ * Project Floor Plans functions
+ */
+export async function listProjectFloorPlans(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(projectFloorPlans)
+    .where(eq(projectFloorPlans.projectId, projectId))
+    .orderBy(projectFloorPlans.displayOrder);
+}
+
+export async function addProjectFloorPlan(floorPlan: InsertProjectFloorPlan) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(projectFloorPlans).values(floorPlan);
+  return { success: true };
+}
+
+export async function deleteProjectFloorPlan(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectFloorPlans).where(eq(projectFloorPlans.id, id));
+  return { success: true };
+}
+
+export async function deleteAllProjectFloorPlans(projectId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(projectFloorPlans).where(eq(projectFloorPlans.projectId, projectId));
+  return { success: true };
 }
