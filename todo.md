@@ -1463,3 +1463,9 @@
 ## Breadcrumb Layout Fix (Jan 25, 2026)
 
 - [x] Fix breadcrumb wrapping issue - keep Home / Projects / Pride Purple Park Eden on single line ✅
+
+
+## Additional Fixes Needed (Jan 25, 2026)
+
+- [x] Fix breadcrumb still breaking on mobile (previous fix didn't work) ✅
+- [x] Add badge display to homepage featured projects section ✅

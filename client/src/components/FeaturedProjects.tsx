@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function FeaturedProjects() {
   // Fetch featured projects
@@ -157,8 +158,25 @@ export default function FeaturedProjects() {
                           </div>
                         )}
                         
-                        {/* Status Badge */}
-                        <Badge className={`absolute top-3 left-3 text-xs ${getStatusColor(project.status)}`}>
+                        {/* Badges - Using badgeUtils */}
+                        {(() => {
+                          const badges = getPropertyBadges(project);
+                          if (badges.length > 0) {
+                            return (
+                              <div className="absolute top-3 left-3 flex flex-col gap-2">
+                                {badges.map((badge, idx) => (
+                                  <Badge key={idx} className={`${badge.colorClass} text-xs px-2 py-1 shadow-lg`}>
+                                    {badge.text}
+                                  </Badge>
+                                ))}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                        
+                        {/* Status Badge on right */}
+                        <Badge className={`absolute top-3 right-3 text-xs ${getStatusColor(project.status)}`}>
                           {project.status}
                         </Badge>
                       </div>
