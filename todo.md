@@ -1501,3 +1501,10 @@
 - [x] Fix gallery image disappearing on touch in project management (added confirmation dialog + always visible buttons) ✅
 - [x] Fix PDF not visible after upload in admin panel (improved PDF detection with icon) ✅
 - [x] Fix brochure download not working for clients (improved external URL handling) ✅
+
+
+## PDF Upload Bug (Jan 25, 2026)
+
+- [x] Fix manually uploaded PDFs showing as corrupted/damaged when downloaded ✅
+- [x] Investigate PDF upload process and S3 storage ✅
+- [x] Ensure proper content-type and file handling for PDFs (fixed base64 prefix regex) ✅
