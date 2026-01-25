@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { MapView } from "@/components/Map";
+import { trpc } from "@/lib/trpc";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -16,11 +17,23 @@ export default function Contact() {
     message: "",
   });
 
+  const createInquiry = trpc.inquiries.create.useMutation({
+    onSuccess: () => {
+      toast.success("Thank you for your inquiry! We'll get back to you soon.");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    },
+    onError: (error) => {
+      toast.error("Failed to submit inquiry. Please try again.");
+      console.error(error);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would send the form data to a backend
-    toast.success("Thank you for your inquiry! We'll get back to you soon.");
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    createInquiry.mutate({
+      ...formData,
+      inquiryType: "general",
+    });
   };
 
   const handleChange = (
@@ -73,8 +86,9 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold mb-2">Office Location</h3>
                         <p className="text-muted-foreground">
-                          Kharadi, Pune<br />
-                          Maharashtra, India
+                          Office No. 203, Sr No.69/4,<br />
+                          Plot.B Zen Square, Kharadi,<br />
+                          Pune (MH), India
                         </p>
                       </div>
                     </div>
@@ -92,8 +106,9 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold mb-2">Phone</h3>
                         <p className="text-muted-foreground">
-                          +91 XXXXX XXXXX<br />
-                          <span className="text-sm">Mon-Sat: 9:00 AM - 7:00 PM</span>
+                          +91 9764515697<br />
+                          +91 9022813423<br />
+                          <span className="text-sm">Available 7 days a week</span>
                         </p>
                       </div>
                     </div>
@@ -111,7 +126,7 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold mb-2">Email</h3>
                         <p className="text-muted-foreground">
-                          info@nivaara.com<br />
+                          info@nivaararealty.com<br />
                           <span className="text-sm">We'll respond within 24 hours</span>
                         </p>
                       </div>
@@ -134,7 +149,7 @@ export default function Contact() {
                         </p>
                         <Button variant="outline" size="sm" asChild>
                           <a
-                            href="https://wa.me/91XXXXXXXXXX"
+                            href="https://wa.me/919764515697"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -249,32 +264,26 @@ export default function Contact() {
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-8 text-foreground">
-              Office Hours
+              Availability
             </h2>
             <Card>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-semibold mb-3">Working Days</h3>
+                    <h3 className="font-semibold mb-3">We're Available</h3>
                     <div className="space-y-2 text-muted-foreground">
-                      <div className="flex justify-between">
-                        <span>Monday - Friday</span>
-                        <span className="font-medium">9:00 AM - 7:00 PM</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-foreground">Monday to Sunday</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Saturday</span>
-                        <span className="font-medium">10:00 AM - 5:00 PM</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Sunday</span>
-                        <span className="font-medium">Closed</span>
-                      </div>
+                      <p className="text-sm">
+                        Available all 7 days for your convenience. Contact us anytime via phone, WhatsApp, or email.
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-3">Emergency Contact</h3>
+                    <h3 className="font-semibold mb-3">Flexible Consultation</h3>
                     <p className="text-muted-foreground mb-2">
-                      For urgent property matters outside office hours, please contact us via WhatsApp or email. We'll respond as soon as possible.
+                      We understand real estate decisions don't follow a 9-to-5 schedule. Reach out to us any day of the week, and we'll arrange a consultation at your convenience.
                     </p>
                   </div>
                 </div>

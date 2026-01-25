@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, title, location FROM properties WHERE location LIKE '%Purandar%' OR title LIKE '%Purandar%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, location FROM properties WHERE location LIKE '%Purandar%' OR title LIKE '%Purandar%';",
+  "rows": [
+    {
+      "id": "60001",
+      "title": "5 Acre Premium Land in Purandar - Near New Pune International Airport",
+      "location": "Purandar"
+    },
+    {
+      "id": "150001",
+      "title": "Purandar Land near new International Airport",
+      "location": "Pune"
+    },
+    {
+      "id": "150003",
+      "title": "Land in Purandar",
+      "location": "Purandar"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tlocation\n60001\t5 Acre Premium Land in Purandar - Near New Pune International Airport\tPurandar\n150001\tPurandar Land near new International Airport\tPune\n150003\tLand in Purandar\tPurandar\n",
+  "stderr": "",
+  "execution_time_ms": 1639
+}

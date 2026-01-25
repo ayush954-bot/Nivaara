@@ -14,8 +14,15 @@ import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Locations from "./pages/Locations";
-
+import ChatWidget from "./components/ChatWidget";
+import AdminDashboard from "./pages/admin/Dashboard";
+import PropertyForm from "./pages/admin/PropertyForm";
+import BulkImport from "./pages/admin/BulkImport";
+import StaffLogin from "./pages/StaffLogin";
+import StaffManagement from "./pages/admin/StaffManagement";
+import PropertyDetail from "./pages/PropertyDetail";
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -25,15 +32,23 @@ function Router() {
           <Route path={"/about"} component={About} />
           <Route path={"/services"} component={Services} />
           <Route path={"/properties"} component={Properties} />
+          <Route path={"/properties/:id"} component={PropertyDetail} />
           <Route path={"/team"} component={Team} />
           <Route path={"/contact"} component={Contact} />
           <Route path={"/faq"} component={FAQ} />
           <Route path={"/locations"} component={Locations} />
+          <Route path={"/staff/login"} component={StaffLogin} />
+          <Route path={"/admin/dashboard"} component={AdminDashboard} />
+          <Route path={"/admin/staff"} component={StaffManagement} />
+          <Route path={"/admin/properties/new"} component={PropertyForm} />
+          <Route path={"/admin/properties/edit/:id"} component={PropertyForm} />
+          <Route path={"/admin/properties/bulk-import"} component={BulkImport} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
