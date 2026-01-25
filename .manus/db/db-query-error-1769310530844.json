@@ -1,0 +1,8 @@
+{
+  "query": "UPDATE projects SET brochure_url = 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf' WHERE id = 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute UPDATE projects SET brochure_url = 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table-word.pdf' WHERE id = 1;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'brochure_url' in 'field list'"
+  ]
+}
