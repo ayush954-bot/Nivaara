@@ -1534,3 +1534,10 @@
 - [x] Verify production build includes OG meta tag handling
 - [x] Test with Facebook Sharing Debugger
 - [x] Ensure image URLs are publicly accessible
+
+## GitHub Export & Database Backup (Jan 25, 2026)
+
+- [x] Export current database data to SQL file
+- [x] Create database backup script
+- [x] Set up daily automated backup mechanism
+- [x] Guide user to export code to GitHub via Settings
