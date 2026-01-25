@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 import {
   Building2,
   MapPin,
@@ -234,14 +235,14 @@ export default function ProjectDetail() {
       )}
 
       {/* Breadcrumb */}
-      <div className="bg-secondary/30 py-4">
+      <div className="bg-white py-4 border-b">
         <div className="container">
           <nav className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-muted-foreground hover:text-primary whitespace-nowrap">Home</Link>
-            <span className="text-muted-foreground">/</span>
-            <Link href="/projects" className="text-muted-foreground hover:text-primary whitespace-nowrap">Projects</Link>
-            <span className="text-muted-foreground">/</span>
-            <span className="text-foreground font-medium whitespace-nowrap overflow-hidden text-ellipsis">{project.name}</span>
+            <Link href="/" className="text-gray-700 hover:text-primary whitespace-nowrap">Home</Link>
+            <span className="text-gray-500">/</span>
+            <Link href="/projects" className="text-gray-700 hover:text-primary whitespace-nowrap">Projects</Link>
+            <span className="text-gray-500">/</span>
+            <span className="text-gray-900 font-medium whitespace-nowrap overflow-hidden text-ellipsis">{project.name}</span>
           </nav>
         </div>
       </div>
@@ -268,14 +269,31 @@ export default function ProjectDetail() {
                   </div>
                 )}
                 
-                {/* Status Badge */}
-                <Badge className={`absolute top-4 left-4 text-sm px-3 py-1 ${getStatusColor(project.status)}`}>
+                {/* Badges - Using badgeUtils like Properties section */}
+                {(() => {
+                  const badges = getPropertyBadges(project);
+                  if (badges.length > 0) {
+                    return (
+                      <div className="absolute top-4 left-4 flex flex-col gap-2">
+                        {badges.map((badge, idx) => (
+                          <Badge key={idx} className={`${badge.colorClass} text-sm px-3 py-1 shadow-lg`}>
+                            {badge.text}
+                          </Badge>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
+                
+                {/* Status Badge on right */}
+                <Badge className={`absolute top-4 right-4 text-sm px-3 py-1 ${getStatusColor(project.status)}`}>
                   {project.status}
                 </Badge>
                 
                 {/* Featured Badge */}
                 {project.featured && (
-                  <Badge className="absolute top-4 right-4 bg-primary text-primary-foreground text-sm px-3 py-1">
+                  <Badge className="absolute top-16 right-4 bg-primary text-primary-foreground text-sm px-3 py-1">
                     Featured Project
                   </Badge>
                 )}

@@ -1451,3 +1451,10 @@
 - [x] Add amenity images to Pride Purple project (5 images with beautiful cards) ✅
 - [x] Fix badge persistence for projects (badge fields in handleSubmit) ✅
 - [x] Remove extra test properties (cleaned from 20 to 8 real properties) ✅
+
+
+## Critical Fixes Needed (Jan 25, 2026 - User Report)
+
+- [x] Fix breadcrumb path visibility issue (text not visible on mobile) ✅
+- [x] Fix amenity images not displaying (images stopped showing) ✅
+- [x] Fix badge display and persistence - replicate exact Property section implementation ✅
