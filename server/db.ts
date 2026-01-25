@@ -1,6 +1,6 @@
-import { eq, desc, and, like, sql } from "drizzle-orm";
+import { eq, desc, and, like, sql, gte, lte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage, propertyVideos, InsertPropertyVideo } from "../drizzle/schema";
+import { InsertUser, users, properties, InsertProperty, inquiries, InsertInquiry, testimonials, InsertTestimonial, propertyImages, InsertPropertyImage, propertyVideos, InsertPropertyVideo, projects, projectAmenities, projectFloorPlans, projectImages, projectVideos } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -403,4 +403,208 @@ export async function updateVideoOrder(videoId: number, displayOrder: number) {
     .update(propertyVideos)
     .set({ displayOrder })
     .where(eq(propertyVideos.id, videoId));
+}
+
+
+// ===== PROJECTS FUNCTIONS =====
+
+/**
+ * Get all projects with their related data
+ */
+export async function getAllProjects() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const projectsList = await db.select().from(projects).orderBy(desc(projects.createdAt));
+  
+  // Fetch related data for each project
+  const projectsWithData = await Promise.all(
+    projectsList.map(async (project) => {
+      const [amenitiesList, floorPlansList, imagesList] = await Promise.all([
+        getProjectAmenities(project.id),
+        getProjectFloorPlans(project.id),
+        getProjectImages(project.id),
+      ]);
+      
+      return {
+        ...project,
+        amenities: amenitiesList,
+        floorPlans: floorPlansList,
+        images: imagesList,
+      };
+    })
+  );
+  
+  return projectsWithData;
+}
+
+/**
+ * Get a single project by ID with all related data
+ */
+export async function getProjectById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  if (result.length === 0) return null;
+  
+  const project = result[0];
+  
+  // Fetch all related data
+  const [amenitiesList, floorPlansList, imagesList, videosList] = await Promise.all([
+    getProjectAmenities(id),
+    getProjectFloorPlans(id),
+    getProjectImages(id),
+    getProjectVideos(id),
+  ]);
+  
+  return {
+    ...project,
+    amenities: amenitiesList,
+    floorPlans: floorPlansList,
+    images: imagesList,
+    videos: videosList,
+  };
+}
+
+/**
+ * Get featured projects
+ */
+export async function getFeaturedProjects() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const projectsList = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.featured, true))
+    .orderBy(desc(projects.createdAt))
+    .limit(6);
+  
+  // Fetch related data for each project
+  const projectsWithData = await Promise.all(
+    projectsList.map(async (project) => {
+      const [amenitiesList, floorPlansList] = await Promise.all([
+        getProjectAmenities(project.id),
+        getProjectFloorPlans(project.id),
+      ]);
+      
+      return {
+        ...project,
+        amenities: amenitiesList,
+        floorPlans: floorPlansList,
+      };
+    })
+  );
+  
+  return projectsWithData;
+}
+
+/**
+ * Search projects with filters
+ */
+export async function searchProjects(filters: {
+  location?: string;
+  status?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  bedrooms?: number;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  let query = db.select().from(projects);
+  const conditions = [];
+  
+  if (filters.location) {
+    conditions.push(eq(projects.location, filters.location));
+  }
+  
+  if (filters.status) {
+    conditions.push(eq(projects.status, filters.status as any));
+  }
+  
+  if (filters.minPrice) {
+    conditions.push(sql`${projects.minPrice} >= ${filters.minPrice}`);
+  }
+  
+  if (filters.maxPrice) {
+    conditions.push(sql`${projects.maxPrice} <= ${filters.maxPrice}`);
+  }
+  
+  if (conditions.length > 0) {
+    query = query.where(and(...conditions)) as any;
+  }
+  
+  const projectsList = await query.orderBy(desc(projects.createdAt));
+  
+  // Fetch related data for each project
+  const projectsWithData = await Promise.all(
+    projectsList.map(async (project) => {
+      const [amenitiesList, floorPlansList] = await Promise.all([
+        getProjectAmenities(project.id),
+        getProjectFloorPlans(project.id),
+      ]);
+      
+      return {
+        ...project,
+        amenities: amenitiesList,
+        floorPlans: floorPlansList,
+      };
+    })
+  );
+  
+  return projectsWithData;
+}
+
+/**
+ * Get project amenities
+ */
+export async function getProjectAmenities(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(projectAmenities)
+    .where(eq(projectAmenities.projectId, projectId))
+    .orderBy(projectAmenities.displayOrder);
+}
+
+/**
+ * Get project floor plans
+ */
+export async function getProjectFloorPlans(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(projectFloorPlans)
+    .where(eq(projectFloorPlans.projectId, projectId))
+    .orderBy(projectFloorPlans.displayOrder);
+}
+
+/**
+ * Get project images
+ */
+export async function getProjectImages(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(projectImages)
+    .where(eq(projectImages.projectId, projectId))
+    .orderBy(projectImages.displayOrder);
+}
+
+/**
+ * Get project videos
+ */
+export async function getProjectVideos(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(projectVideos)
+    .where(eq(projectVideos.projectId, projectId))
+    .orderBy(projectVideos.displayOrder);
 }

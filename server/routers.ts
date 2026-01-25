@@ -389,6 +389,38 @@ export const appRouter = router({
         }),
     }),
   }),
+
+  // Projects router - Builder project listings
+  projects: router({
+    // Public queries
+    list: publicProcedure.query(async () => {
+      return await db.getAllProjects();
+    }),
+    
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getProjectById(input.id);
+      }),
+    
+    featured: publicProcedure.query(async () => {
+      return await db.getFeaturedProjects();
+    }),
+    
+    search: publicProcedure
+      .input(
+        z.object({
+          location: z.string().optional(),
+          status: z.string().optional(),
+          minPrice: z.number().optional(),
+          maxPrice: z.number().optional(),
+          bedrooms: z.number().optional(),
+        })
+      )
+      .query(async ({ input }) => {
+        return await db.searchProjects(input);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

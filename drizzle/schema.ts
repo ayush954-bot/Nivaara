@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean, date } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -145,3 +145,101 @@ export const staff = mysqlTable("staff", {
 
 export type Staff = typeof staff.$inferSelect;
 export type InsertStaff = typeof staff.$inferInsert;
+
+/**
+ * Projects table - stores builder project listings (apartments, townships, etc.)
+ */
+export const projects = mysqlTable("projects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(), // e.g., "Pride Purple Park Eden"
+  builderName: varchar("builderName", { length: 255 }).notNull(), // e.g., "Pride Group"
+  description: text("description").notNull(), // Full project description
+  location: varchar("location", { length: 255 }).notNull(), // e.g., "Kharadi"
+  city: varchar("city", { length: 100 }).notNull(), // e.g., "Pune"
+  latitude: decimal("latitude", { precision: 10, scale: 8 }), // Latitude coordinate
+  longitude: decimal("longitude", { precision: 11, scale: 8 }), // Longitude coordinate
+  status: mysqlEnum("status", ["Upcoming", "Under Construction", "Ready to Move"]).notNull(),
+  priceRange: varchar("priceRange", { length: 100 }).notNull(), // e.g., "₹85L - ₹1.45Cr"
+  minPrice: decimal("minPrice", { precision: 15, scale: 2 }), // For filtering
+  maxPrice: decimal("maxPrice", { precision: 15, scale: 2 }), // For filtering
+  configurations: varchar("configurations", { length: 255 }), // e.g., "2, 3 BHK"
+  reraNumber: varchar("reraNumber", { length: 100 }), // RERA registration number
+  possessionDate: date("possessionDate"), // Expected possession date
+  totalUnits: int("totalUnits"), // Total number of units
+  towers: int("towers"), // Number of towers/buildings
+  floors: int("floors"), // Number of floors per tower
+  coverImage: text("coverImage"), // Main project image URL
+  videoUrl: text("videoUrl"), // YouTube video URL
+  brochureUrl: text("brochureUrl"), // PDF brochure URL
+  featured: boolean("featured").default(false).notNull(), // Featured projects
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+
+/**
+ * Project Amenities table - stores amenities for each project
+ */
+export const projectAmenities = mysqlTable("project_amenities", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(), // Foreign key to projects table
+  name: varchar("name", { length: 255 }).notNull(), // e.g., "Swimming Pool", "Gym"
+  icon: varchar("icon", { length: 50 }), // Lucide icon name (e.g., "Dumbbell", "Waves")
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectAmenity = typeof projectAmenities.$inferSelect;
+export type InsertProjectAmenity = typeof projectAmenities.$inferInsert;
+
+/**
+ * Project Floor Plans table - stores different floor plan configurations
+ */
+export const projectFloorPlans = mysqlTable("project_floor_plans", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(), // Foreign key to projects table
+  name: varchar("name", { length: 255 }).notNull(), // e.g., "2 BHK - Type A"
+  bedrooms: int("bedrooms").notNull(),
+  bathrooms: int("bathrooms").notNull(),
+  area: int("area").notNull(), // Area in sq ft
+  price: decimal("price", { precision: 15, scale: 2 }).notNull(), // Starting price
+  imageUrl: text("imageUrl"), // Floor plan image URL
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectFloorPlan = typeof projectFloorPlans.$inferSelect;
+export type InsertProjectFloorPlan = typeof projectFloorPlans.$inferInsert;
+
+/**
+ * Project Images table - stores multiple images per project
+ */
+export const projectImages = mysqlTable("project_images", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(), // Foreign key to projects table
+  imageUrl: text("imageUrl").notNull(), // S3 URL of the image
+  caption: varchar("caption", { length: 255 }), // Optional image caption
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectImage = typeof projectImages.$inferSelect;
+export type InsertProjectImage = typeof projectImages.$inferInsert;
+
+/**
+ * Project Videos table - stores multiple video links per project
+ */
+export const projectVideos = mysqlTable("project_videos", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(), // Foreign key to projects table
+  videoUrl: text("videoUrl").notNull(), // YouTube, Vimeo, or other video URL
+  videoType: mysqlEnum("videoType", ["youtube", "vimeo", "virtual_tour", "other"]).default("youtube").notNull(),
+  title: varchar("title", { length: 255 }), // Optional video title
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectVideo = typeof projectVideos.$inferSelect;
+export type InsertProjectVideo = typeof projectVideos.$inferInsert;

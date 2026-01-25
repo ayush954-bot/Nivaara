@@ -1301,3 +1301,45 @@
 - [x] Green "New", Red "Price Reduced", Orange "Limited Time"
 - [x] Test character limit enforcement (25 chars) - Working correctly
 - [ ] Save checkpoint with enhanced badge system
+
+
+## Projects Feature - Builder Projects Showcase
+
+### Phase 1: Database Schema & Backend
+- [x] Add projects table schema to drizzle/schema.ts
+- [x] Add project_amenities table
+- [x] Add project_floor_plans table  
+- [x] Add project_images table
+- [x] Add project_videos table
+- [x] Run database migration (pnpm db:push)
+- [x] Add projects router to server/routers.ts with public queries (list, getById, featured)
+- [x] Add database helper functions in server/db.ts
+- [x] Test backend with sample data (Pride Purple Park Eden)
+
+### Phase 2: Frontend Pages
+- [ ] Create Projects listing page (client/src/pages/Projects.tsx)
+- [ ] Add filters (status, location, budget, BHK)
+- [ ] Create Project detail page (client/src/pages/ProjectDetail.tsx)
+- [ ] Add tabs (Overview, Floor Plans, Amenities, Gallery, Location)
+- [ ] Add image gallery with lightbox
+- [ ] Add floor plan cards with pricing
+
+### Phase 3: Integration
+- [ ] Add Projects link to Header navigation
+- [ ] Add Projects route to App.tsx
+- [ ] Add Featured Projects section to Home page
+- [ ] Update homepage to show projects
+
+### Phase 4: Admin Panel
+- [ ] Create admin project management page
+- [ ] Add project form with all fields
+- [ ] Add image upload for projects
+- [ ] Add floor plan management
+
+### Phase 5: Testing & Polish
+- [ ] Test all pages load correctly
+- [ ] Test filters work
+- [ ] Test detail page displays all data
+- [ ] Test responsive design
+- [ ] Test navigation
+- [ ] Save checkpoint
