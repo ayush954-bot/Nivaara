@@ -414,7 +414,23 @@ export default function ProjectDetail() {
                         EMI
                       </Button>
                       {project.brochureUrl && (
-                        <a href={project.brochureUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
+                        <a 
+                          href={project.brochureUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="flex-1"
+                          download
+                          onClick={(e) => {
+                            // For external URLs, open in new tab instead of download
+                            const url = project.brochureUrl;
+                            if (url && !url.includes(window.location.hostname) && 
+                                !url.includes('s3.') && 
+                                !url.includes('amazonaws.com')) {
+                              e.preventDefault();
+                              window.open(url, '_blank', 'noopener,noreferrer');
+                            }
+                          }}
+                        >
                           <Button variant="outline" className="w-full">
                             <Download className="h-4 w-4 mr-2" />
                             Brochure

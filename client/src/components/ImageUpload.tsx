@@ -143,15 +143,23 @@ export function ImageUpload({
       {/* Preview */}
       {value && value.startsWith("http") && (
         <div className="mt-2">
-          {value.endsWith(".pdf") || value.includes("application/pdf") ? (
-            <a 
-              href={value} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-sm text-primary hover:underline"
-            >
-              View PDF
-            </a>
+          {value.toLowerCase().endsWith(".pdf") || 
+           value.includes("application/pdf") || 
+           value.includes("/pdf/") ||
+           value.toLowerCase().includes("brochure") ? (
+            <div className="flex items-center gap-2 p-2 bg-secondary/50 rounded border">
+              <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM8.5 12h1v1h-1v-1zm0 2h1v3h-1v-3zm2.5-2h1.5c.55 0 1 .45 1 1v1c0 .55-.45 1-1 1H12v2h-1v-5zm1 2h.5v-1H12v1zm3-2h1.5c.55 0 1 .45 1 1v3c0 .55-.45 1-1 1H15v-5zm1 4h.5v-3H16v3z"/>
+              </svg>
+              <a 
+                href={value} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:underline font-medium"
+              >
+                View/Download PDF
+              </a>
+            </div>
           ) : (
             <img
               src={value}

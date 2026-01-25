@@ -195,7 +195,7 @@ export function GalleryImageUpload({
       {images.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((image, index) => (
-            <Card key={index} className="relative group overflow-hidden">
+            <Card key={index} className="relative overflow-hidden">
               <img
                 src={image.imageUrl}
                 alt={image.caption || `Image ${index + 1}`}
@@ -204,7 +204,8 @@ export function GalleryImageUpload({
                   (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23ddd" width="100" height="100"/><text fill="%23999" x="50%" y="50%" text-anchor="middle" dy=".3em">Error</text></svg>';
                 }}
               />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              {/* Action buttons always visible to prevent accidental touch issues */}
+              <div className="absolute top-2 right-2 flex gap-1">
                 {showCoverSelection && (
                   <Button
                     type="button"
@@ -220,7 +221,13 @@ export function GalleryImageUpload({
                   type="button"
                   size="sm"
                   variant="destructive"
-                  onClick={() => handleRemove(index)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.confirm('Remove this image?')) {
+                      handleRemove(index);
+                    }
+                  }}
                   title="Remove image"
                 >
                   <X className="h-4 w-4" />

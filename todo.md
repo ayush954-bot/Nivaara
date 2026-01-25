@@ -1494,3 +1494,10 @@
 
 - [x] Improve tabs styling (Overview, Floor Plans, etc.) - more attractive colors ✅
 - [x] Update View Details button in FeaturedProjects to match Properties style ✅
+
+
+## Project Management Bugs (Jan 25, 2026)
+
+- [x] Fix gallery image disappearing on touch in project management (added confirmation dialog + always visible buttons) ✅
+- [x] Fix PDF not visible after upload in admin panel (improved PDF detection with icon) ✅
+- [x] Fix brochure download not working for clients (improved external URL handling) ✅
