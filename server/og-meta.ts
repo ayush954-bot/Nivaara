@@ -1,4 +1,4 @@
-import { getProjectBySlug, getPropertyById } from "./db";
+import { getProjectBySlug, getPropertyById, getPropertyBySlug } from "./db";
 
 /**
  * Generate dynamic Open Graph meta tags for projects and properties
@@ -17,6 +17,36 @@ const DEFAULT_IMAGE = "https://files.manuscdn.com/user_upload_by_module/session_
 const SITE_NAME = "Nivaara Realty Solutions";
 const BASE_URL = "https://nivaararealty.com";
 
+/**
+ * Convert relative image URLs to absolute URLs for social media crawlers
+ * Social media platforms require absolute URLs to fetch images
+ */
+function toAbsoluteImageUrl(imageUrl: string | null | undefined): string {
+  if (!imageUrl) return DEFAULT_IMAGE;
+  
+  // Clean up the URL - remove any leading/trailing whitespace
+  const cleanUrl = imageUrl.trim();
+  
+  // Already an absolute URL (check for various protocols)
+  if (cleanUrl.match(/^https?:\/\//i)) {
+    return cleanUrl;
+  }
+  
+  // Handle URLs that start with "https:" but missing slashes (malformed)
+  if (cleanUrl.startsWith("https:") || cleanUrl.startsWith("http:")) {
+    // Fix malformed URLs like "https:/images/..." -> "https://images/..."
+    return cleanUrl.replace(/^(https?:)\/([^/])/, '$1//$2');
+  }
+  
+  // Relative URL - prepend base URL
+  if (cleanUrl.startsWith("/")) {
+    return `${BASE_URL}${cleanUrl}`;
+  }
+  
+  // No leading slash - add one
+  return `${BASE_URL}/${cleanUrl}`;
+}
+
 export async function getProjectOGMeta(slug: string): Promise<OGMeta | null> {
   try {
     const project = await getProjectBySlug(slug);
@@ -26,7 +56,7 @@ export async function getProjectOGMeta(slug: string): Promise<OGMeta | null> {
       title: `${project.name} by ${project.builderName} | ${SITE_NAME}`,
       description: project.description?.substring(0, 200) || 
         `Explore ${project.name} - ${project.configurations || ""} apartments in ${project.location}, ${project.city}. Price starting from ${project.priceRange || "Contact for price"}.`,
-      image: project.coverImage || DEFAULT_IMAGE,
+      image: toAbsoluteImageUrl(project.coverImage),
       url: `${BASE_URL}/projects/${slug}`,
       type: "article",
     };
@@ -38,19 +68,27 @@ export async function getProjectOGMeta(slug: string): Promise<OGMeta | null> {
 
 export async function getPropertyOGMeta(idOrSlug: string): Promise<OGMeta | null> {
   try {
-    // Properties use numeric IDs in URLs
-    const id = parseInt(idOrSlug, 10);
-    if (isNaN(id)) return null;
+    // Try to find by slug first, then by ID
+    let property = await getPropertyBySlug(idOrSlug);
     
-    const property = await getPropertyById(id);
+    // If not found by slug, try by ID (for backward compatibility)
+    if (!property) {
+      const id = parseInt(idOrSlug, 10);
+      if (!isNaN(id)) {
+        property = await getPropertyById(id);
+      }
+    }
+    
     if (!property) return null;
 
+    const slug = property.slug || property.id.toString();
+    
     return {
       title: `${property.title} | ${SITE_NAME}`,
       description: property.description?.substring(0, 200) || 
         `${property.bedrooms} BHK ${property.propertyType} in ${property.location}. Price: ₹${property.price}`,
-      image: property.imageUrl || DEFAULT_IMAGE,
-      url: `${BASE_URL}/properties/${id}`,
+      image: toAbsoluteImageUrl(property.imageUrl),
+      url: `${BASE_URL}/properties/${slug}`,
       type: "article",
     };
   } catch (error) {

@@ -34,6 +34,20 @@ export const appRouter = router({
         return await db.getPropertyById(input.id);
       }),
     
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        // Try slug first, then fall back to ID for backward compatibility
+        let property = await db.getPropertyBySlug(input.slug);
+        if (!property) {
+          const id = parseInt(input.slug, 10);
+          if (!isNaN(id)) {
+            property = await db.getPropertyById(id);
+          }
+        }
+        return property;
+      }),
+    
     featured: publicProcedure.query(async () => {
       return await db.getFeaturedProperties();
     }),

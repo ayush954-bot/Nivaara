@@ -26,21 +26,21 @@ import { getPropertyBadges } from "@/lib/badgeUtils";
 export default function PropertyDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
-  const propertyId = params.id ? parseInt(params.id) : null;
+  const slug = params.slug || "";
 
-  const { data: property, isLoading } = trpc.properties.getById.useQuery(
-    { id: propertyId! },
-    { enabled: !!propertyId }
+  const { data: property, isLoading } = trpc.properties.getBySlug.useQuery(
+    { slug },
+    { enabled: !!slug }
   );
 
   const { data: propertyImages = [] } = trpc.admin.properties.images.list.useQuery(
-    { propertyId: propertyId! },
-    { enabled: !!propertyId }
+    { propertyId: property?.id! },
+    { enabled: !!property?.id }
   );
 
   const { data: propertyVideos = [] } = trpc.admin.properties.videos.list.useQuery(
-    { propertyId: propertyId! },
-    { enabled: !!propertyId }
+    { propertyId: property?.id! },
+    { enabled: !!property?.id }
   );
 
   const createInquiry = trpc.inquiries.create.useMutation({

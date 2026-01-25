@@ -30,6 +30,7 @@ export type InsertUser = typeof users.$inferInsert;
  */
 export const properties = mysqlTable("properties", {
   id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 255 }).unique(), // URL-friendly slug for SEO
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
   propertyType: mysqlEnum("propertyType", ["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]).notNull(),

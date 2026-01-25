@@ -199,7 +199,7 @@ export default function FeaturedProperties() {
                       </div>
 
                       <Button asChild className="w-full">
-                        <Link href={`/properties/${property.id}`}>View Details</Link>
+                        <Link href={`/properties/${property.slug || property.id}`}>View Details</Link>
                       </Button>
                     </CardContent>
                   </Card>

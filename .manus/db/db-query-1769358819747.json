@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, title, imageUrl FROM properties LIMIT 3;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, imageUrl FROM properties LIMIT 3;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "imageUrl": "https:/images/property-1.jpg"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "imageUrl": "https:/images/property-2.jpg"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "imageUrl": "https:/images/property-3.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\timageUrl\n1\tLuxury 3BHK Apartment in Kharadi\thttps:/images/property-1.jpg\n2\tPremium Office Space in Hinjewadi\thttps:/images/property-2.jpg\n3\tUnder Construction 2BHK in Wagholi\thttps:/images/property-3.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 1522
+}

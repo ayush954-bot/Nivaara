@@ -289,7 +289,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex gap-2 flex-shrink-0">
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={`/properties/${property.id}`}>
+                          <Link href={`/properties/${property.slug || property.id}`}>
                             <Eye className="h-4 w-4" />
                           </Link>
                         </Button>

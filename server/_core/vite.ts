@@ -43,13 +43,12 @@ export async function setupVite(app: Express, server: Server) {
       
       // Handle dynamic OG meta tags for social media crawlers
       if (isSocialMediaCrawler(userAgent)) {
+        console.log("[OG Meta] Social media crawler detected:", userAgent.substring(0, 50));
         const dynamicMeta = await getDynamicOGMeta(url);
         if (dynamicMeta) {
-          // Replace static OG tags with dynamic ones
-          template = template.replace(
-            /<!-- Open Graph \/ Facebook -->[\s\S]*?<!-- Twitter -->[\s\S]*?<meta name="twitter:image"[^>]*>/,
-            dynamicMeta
-          );
+          console.log("[OG Meta] Injecting dynamic meta tags for:", url);
+          // Replace the entire OG section with dynamic tags
+          template = replaceOGTags(template, dynamicMeta);
         }
       }
       
@@ -66,18 +65,46 @@ async function getDynamicOGMeta(url: string): Promise<string | null> {
   // Check for project pages: /projects/slug
   const projectMatch = url.match(/\/projects\/([^/?]+)/);
   if (projectMatch) {
+    console.log("[OG Meta] Project match found:", projectMatch[1]);
     const meta = await getProjectOGMeta(projectMatch[1]);
-    if (meta) return generateOGMetaTags(meta);
+    if (meta) {
+      console.log("[OG Meta] Project meta generated:", meta.title);
+      return generateOGMetaTags(meta);
+    }
   }
   
-  // Check for property pages: /properties/id
+  // Check for property pages: /properties/id or /properties/slug
   const propertyMatch = url.match(/\/properties\/([^/?]+)/);
   if (propertyMatch) {
+    console.log("[OG Meta] Property match found:", propertyMatch[1]);
     const meta = await getPropertyOGMeta(propertyMatch[1]);
-    if (meta) return generateOGMetaTags(meta);
+    if (meta) {
+      console.log("[OG Meta] Property meta generated:", meta.title);
+      return generateOGMetaTags(meta);
+    }
   }
   
   return null;
+}
+
+function replaceOGTags(html: string, newTags: string): string {
+  // Remove existing OG and Twitter tags
+  let result = html;
+  
+  // Remove og: meta tags
+  result = result.replace(/<meta property="og:[^"]*"[^>]*>\s*/g, "");
+  
+  // Remove twitter: meta tags
+  result = result.replace(/<meta name="twitter:[^"]*"[^>]*>\s*/g, "");
+  
+  // Remove the comment markers
+  result = result.replace(/<!-- Open Graph \/ Facebook -->\s*/g, "");
+  result = result.replace(/<!-- Twitter -->\s*/g, "");
+  
+  // Insert new tags before </head>
+  result = result.replace("</head>", `${newTags}\n  </head>`);
+  
+  return result;
 }
 
 export function serveStatic(app: Express) {
@@ -93,8 +120,27 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  // Handle dynamic OG meta for production
+  app.use("*", async (req, res) => {
+    const url = req.originalUrl;
+    const userAgent = req.get("user-agent") || "";
+    const indexPath = path.resolve(distPath, "index.html");
+    
+    // Check if this is a social media crawler requesting a project/property page
+    if (isSocialMediaCrawler(userAgent)) {
+      try {
+        let html = await fs.promises.readFile(indexPath, "utf-8");
+        const dynamicMeta = await getDynamicOGMeta(url);
+        if (dynamicMeta) {
+          html = replaceOGTags(html, dynamicMeta);
+        }
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+        return;
+      } catch (error) {
+        console.error("[OG Meta] Error in production:", error);
+      }
+    }
+    
+    res.sendFile(indexPath);
   });
 }

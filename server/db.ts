@@ -103,6 +103,13 @@ export async function getPropertyById(id: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getPropertyBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(properties).where(eq(properties.slug, slug)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
 export async function getFeaturedProperties() {
   const db = await getDb();
   if (!db) return [];

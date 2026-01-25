@@ -134,6 +134,13 @@
       "when": 1769357468940,
       "tag": "0018_chemical_gwen_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1769358935362,
+      "tag": "0019_special_karen_page",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE properties ADD COLUMN slug VARCHAR(255) UNIQUE;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute ALTER TABLE properties ADD COLUMN slug VARCHAR(255) UNIQUE;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 8200 (HY000) at line 1: unsupported add column 'slug' constraint UNIQUE KEY when altering 'aSHZEBwUmWTuA7HAwuTg3z.properties'"
+  ]
+}

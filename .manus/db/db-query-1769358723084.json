@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, title, slug FROM properties;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, slug FROM properties;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "slug": "luxury-3bhk-apartment-in-kharadi"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "slug": "premium-office-space-in-hinjewadi"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "slug": "under-construction-2bhk-in-wagholi"
+    },
+    {
+      "id": "4",
+      "title": "Commercial Shop in Viman Nagar",
+      "slug": "commercial-shop-in-viman-nagar"
+    },
+    {
+      "id": "5",
+      "title": "Residential Plot in Baner",
+      "slug": "residential-plot-in-baner"
+    },
+    {
+      "id": "6",
+      "title": "Luxury Villa in Mumbai Suburbs",
+      "slug": "luxury-villa-in-mumbai-suburbs"
+    },
+    {
+      "id": "7",
+      "title": "Modern Apartment in Dubai Marina",
+      "slug": "modern-apartment-in-dubai-marina"
+    },
+    {
+      "id": "8",
+      "title": "Commercial Space in Bangalore",
+      "slug": "commercial-space-in-bangalore"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tslug\n1\tLuxury 3BHK Apartment in Kharadi\tluxury-3bhk-apartment-in-kharadi\n2\tPremium Office Space in Hinjewadi\tpremium-office-space-in-hinjewadi\n3\tUnder Construction 2BHK in Wagholi\tunder-construction-2bhk-in-wagholi\n4\tCommercial Shop in Viman Nagar\tcommercial-shop-in-viman-nagar\n5\tResidential Plot in Baner\tresidential-plot-in-baner\n6\tLuxury Villa in Mumbai Suburbs\tluxury-villa-in-mumbai-suburbs\n7\tModern Apartment in Dubai Marina\tmodern-apartment-in-dubai-marina\n8\tCommercial Space in Bangalore\tcommercial-space-in-bangalore\n",
+  "stderr": "",
+  "execution_time_ms": 1500
+}

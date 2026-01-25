@@ -1518,3 +1518,12 @@
 - [x] Add image upload option for builder logo field ✅
 - [x] Add image upload option for floor plan images ✅
 - [x] Add image upload option for all other image URL fields (amenity images already have upload) ✅
+
+
+## Share Preview & Property URL Fixes (Jan 25, 2026)
+
+- [x] Fix share preview showing website logo instead of project/property cover image
+- [x] Debug Open Graph meta tag server-side rendering for social media crawlers
+- [x] Add slug field to properties table (like projects)
+- [x] Update property URLs from /properties/1 to /properties/property-slug
+- [x] Update all property links throughout the site

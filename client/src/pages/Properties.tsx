@@ -243,7 +243,7 @@ export default function Properties() {
                         </div>
                         <div className="flex gap-2 mt-3">
                           <Button size="sm" className="flex-1" asChild>
-                            <Link href={`/properties/${property.id}`}>View Details</Link>
+                            <Link href={`/properties/${property.slug || property.id}`}>View Details</Link>
                           </Button>
                           <Button size="sm" variant="outline" className="flex-1" asChild>
                             <Link href="/contact">Inquire</Link>
