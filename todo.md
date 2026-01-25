@@ -1527,3 +1527,10 @@
 - [x] Add slug field to properties table (like projects)
 - [x] Update property URLs from /properties/1 to /properties/property-slug
 - [x] Update all property links throughout the site
+
+## OG Meta Tags Still Not Working (Jan 25, 2026)
+
+- [x] Debug why WhatsApp still shows website logo instead of project image after publishing
+- [x] Verify production build includes OG meta tag handling
+- [x] Test with Facebook Sharing Debugger
+- [x] Ensure image URLs are publicly accessible
