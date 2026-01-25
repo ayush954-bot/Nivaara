@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, name, slug, coverImage FROM projects ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, name, slug, coverImage FROM projects ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Pride Purple Park Eden",
+      "slug": "pride-purple-park-eden",
+      "coverImage": "/images/projects/project-1.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Kolte Patil 24K Glitterati",
+      "slug": "godrej-infinity",
+      "coverImage": "/images/projects/project-2.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Kumar Privé",
+      "slug": "kolte-patil-life-republic",
+      "coverImage": "https://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1769353551908-NCMJPJ8U0P.jpeg"
+    },
+    {
+      "id": "4",
+      "name": "Nyati Elysia II",
+      "slug": "shapoorji-pallonji-joyville",
+      "coverImage": "/images/projects/project-4.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Paranjape Blue Ridge",
+      "slug": "kumar-princetown-royal",
+      "coverImage": "/images/projects/project-5.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tcoverImage\n1\tPride Purple Park Eden\tpride-purple-park-eden\t/images/projects/project-1.jpg\n2\tKolte Patil 24K Glitterati\tgodrej-infinity\t/images/projects/project-2.jpg\n3\tKumar Privé\tkolte-patil-life-republic\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1769353551908-NCMJPJ8U0P.jpeg\n4\tNyati Elysia II\tshapoorji-pallonji-joyville\t/images/projects/project-4.jpg\n5\tParanjape Blue Ridge\tkumar-princetown-royal\t/images/projects/project-5.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 1574
+}

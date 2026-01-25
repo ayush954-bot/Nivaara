@@ -1541,3 +1541,4 @@
 - [x] Create database backup script
 - [x] Set up daily automated backup mechanism
 - [x] Guide user to export code to GitHub via Settings
+- [x] Fix project slugs mismatch (slugs didn't match project names)
