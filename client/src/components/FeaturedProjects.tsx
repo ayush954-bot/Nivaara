@@ -223,11 +223,15 @@ export default function FeaturedProjects() {
                           )}
                         </div>
 
-                        {/* View Details */}
-                        <Button className="w-full" size="sm" variant="outline">
-                          View Details
-                          <ArrowRight className="h-3 w-3 ml-1" />
-                        </Button>
+                        {/* View Details - matching Properties style */}
+                        <div className="flex gap-2">
+                          <Button size="sm" className="flex-1">
+                            View Details
+                          </Button>
+                          <Button size="sm" variant="outline" className="flex-1" asChild>
+                            <Link href="/contact">Inquire</Link>
+                          </Button>
+                        </div>
                       </CardContent>
                     </Card>
                   </Link>

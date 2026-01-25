@@ -1488,3 +1488,9 @@
 
 - [x] Remove breadcrumb from ProjectDetail page ✅
 - [x] Add "Back to Projects" button like PropertyDetail page ✅
+
+
+## Visual Styling Improvements (Jan 25, 2026)
+
+- [x] Improve tabs styling (Overview, Floor Plans, etc.) - more attractive colors ✅
+- [x] Update View Details button in FeaturedProjects to match Properties style ✅

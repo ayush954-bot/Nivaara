@@ -528,13 +528,13 @@ export default function ProjectDetail() {
       <section className="py-8 bg-background flex-1">
         <div className="container">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full mb-8 bg-secondary/50 h-auto p-1 grid grid-cols-3 sm:grid-cols-6 gap-1">
-              <TabsTrigger value="overview" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Overview</TabsTrigger>
-              <TabsTrigger value="floorplans" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Floor Plans</TabsTrigger>
-              <TabsTrigger value="amenities" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Amenities</TabsTrigger>
-              <TabsTrigger value="gallery" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Gallery</TabsTrigger>
-              <TabsTrigger value="builder" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Builder</TabsTrigger>
-              <TabsTrigger value="location" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Location</TabsTrigger>
+            <TabsList className="w-full mb-8 bg-white border border-gray-200 shadow-sm rounded-xl h-auto p-2 grid grid-cols-3 sm:grid-cols-6 gap-2">
+              <TabsTrigger value="overview" className="px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 hover:bg-gray-100">Overview</TabsTrigger>
+              <TabsTrigger value="floorplans" className="px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 hover:bg-gray-100">Floor Plans</TabsTrigger>
+              <TabsTrigger value="amenities" className="px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 hover:bg-gray-100">Amenities</TabsTrigger>
+              <TabsTrigger value="gallery" className="px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 hover:bg-gray-100">Gallery</TabsTrigger>
+              <TabsTrigger value="builder" className="px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 hover:bg-gray-100">Builder</TabsTrigger>
+              <TabsTrigger value="location" className="px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-200 hover:bg-gray-100">Location</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
