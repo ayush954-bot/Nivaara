@@ -45,8 +45,9 @@ describe("Property Creation with Location", () => {
     expect(result.id).toBeDefined();
     expect(result.title).toBe(propertyData.title);
     expect(result.location).toBe(propertyData.location);
-    expect(result.latitude).toBe(propertyData.latitude);
-    expect(result.longitude).toBe(propertyData.longitude);
+    // Database stores decimals as strings with fixed precision
+    expect(parseFloat(String(result.latitude))).toBeCloseTo(propertyData.latitude, 5);
+    expect(parseFloat(String(result.longitude))).toBeCloseTo(propertyData.longitude, 5);
     expect(result.zone).toBe(propertyData.zone);
   });
 

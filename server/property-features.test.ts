@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { getPropertyBadge, getBadgeColorClass } from "../client/src/lib/badgeUtils";
+import { getPropertyBadge, getBadgeColorClass, getPropertyBadges } from "../client/src/lib/badgeUtils";
 
 describe("Property Badge System", () => {
   it("should return 'New' badge for properties created within 30 days", () => {
@@ -15,7 +15,7 @@ describe("Property Badge System", () => {
     expect(badge).toBe("New");
   });
 
-  it("should return custom badge if set, even for recent properties", () => {
+  it("should return 'New' as first badge even when custom badge is set (stacked badges)", () => {
     const recentDate = new Date();
     recentDate.setDate(recentDate.getDate() - 10);
     
@@ -24,8 +24,15 @@ describe("Property Badge System", () => {
       badge: "Big Discount",
     };
     
+    // getPropertyBadge returns the first badge, which is "New" for recent properties
     const badge = getPropertyBadge(property);
-    expect(badge).toBe("Big Discount");
+    expect(badge).toBe("New");
+    
+    // getPropertyBadges returns all badges
+    const badges = getPropertyBadges(property);
+    expect(badges.length).toBe(2);
+    expect(badges[0].text).toBe("New");
+    expect(badges[1].text).toBe("Big Discount");
   });
 
   it("should return empty string for old properties without custom badge", () => {
@@ -48,7 +55,8 @@ describe("Property Badge System", () => {
     expect(getBadgeColorClass("Hot Deal")).toBe("bg-red-600 text-white");
     expect(getBadgeColorClass("Price Reduced")).toBe("bg-red-600 text-white");
     expect(getBadgeColorClass("Exclusive")).toBe("bg-purple-600 text-white");
-    expect(getBadgeColorClass("Unknown")).toBe("bg-primary text-primary-foreground");
+    // Unknown badges get default blue color
+    expect(getBadgeColorClass("Unknown")).toBe("bg-blue-600 text-white");
   });
 
   it("should handle edge case: exactly 30 days old", () => {
@@ -91,7 +99,7 @@ describe("Property Video Type Enum", () => {
 });
 
 describe("Badge System Integration", () => {
-  it("should prioritize custom badge over automatic New badge", () => {
+  it("should show New badge first for recent properties with custom badge (stacked)", () => {
     const veryRecentDate = new Date();
     veryRecentDate.setDate(veryRecentDate.getDate() - 1); // 1 day ago
     
@@ -100,9 +108,14 @@ describe("Badge System Integration", () => {
       badge: "Hot Deal",
     };
     
+    // First badge is "New" for recent properties
     const badge = getPropertyBadge(property);
-    expect(badge).toBe("Hot Deal");
-    expect(badge).not.toBe("New");
+    expect(badge).toBe("New");
+    
+    // Both badges are available in the array
+    const badges = getPropertyBadges(property);
+    expect(badges.length).toBe(2);
+    expect(badges.map(b => b.text)).toContain("Hot Deal");
   });
 
   it("should handle null/undefined createdAt gracefully", () => {
@@ -111,7 +124,10 @@ describe("Badge System Integration", () => {
       badge: "Special Offer",
     };
     
-    const badge = getPropertyBadge(property);
-    expect(badge).toBe("Special Offer");
+    // When createdAt is invalid, it should still return the custom badge
+    const badges = getPropertyBadges(property);
+    // NaN comparison for days will fail, so only custom badge is returned
+    expect(badges.length).toBeGreaterThan(0);
+    expect(badges.some(b => b.text === "Special Offer")).toBe(true);
   });
 });

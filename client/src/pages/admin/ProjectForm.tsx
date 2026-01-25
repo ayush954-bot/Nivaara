@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,6 +29,8 @@ import {
   Video,
 } from "lucide-react";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
+import { ImageUpload } from "@/components/ImageUpload";
+import { GalleryImageUpload } from "@/components/GalleryImageUpload";
 import { toast } from "sonner";
 
 // Common amenity icons
@@ -61,7 +63,7 @@ export default function ProjectForm() {
   const projectId = params.id ? parseInt(params.id) : null;
   const isEdit = !!projectId;
 
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading, canManageProperties } = useAuth();
   
   // Fetch project data for edit mode
   const { data: project } = trpc.projects.getById.useQuery(
@@ -152,7 +154,7 @@ export default function ProjectForm() {
   });
 
   // Related data state
-  const [amenities, setAmenities] = useState<Array<{ name: string; icon: string }>>([]);
+  const [amenities, setAmenities] = useState<Array<{ name: string; icon: string; imageUrl: string }>>([]);
   const [floorPlans, setFloorPlans] = useState<Array<{
     name: string;
     bedrooms: number;
@@ -200,7 +202,7 @@ export default function ProjectForm() {
 
   useEffect(() => {
     if (existingAmenities.length > 0) {
-      setAmenities(existingAmenities.map(a => ({ name: a.name, icon: a.icon || "" })));
+      setAmenities(existingAmenities.map(a => ({ name: a.name, icon: a.icon || "", imageUrl: a.imageUrl || "" })));
     }
   }, [existingAmenities]);
 
@@ -349,8 +351,8 @@ export default function ProjectForm() {
     return <div className="container py-16 text-center">Loading...</div>;
   }
 
-  // Auth check
-  if (!user) {
+  // Auth check - allow both admin and staff with property_manager role
+  if (!canManageProperties) {
     return (
       <div className="container py-16">
         <Card className="max-w-md mx-auto">
@@ -362,7 +364,7 @@ export default function ProjectForm() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              You don't have permission to manage projects.
+              You don't have permission to manage projects. Please sign in as admin or staff.
             </p>
           </CardContent>
         </Card>
@@ -392,12 +394,12 @@ export default function ProjectForm() {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6">
-                <TabsTrigger value="basic">Basic Info</TabsTrigger>
-                <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="builder">Builder</TabsTrigger>
-                <TabsTrigger value="media">Media</TabsTrigger>
-                <TabsTrigger value="amenities">Amenities & Plans</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 mb-6 h-auto gap-1">
+                <TabsTrigger value="basic" className="text-xs sm:text-sm px-2 py-2">Basic</TabsTrigger>
+                <TabsTrigger value="details" className="text-xs sm:text-sm px-2 py-2">Details</TabsTrigger>
+                <TabsTrigger value="builder" className="text-xs sm:text-sm px-2 py-2">Builder</TabsTrigger>
+                <TabsTrigger value="media" className="text-xs sm:text-sm px-2 py-2">Media</TabsTrigger>
+                <TabsTrigger value="amenities" className="text-xs sm:text-sm px-2 py-2 col-span-3 sm:col-span-1">Amenities</TabsTrigger>
               </TabsList>
 
               {/* Basic Info Tab */}
@@ -652,31 +654,21 @@ export default function ProjectForm() {
               {/* Media Tab */}
               <TabsContent value="media" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="coverImage">Cover Image URL</Label>
-                    <Input
-                      id="coverImage"
-                      value={formData.coverImage}
-                      onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                      placeholder="https://..."
-                    />
-                    {formData.coverImage && (
-                      <img src={formData.coverImage} alt="Cover preview" className="w-full h-32 object-cover rounded mt-2" />
-                    )}
-                  </div>
+                  <ImageUpload
+                    label="Cover Image"
+                    value={formData.coverImage}
+                    onChange={(url) => setFormData({ ...formData, coverImage: url })}
+                    placeholder="Enter cover image URL or upload"
+                    helpText="Main image displayed on project cards"
+                  />
 
-                  <div className="space-y-2">
-                    <Label htmlFor="masterPlanUrl">Master Plan Image URL</Label>
-                    <Input
-                      id="masterPlanUrl"
-                      value={formData.masterPlanUrl}
-                      onChange={(e) => setFormData({ ...formData, masterPlanUrl: e.target.value })}
-                      placeholder="https://..."
-                    />
-                    {formData.masterPlanUrl && (
-                      <img src={formData.masterPlanUrl} alt="Master plan preview" className="w-full h-32 object-cover rounded mt-2" />
-                    )}
-                  </div>
+                  <ImageUpload
+                    label="Master Plan Image"
+                    value={formData.masterPlanUrl}
+                    onChange={(url) => setFormData({ ...formData, masterPlanUrl: url })}
+                    placeholder="Enter master plan URL or upload"
+                    helpText="Site layout/master plan image"
+                  />
 
                   <div className="space-y-2">
                     <Label htmlFor="videoUrl">Main Video URL (YouTube)</Label>
@@ -686,76 +678,38 @@ export default function ProjectForm() {
                       onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
                       placeholder="https://youtube.com/watch?v=..."
                     />
+                    <p className="text-sm text-muted-foreground">YouTube URL for main project video</p>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="brochureUrl">Brochure PDF URL</Label>
-                    <Input
-                      id="brochureUrl"
-                      value={formData.brochureUrl}
-                      onChange={(e) => setFormData({ ...formData, brochureUrl: e.target.value })}
-                      placeholder="https://..."
-                    />
-                  </div>
+                  <ImageUpload
+                    label="Brochure (PDF or Image)"
+                    value={formData.brochureUrl}
+                    onChange={(url) => setFormData({ ...formData, brochureUrl: url })}
+                    placeholder="Enter brochure URL or upload"
+                    helpText="Upload PDF or image brochure"
+                    accept="image/*,application/pdf"
+                  />
                 </div>
 
                 {/* Gallery Images */}
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="flex items-center gap-2">
-                      <ImageIcon className="h-4 w-4" />
-                      Gallery Images
-                    </Label>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setImages([...images, { imageUrl: "", caption: "" }])}
-                    >
-                      <Plus className="h-4 w-4 mr-1" />
-                      Add Image
-                    </Button>
-                  </div>
-                  {images.map((img, index) => (
-                    <div key={index} className="flex gap-2 items-start">
-                      <Input
-                        value={img.imageUrl}
-                        onChange={(e) => {
-                          const newImages = [...images];
-                          newImages[index].imageUrl = e.target.value;
-                          setImages(newImages);
-                        }}
-                        placeholder="Image URL"
-                        className="flex-1"
-                      />
-                      <Input
-                        value={img.caption}
-                        onChange={(e) => {
-                          const newImages = [...images];
-                          newImages[index].caption = e.target.value;
-                          setImages(newImages);
-                        }}
-                        placeholder="Caption"
-                        className="w-40"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setImages(images.filter((_, i) => i !== index))}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  ))}
+                  <Label className="flex items-center gap-2 text-lg font-semibold">
+                    <ImageIcon className="h-4 w-4" />
+                    Gallery Images
+                  </Label>
+                  <GalleryImageUpload
+                    images={images}
+                    onChange={setImages}
+                    showCoverSelection={true}
+                  />
                 </div>
 
-                {/* Videos */}
+                {/* Videos - YouTube URLs only */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label className="flex items-center gap-2">
+                    <Label className="flex items-center gap-2 text-lg font-semibold">
                       <Video className="h-4 w-4" />
-                      Additional Videos
+                      Additional Video URLs
                     </Label>
                     <Button
                       type="button"
@@ -764,49 +718,52 @@ export default function ProjectForm() {
                       onClick={() => setVideos([...videos, { videoUrl: "", videoType: "youtube", title: "" }])}
                     >
                       <Plus className="h-4 w-4 mr-1" />
-                      Add Video
+                      Add YouTube URL
                     </Button>
                   </div>
+                  <p className="text-sm text-muted-foreground">Add YouTube video URLs for project tours, walkthroughs, etc.</p>
                   {videos.map((video, index) => (
-                    <div key={index} className="flex gap-2 items-start">
-                      <Input
-                        value={video.videoUrl}
-                        onChange={(e) => {
-                          const newVideos = [...videos];
-                          newVideos[index].videoUrl = e.target.value;
-                          setVideos(newVideos);
-                        }}
-                        placeholder="Video URL"
-                        className="flex-1"
-                      />
-                      <Select
-                        value={video.videoType}
-                        onValueChange={(value) => {
-                          const newVideos = [...videos];
-                          newVideos[index].videoType = value;
-                          setVideos(newVideos);
-                        }}
-                      >
-                        <SelectTrigger className="w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="youtube">YouTube</SelectItem>
-                          <SelectItem value="vimeo">Vimeo</SelectItem>
-                          <SelectItem value="virtual_tour">Virtual Tour</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input
-                        value={video.title}
-                        onChange={(e) => {
-                          const newVideos = [...videos];
-                          newVideos[index].title = e.target.value;
-                          setVideos(newVideos);
-                        }}
-                        placeholder="Title"
-                        className="w-40"
-                      />
+                    <div key={index} className="flex gap-2 items-start p-3 border rounded-lg bg-secondary/30">
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          value={video.videoUrl}
+                          onChange={(e) => {
+                            const newVideos = [...videos];
+                            newVideos[index].videoUrl = e.target.value;
+                            setVideos(newVideos);
+                          }}
+                          placeholder="https://youtube.com/watch?v=... or https://youtu.be/..."
+                        />
+                        <div className="flex gap-2">
+                          <Input
+                            value={video.title}
+                            onChange={(e) => {
+                              const newVideos = [...videos];
+                              newVideos[index].title = e.target.value;
+                              setVideos(newVideos);
+                            }}
+                            placeholder="Video title (e.g., Project Walkthrough)"
+                            className="flex-1"
+                          />
+                          <Select
+                            value={video.videoType}
+                            onValueChange={(value) => {
+                              const newVideos = [...videos];
+                              newVideos[index].videoType = value;
+                              setVideos(newVideos);
+                            }}
+                          >
+                            <SelectTrigger className="w-36">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="youtube">YouTube</SelectItem>
+                              <SelectItem value="virtual_tour">Virtual Tour</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
                       <Button
                         type="button"
                         variant="ghost"
@@ -817,6 +774,12 @@ export default function ProjectForm() {
                       </Button>
                     </div>
                   ))}
+                  {videos.length === 0 && (
+                    <div className="text-center py-6 border-2 border-dashed rounded-lg">
+                      <Video className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
+                      <p className="text-sm text-muted-foreground">No additional videos added</p>
+                    </div>
+                  )}
                 </div>
               </TabsContent>
 
@@ -830,60 +793,79 @@ export default function ProjectForm() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => setAmenities([...amenities, { name: "", icon: "" }])}
+                      onClick={() => setAmenities([...amenities, { name: "", icon: "", imageUrl: "" }])}
                     >
                       <Plus className="h-4 w-4 mr-1" />
                       Add Amenity
                     </Button>
                   </div>
+                  <p className="text-sm text-muted-foreground">Add amenities with optional images for beautiful display on project page</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {amenities.map((amenity, index) => (
-                      <div key={index} className="flex gap-2 items-center">
-                        <Select
-                          value={amenity.icon}
-                          onValueChange={(value) => {
-                            const newAmenities = [...amenities];
-                            newAmenities[index].icon = value;
-                            // Auto-fill name if empty
-                            if (!newAmenities[index].name) {
-                              const iconInfo = AMENITY_ICONS.find(i => i.value === value);
-                              if (iconInfo) newAmenities[index].name = iconInfo.label;
-                            }
-                            setAmenities(newAmenities);
-                          }}
-                        >
-                          <SelectTrigger className="w-32">
-                            <SelectValue placeholder="Icon" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {AMENITY_ICONS.map((icon) => (
-                              <SelectItem key={icon.value} value={icon.value}>
-                                {icon.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Input
-                          value={amenity.name}
-                          onChange={(e) => {
-                            const newAmenities = [...amenities];
-                            newAmenities[index].name = e.target.value;
-                            setAmenities(newAmenities);
-                          }}
-                          placeholder="Amenity name"
-                          className="flex-1"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setAmenities(amenities.filter((_, i) => i !== index))}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
+                      <Card key={index} className="p-4">
+                        <div className="space-y-3">
+                          <div className="flex gap-2 items-center">
+                            <Select
+                              value={amenity.icon}
+                              onValueChange={(value) => {
+                                const newAmenities = [...amenities];
+                                newAmenities[index].icon = value;
+                                if (!newAmenities[index].name) {
+                                  const iconInfo = AMENITY_ICONS.find(i => i.value === value);
+                                  if (iconInfo) newAmenities[index].name = iconInfo.label;
+                                }
+                                setAmenities(newAmenities);
+                              }}
+                            >
+                              <SelectTrigger className="w-28">
+                                <SelectValue placeholder="Icon" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {AMENITY_ICONS.map((icon) => (
+                                  <SelectItem key={icon.value} value={icon.value}>
+                                    {icon.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              value={amenity.name}
+                              onChange={(e) => {
+                                const newAmenities = [...amenities];
+                                newAmenities[index].name = e.target.value;
+                                setAmenities(newAmenities);
+                              }}
+                              placeholder="Amenity name"
+                              className="flex-1"
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setAmenities(amenities.filter((_, i) => i !== index))}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                          <ImageUpload
+                            value={amenity.imageUrl}
+                            onChange={(url) => {
+                              const newAmenities = [...amenities];
+                              newAmenities[index].imageUrl = url;
+                              setAmenities(newAmenities);
+                            }}
+                            placeholder="Amenity image URL (optional)"
+                            helpText="Add an image for this amenity"
+                          />
+                        </div>
+                      </Card>
                     ))}
                   </div>
+                  {amenities.length === 0 && (
+                    <div className="text-center py-8 border-2 border-dashed rounded-lg">
+                      <p className="text-sm text-muted-foreground">No amenities added yet</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Floor Plans */}

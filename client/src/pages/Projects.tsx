@@ -22,8 +22,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { Link } from "wouter";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+// Header and Footer are already in App.tsx layout
 
 export default function Projects() {
   const [location] = useLocation();
@@ -83,7 +82,7 @@ export default function Projects() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {/* Header is already in App.tsx layout */}
       
       {/* Hero Section */}
       <section className="py-20 bg-secondary/30">
@@ -310,7 +309,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <Footer />
+      {/* Footer is already in App.tsx layout */}
     </div>
   );
 }

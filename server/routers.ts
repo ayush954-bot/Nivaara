@@ -507,6 +507,7 @@ export const appRouter = router({
               projectId: z.number(),
               name: z.string().min(1),
               icon: z.string().optional(),
+              imageUrl: z.string().optional(),
               displayOrder: z.number().default(0),
             })
           )

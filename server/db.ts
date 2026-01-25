@@ -469,6 +469,7 @@ export async function getProjectById(id: number) {
 
 /**
  * Get featured projects
+ * Pride Purple projects are shown first, then ordered by creation date
  */
 export async function getFeaturedProjects() {
   const db = await getDb();
@@ -480,6 +481,15 @@ export async function getFeaturedProjects() {
     .where(eq(projects.featured, true))
     .orderBy(desc(projects.createdAt))
     .limit(6);
+  
+  // Sort to put Pride Purple projects first
+  projectsList.sort((a, b) => {
+    const aIsPride = a.name.toLowerCase().includes('pride purple') || a.builderName.toLowerCase().includes('pride');
+    const bIsPride = b.name.toLowerCase().includes('pride purple') || b.builderName.toLowerCase().includes('pride');
+    if (aIsPride && !bIsPride) return -1;
+    if (!aIsPride && bIsPride) return 1;
+    return 0;
+  });
   
   // Fetch related data for each project
   const projectsWithData = await Promise.all(
@@ -743,6 +753,7 @@ export async function addProjectAmenity(data: {
   projectId: number;
   name: string;
   icon?: string;
+  imageUrl?: string;
   displayOrder?: number;
 }) {
   const db = await getDb();

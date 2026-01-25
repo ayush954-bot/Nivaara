@@ -17,25 +17,27 @@ export interface PropertyBadge {
 export function getPropertyBadges(property: {
   badge?: string | null;
   customBadgeText?: string | null;
-  createdAt: string | Date;
+  createdAt?: string | Date | null;
   status?: string;
 }): PropertyBadge[] {
   const badges: PropertyBadge[] = [];
 
   // 1. Auto-detect "New" badge for properties added in last 30 days
-  const createdDate = typeof property.createdAt === 'string' 
-    ? new Date(property.createdAt) 
-    : property.createdAt;
-  
-  const daysSinceCreated = Math.floor(
-    (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  if (property.createdAt) {
+    const createdDate = typeof property.createdAt === 'string' 
+      ? new Date(property.createdAt) 
+      : property.createdAt;
+    
+    const daysSinceCreated = Math.floor(
+      (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
 
-  if (daysSinceCreated <= 30) {
-    badges.push({
-      text: "New",
-      colorClass: "bg-green-600 text-white"
-    });
+    if (daysSinceCreated <= 30) {
+      badges.push({
+        text: "New",
+        colorClass: "bg-green-600 text-white"
+      });
+    }
   }
 
   // 2. Add predefined badge if set
@@ -84,7 +86,7 @@ export function getBadgeColorClass(badgeText: string): string {
 export function getPropertyBadge(property: {
   badge?: string | null;
   customBadgeText?: string | null;
-  createdAt: string | Date;
+  createdAt?: string | Date | null;
   status?: string;
 }): string {
   const badges = getPropertyBadges(property);

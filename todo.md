@@ -1416,3 +1416,17 @@
 - [x] Test project detail page with missing content
 - [x] Verify all fallbacks work correctly
 - [x] Save checkpoint
+
+## Bug Fixes & Improvements (Jan 25, 2026)
+
+- [x] Fix double header display when scrolling up from down ✅
+- [x] Fix tabs overlapping on mobile (project detail page) ✅
+- [x] Add Property/Project side-by-side tabs in admin dashboard ✅
+- [x] Fix staff access denied for projects (allow staff same as property management) ✅
+- [x] Fix project form tabs overlapping on mobile ✅
+- [x] Fix Featured Projects mobile carousel (horizontal like Featured Properties) ✅
+- [x] Make Pride Purple Park Eden first/featured project ✅
+- [x] Remove video upload, use multiple YouTube URL links only ✅
+- [x] Add image upload option alongside URL inputs for all image fields ✅
+- [x] Add amenity images with beautiful display and upload option ✅
+- [x] Add brochure upload (PDF/image format) option ✅

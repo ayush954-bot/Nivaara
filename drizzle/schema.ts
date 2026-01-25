@@ -192,6 +192,7 @@ export const projectAmenities = mysqlTable("project_amenities", {
   projectId: int("projectId").notNull(), // Foreign key to projects table
   name: varchar("name", { length: 255 }).notNull(), // e.g., "Swimming Pool", "Gym"
   icon: varchar("icon", { length: 50 }), // Lucide icon name (e.g., "Dumbbell", "Waves")
+  imageUrl: text("imageUrl"), // Optional image URL for the amenity
   displayOrder: int("displayOrder").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

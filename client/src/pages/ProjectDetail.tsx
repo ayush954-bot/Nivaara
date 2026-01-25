@@ -53,8 +53,7 @@ import {
   Image as ImageIcon,
   Video,
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+// Header and Footer are provided by App.tsx layout
 
 // Icon mapping for amenities
 const iconMap: Record<string, any> = {
@@ -172,42 +171,33 @@ export default function ProjectDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <span className="ml-2 text-muted-foreground">Loading project details...</span>
-        </div>
-        <Footer />
+      <div className="flex-1 flex items-center justify-center py-16">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2 text-muted-foreground">Loading project details...</span>
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <Building2 className="h-16 w-16 text-muted-foreground mb-4" />
-          <h2 className="text-2xl font-bold mb-2">Project Not Found</h2>
-          <p className="text-muted-foreground mb-4">
-            The project you're looking for doesn't exist or has been removed.
-          </p>
-          <Link href="/projects">
-            <Button>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Projects
-            </Button>
-          </Link>
-        </div>
-        <Footer />
+      <div className="flex-1 flex flex-col items-center justify-center py-16">
+        <Building2 className="h-16 w-16 text-muted-foreground mb-4" />
+        <h2 className="text-2xl font-bold mb-2">Project Not Found</h2>
+        <p className="text-muted-foreground mb-4">
+          The project you're looking for doesn't exist or has been removed.
+        </p>
+        <Link href="/projects">
+          <Button>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Projects
+          </Button>
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
+    <div className="flex flex-col">
 
       {/* Lightbox */}
       {lightboxOpen && allImages.length > 0 && (
@@ -520,13 +510,13 @@ export default function ProjectDetail() {
       <section className="py-8 bg-background flex-1">
         <div className="container">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full justify-start mb-8 bg-secondary/50 flex-wrap h-auto gap-1 p-1">
-              <TabsTrigger value="overview" className="px-4 py-2">Overview</TabsTrigger>
-              <TabsTrigger value="floorplans" className="px-4 py-2">Floor Plans</TabsTrigger>
-              <TabsTrigger value="amenities" className="px-4 py-2">Amenities</TabsTrigger>
-              <TabsTrigger value="gallery" className="px-4 py-2">Gallery</TabsTrigger>
-              <TabsTrigger value="builder" className="px-4 py-2">Builder</TabsTrigger>
-              <TabsTrigger value="location" className="px-4 py-2">Location</TabsTrigger>
+            <TabsList className="w-full mb-8 bg-secondary/50 h-auto p-1 grid grid-cols-3 sm:grid-cols-6 gap-1">
+              <TabsTrigger value="overview" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Overview</TabsTrigger>
+              <TabsTrigger value="floorplans" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Floor Plans</TabsTrigger>
+              <TabsTrigger value="amenities" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Amenities</TabsTrigger>
+              <TabsTrigger value="gallery" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Gallery</TabsTrigger>
+              <TabsTrigger value="builder" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Builder</TabsTrigger>
+              <TabsTrigger value="location" className="px-2 sm:px-4 py-2 text-xs sm:text-sm">Location</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -731,15 +721,42 @@ export default function ProjectDetail() {
                 </CardHeader>
                 <CardContent>
                   {project.amenities && project.amenities.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                       {project.amenities.map((amenity: any) => {
                         const IconComponent = iconMap[amenity.icon] || CheckCircle2;
+                        const hasImage = amenity.imageUrl && amenity.imageUrl.trim();
                         return (
-                          <div key={amenity.id} className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-secondary/50 transition-colors">
-                            <div className="p-3 bg-primary/10 rounded-full mb-3">
-                              <IconComponent className="h-6 w-6 text-primary" />
-                            </div>
-                            <span className="text-sm font-medium">{amenity.name}</span>
+                          <div 
+                            key={amenity.id} 
+                            className="group relative overflow-hidden rounded-xl border bg-card hover:shadow-lg transition-all duration-300"
+                          >
+                            {hasImage ? (
+                              <>
+                                <div className="aspect-[4/3] overflow-hidden">
+                                  <img 
+                                    src={amenity.imageUrl} 
+                                    alt={amenity.name}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                  />
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                                <div className="absolute bottom-0 left-0 right-0 p-4">
+                                  <div className="flex items-center gap-2">
+                                    <div className="p-2 bg-white/20 backdrop-blur-sm rounded-full">
+                                      <IconComponent className="h-4 w-4 text-white" />
+                                    </div>
+                                    <span className="text-white font-medium text-sm">{amenity.name}</span>
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="p-6 flex flex-col items-center text-center">
+                                <div className="p-4 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
+                                  <IconComponent className="h-8 w-8 text-primary" />
+                                </div>
+                                <span className="font-medium">{amenity.name}</span>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -987,7 +1004,6 @@ export default function ProjectDetail() {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 }
