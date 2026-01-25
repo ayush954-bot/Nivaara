@@ -236,14 +236,14 @@ export default function ProjectDetail() {
 
       {/* Breadcrumb */}
       <div className="bg-white py-4 border-b">
-        <div className="max-w-[1280px] mx-auto px-4">
-          <nav className="text-sm" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
-            <Link href="/" className="text-gray-700 hover:text-primary" style={{ flexShrink: 0 }}>Home</Link>
-            <span className="text-gray-500" style={{ flexShrink: 0 }}>/</span>
-            <Link href="/projects" className="text-gray-700 hover:text-primary" style={{ flexShrink: 0 }}>Projects</Link>
-            <span className="text-gray-500" style={{ flexShrink: 0 }}>/</span>
-            <span className="text-gray-900 font-medium" style={{ flexShrink: 0 }}>{project.name}</span>
-          </nav>
+        <div className="max-w-[1280px] mx-auto px-4 overflow-x-auto">
+          <div className="text-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+            <Link href="/" className="text-gray-700 hover:text-primary" style={{ whiteSpace: 'nowrap' }}>Home</Link>
+            <span className="text-gray-500" style={{ whiteSpace: 'nowrap' }}>/</span>
+            <Link href="/projects" className="text-gray-700 hover:text-primary" style={{ whiteSpace: 'nowrap' }}>Projects</Link>
+            <span className="text-gray-500" style={{ whiteSpace: 'nowrap' }}>/</span>
+            <span className="text-gray-900 font-medium" style={{ whiteSpace: 'nowrap' }}>{project.name}</span>
+          </div>
         </div>
       </div>
 

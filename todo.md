@@ -1477,3 +1477,8 @@
 - [x] Fix breadcrumb alignment on mobile (still breaking to multiple lines) ✅
 - [x] Re-add amenity images to database (data lost again) ✅
 - [x] Fix builder logo visibility in builder tab ✅
+
+
+## Breadcrumb Alignment Issue (Jan 25, 2026 - Still Broken)
+
+- [x] Fix breadcrumb "Home / Projects / Pride Purple Park Eden" - must stay on single horizontal line on mobile (used inline-flex with nowrap) ✅

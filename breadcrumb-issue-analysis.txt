@@ -1,0 +1,19 @@
+Breadcrumb Issue Analysis - Jan 25, 2026
+
+User Screenshot Analysis:
+- The breadcrumb shows "Home / Projects / Pride Purple Park Eden"
+- The "/" separators are appearing on SEPARATE LINES from the text
+- Layout appears as:
+  Home    Projects
+     /          / Pride Purple Park Eden
+
+This is NOT a simple wrapping issue - the slashes are being pushed to new lines while the text stays on previous lines.
+
+Root Cause Hypothesis:
+- The "/" separator spans are being treated as block-level elements or have some CSS causing them to drop to new lines
+- The "inline" class might not be working correctly on mobile
+- There could be a CSS rule affecting spans specifically
+
+Solution Approach:
+- Use a single text string approach instead of separate elements
+- Or use CSS to force all elements to display inline with no breaks
