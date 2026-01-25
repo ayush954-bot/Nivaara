@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +86,7 @@ const getYouTubeId = (url: string) => {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -234,17 +235,16 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 border-b">
-        <div className="max-w-[1280px] mx-auto px-4 overflow-x-auto">
-          <div className="text-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
-            <Link href="/" className="text-gray-700 hover:text-primary" style={{ whiteSpace: 'nowrap' }}>Home</Link>
-            <span className="text-gray-500" style={{ whiteSpace: 'nowrap' }}>/</span>
-            <Link href="/projects" className="text-gray-700 hover:text-primary" style={{ whiteSpace: 'nowrap' }}>Projects</Link>
-            <span className="text-gray-500" style={{ whiteSpace: 'nowrap' }}>/</span>
-            <span className="text-gray-900 font-medium" style={{ whiteSpace: 'nowrap' }}>{project.name}</span>
-          </div>
-        </div>
+      {/* Back Button */}
+      <div className="container py-6">
+        <Button
+          variant="ghost"
+          onClick={() => setLocation("/projects")}
+          className="mb-4"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Projects
+        </Button>
       </div>
 
       {/* Hero Section */}

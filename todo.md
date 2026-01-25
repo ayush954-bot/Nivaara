@@ -1482,3 +1482,9 @@
 ## Breadcrumb Alignment Issue (Jan 25, 2026 - Still Broken)
 
 - [x] Fix breadcrumb "Home / Projects / Pride Purple Park Eden" - must stay on single horizontal line on mobile (used inline-flex with nowrap) ✅
+
+
+## Remove Breadcrumb (Jan 25, 2026)
+
+- [x] Remove breadcrumb from ProjectDetail page ✅
+- [x] Add "Back to Projects" button like PropertyDetail page ✅
