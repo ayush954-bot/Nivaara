@@ -341,6 +341,8 @@ export default function ProjectForm() {
       builderEstablished: formData.builderEstablished ? parseInt(formData.builderEstablished) : undefined,
       builderProjects: formData.builderProjects ? parseInt(formData.builderProjects) : undefined,
       featured: formData.featured,
+      badge: formData.badge || undefined,
+      customBadgeText: formData.customBadgeText || undefined,
     };
 
     if (isEdit && projectId) {

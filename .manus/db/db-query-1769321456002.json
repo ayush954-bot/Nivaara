@@ -1,0 +1,110 @@
+{
+  "query": "SELECT id, title, location FROM properties ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, location FROM properties ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "location": "Kharadi, Pune"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "location": "Hinjawadi"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "location": "Wagholi"
+    },
+    {
+      "id": "4",
+      "title": "Commercial Shop in Viman Nagar",
+      "location": "Viman Nagar, Pune"
+    },
+    {
+      "id": "5",
+      "title": "Residential Plot in Baner",
+      "location": "Baner"
+    },
+    {
+      "id": "6",
+      "title": "Luxury Villa in Mumbai Suburbs",
+      "location": "Mumbai, Maharashtra"
+    },
+    {
+      "id": "7",
+      "title": "Modern Apartment in Dubai Marina",
+      "location": "Dubai, Dubai, United Arab Emirates"
+    },
+    {
+      "id": "8",
+      "title": "Commercial Space in Bangalore",
+      "location": "Bengaluru, Karnataka"
+    },
+    {
+      "id": "510061",
+      "title": "Test Property with Video",
+      "location": "Test Location, Pune"
+    },
+    {
+      "id": "510062",
+      "title": "Test Property - Kharadi 3 BHK",
+      "location": "Kharadi, Pune, Maharashtra, India"
+    },
+    {
+      "id": "510063",
+      "title": "Test Property with Images",
+      "location": "Test Location, Pune"
+    },
+    {
+      "id": "510064",
+      "title": "Test Property without Video",
+      "location": "Test Location 2, Mumbai"
+    },
+    {
+      "id": "510065",
+      "title": "Test Property - Manual Location",
+      "location": "Some Custom Location"
+    },
+    {
+      "id": "510066",
+      "title": "Property for Image Test",
+      "location": "Mumbai"
+    },
+    {
+      "id": "510067",
+      "title": "Test Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "location": "Test Location, Bangalore"
+    },
+    {
+      "id": "510068",
+      "title": "Test Property - With Zone",
+      "location": "Kharadi, Pune"
+    },
+    {
+      "id": "510069",
+      "title": "Test Property - https://youtu.be/dQw4w9WgXcQ",
+      "location": "Test Location, Bangalore"
+    },
+    {
+      "id": "510070",
+      "title": "Test Property - https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "location": "Test Location, Bangalore"
+    },
+    {
+      "id": "510071",
+      "title": "Property for Delete Test",
+      "location": "Bangalore"
+    },
+    {
+      "id": "510072",
+      "title": "Multi-Image Property",
+      "location": "Delhi"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tlocation\n1\tLuxury 3BHK Apartment in Kharadi\tKharadi, Pune\n2\tPremium Office Space in Hinjewadi\tHinjawadi\n3\tUnder Construction 2BHK in Wagholi\tWagholi\n4\tCommercial Shop in Viman Nagar\tViman Nagar, Pune\n5\tResidential Plot in Baner\tBaner\n6\tLuxury Villa in Mumbai Suburbs\tMumbai, Maharashtra\n7\tModern Apartment in Dubai Marina\tDubai, Dubai, United Arab Emirates\n8\tCommercial Space in Bangalore\tBengaluru, Karnataka\n510061\tTest Property with Video\tTest Location, Pune\n510062\tTest Property - Kharadi 3 BHK\tKharadi, Pune, Maharashtra, India\n510063\tTest Property with Images\tTest Location, Pune\n510064\tTest Property without Video\tTest Location 2, Mumbai\n510065\tTest Property - Manual Location\tSome Custom Location\n510066\tProperty for Image Test\tMumbai\n510067\tTest Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ\tTest Location, Bangalore\n510068\tTest Property - With Zone\tKharadi, Pune\n510069\tTest Property - https://youtu.be/dQw4w9WgXcQ\tTest Location, Bangalore\n510070\tTest Property - https://www.youtube.com/embed/dQw4w9WgXcQ\tTest Location, Bangalore\n510071\tProperty for Delete Test\tBangalore\n510072\tMulti-Image Property\tDelhi\n",
+  "stderr": "",
+  "execution_time_ms": 1508
+}

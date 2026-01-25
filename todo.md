@@ -1443,3 +1443,11 @@
 - [x] Fix location "Coming Soon" display in projects ✅
 - [x] Add amenity images to Pride Purple project ✅
 - [x] Add badge management section to project form (like properties) ✅
+
+
+## Re-implemented Fixes After Sandbox Reset (Jan 25, 2026)
+
+- [x] Fix breadcrumb alignment to display in straight line on mobile ✅
+- [x] Add amenity images to Pride Purple project (5 images with beautiful cards) ✅
+- [x] Fix badge persistence for projects (badge fields in handleSubmit) ✅
+- [x] Remove extra test properties (cleaned from 20 to 8 real properties) ✅
