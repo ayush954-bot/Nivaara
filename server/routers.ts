@@ -388,6 +388,312 @@ export const appRouter = router({
           return await db.updateInquiryStatus(input.id, input.status);
         }),
     }),
+
+    // Projects Management
+    projects: router({
+      list: publicProcedure.query(async ({ ctx }) => {
+        const isOAuthAdmin = ctx.user?.role === "admin";
+        const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+        if (!isOAuthAdmin && !isStaffPropertyManager) {
+          throw new Error("Admin access is required");
+        }
+        return await db.getAllProjects();
+      }),
+
+      create: publicProcedure
+        .input(
+          z.object({
+            name: z.string().min(1),
+            builderName: z.string().min(1),
+            description: z.string().min(1),
+            location: z.string().min(1),
+            city: z.string().min(1),
+            latitude: z.number().nullable().optional(),
+            longitude: z.number().nullable().optional(),
+            status: z.enum(["Upcoming", "Under Construction", "Ready to Move"]),
+            priceRange: z.string().min(1),
+            minPrice: z.number().nullable().optional(),
+            maxPrice: z.number().nullable().optional(),
+            configurations: z.string().optional(),
+            reraNumber: z.string().optional(),
+            possessionDate: z.string().optional(),
+            totalUnits: z.number().optional(),
+            towers: z.number().optional(),
+            floors: z.number().optional(),
+            coverImage: z.string().optional(),
+            videoUrl: z.string().optional(),
+            brochureUrl: z.string().optional(),
+            masterPlanUrl: z.string().optional(),
+            builderDescription: z.string().optional(),
+            builderLogo: z.string().optional(),
+            builderEstablished: z.number().optional(),
+            builderProjects: z.number().optional(),
+            featured: z.boolean().default(false),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required");
+          }
+          return await db.createProject(input);
+        }),
+
+      update: publicProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            name: z.string().min(1).optional(),
+            builderName: z.string().min(1).optional(),
+            description: z.string().min(1).optional(),
+            location: z.string().min(1).optional(),
+            city: z.string().min(1).optional(),
+            latitude: z.number().nullable().optional(),
+            longitude: z.number().nullable().optional(),
+            status: z.enum(["Upcoming", "Under Construction", "Ready to Move"]).optional(),
+            priceRange: z.string().min(1).optional(),
+            minPrice: z.number().nullable().optional(),
+            maxPrice: z.number().nullable().optional(),
+            configurations: z.string().optional(),
+            reraNumber: z.string().optional(),
+            possessionDate: z.string().optional(),
+            totalUnits: z.number().optional(),
+            towers: z.number().optional(),
+            floors: z.number().optional(),
+            coverImage: z.string().optional(),
+            videoUrl: z.string().optional(),
+            brochureUrl: z.string().optional(),
+            masterPlanUrl: z.string().optional(),
+            builderDescription: z.string().optional(),
+            builderLogo: z.string().optional(),
+            builderEstablished: z.number().optional(),
+            builderProjects: z.number().optional(),
+            featured: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required");
+          }
+          const { id, ...data } = input;
+          return await db.updateProject(id, data);
+        }),
+
+      delete: publicProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input, ctx }) => {
+          const isOAuthAdmin = ctx.user?.role === "admin";
+          const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+          if (!isOAuthAdmin && !isStaffPropertyManager) {
+            throw new Error("Admin access is required");
+          }
+          return await db.deleteProject(input.id);
+        }),
+
+      // Amenities management
+      amenities: router({
+        list: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .query(async ({ input }) => {
+            return await db.getProjectAmenities(input.projectId);
+          }),
+
+        add: publicProcedure
+          .input(
+            z.object({
+              projectId: z.number(),
+              name: z.string().min(1),
+              icon: z.string().optional(),
+              displayOrder: z.number().default(0),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.addProjectAmenity(input);
+          }),
+
+        delete: publicProcedure
+          .input(z.object({ id: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteProjectAmenity(input.id);
+          }),
+
+        deleteAll: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteAllProjectAmenities(input.projectId);
+          }),
+      }),
+
+      // Floor plans management
+      floorPlans: router({
+        list: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .query(async ({ input }) => {
+            return await db.getProjectFloorPlans(input.projectId);
+          }),
+
+        add: publicProcedure
+          .input(
+            z.object({
+              projectId: z.number(),
+              name: z.string().min(1),
+              bedrooms: z.number(),
+              bathrooms: z.number(),
+              area: z.number(),
+              price: z.number(),
+              imageUrl: z.string().optional(),
+              displayOrder: z.number().default(0),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.addProjectFloorPlan(input);
+          }),
+
+        delete: publicProcedure
+          .input(z.object({ id: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteProjectFloorPlan(input.id);
+          }),
+
+        deleteAll: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteAllProjectFloorPlans(input.projectId);
+          }),
+      }),
+
+      // Images management
+      images: router({
+        list: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .query(async ({ input }) => {
+            return await db.getProjectImages(input.projectId);
+          }),
+
+        add: publicProcedure
+          .input(
+            z.object({
+              projectId: z.number(),
+              imageUrl: z.string().min(1),
+              caption: z.string().optional(),
+              displayOrder: z.number().default(0),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.addProjectImage(input);
+          }),
+
+        delete: publicProcedure
+          .input(z.object({ id: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteProjectImage(input.id);
+          }),
+
+        deleteAll: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteAllProjectImages(input.projectId);
+          }),
+      }),
+
+      // Videos management
+      videos: router({
+        list: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .query(async ({ input }) => {
+            return await db.getProjectVideos(input.projectId);
+          }),
+
+        add: publicProcedure
+          .input(
+            z.object({
+              projectId: z.number(),
+              videoUrl: z.string().min(1),
+              videoType: z.enum(["youtube", "vimeo", "virtual_tour", "other"]).default("youtube"),
+              title: z.string().optional(),
+              displayOrder: z.number().default(0),
+            })
+          )
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.addProjectVideo(input);
+          }),
+
+        delete: publicProcedure
+          .input(z.object({ id: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteProjectVideo(input.id);
+          }),
+
+        deleteAll: publicProcedure
+          .input(z.object({ projectId: z.number() }))
+          .mutation(async ({ input, ctx }) => {
+            const isOAuthAdmin = ctx.user?.role === "admin";
+            const isStaffPropertyManager = ctx.staff?.role === "property_manager";
+            if (!isOAuthAdmin && !isStaffPropertyManager) {
+              throw new Error("Admin access is required");
+            }
+            return await db.deleteAllProjectVideos(input.projectId);
+          }),
+      }),
+    }),
   }),
 
   // Projects router - Builder project listings

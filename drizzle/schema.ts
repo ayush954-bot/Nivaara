@@ -171,6 +171,11 @@ export const projects = mysqlTable("projects", {
   coverImage: text("coverImage"), // Main project image URL
   videoUrl: text("videoUrl"), // YouTube video URL
   brochureUrl: text("brochureUrl"), // PDF brochure URL
+  masterPlanUrl: text("masterPlanUrl"), // Master plan image URL
+  builderDescription: text("builderDescription"), // Builder/Developer history and background
+  builderLogo: text("builderLogo"), // Builder logo URL
+  builderEstablished: int("builderEstablished"), // Year builder was established
+  builderProjects: int("builderProjects"), // Number of projects by builder
   featured: boolean("featured").default(false).notNull(), // Featured projects
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

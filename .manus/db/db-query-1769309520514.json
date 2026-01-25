@@ -1,0 +1,35 @@
+{
+  "query": "UPDATE projects SET coverImage = '/images/projects/project-1.jpg' WHERE id = 1;\nUPDATE projects SET coverImage = '/images/projects/project-2.jpg' WHERE id = 2;\nUPDATE projects SET coverImage = '/images/projects/project-3.jpg' WHERE id = 3;\nUPDATE projects SET coverImage = '/images/projects/project-4.jpg' WHERE id = 4;\nUPDATE projects SET coverImage = '/images/projects/project-5.jpg' WHERE id = 5;\nSELECT id, name, coverImage FROM projects;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute UPDATE projects SET coverImage = '/images/projects/project-1.jpg' WHERE id = 1;\nUPDATE projects SET coverImage = '/images/projects/project-2.jpg' WHERE id = 2;\nUPDATE projects SET coverImage = '/images/projects/project-3.jpg' WHERE id = 3;\nUPDATE projects SET coverImage = '/images/projects/project-4.jpg' WHERE id = 4;\nUPDATE projects SET coverImage = '/images/projects/project-5.jpg' WHERE id = 5;\nSELECT id, name, coverImage FROM projects;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Pride Purple Park Eden",
+      "coverImage": "/images/projects/project-1.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Kolte Patil 24K Glitterati",
+      "coverImage": "/images/projects/project-2.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Kumar Privé",
+      "coverImage": "/images/projects/project-3.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Nyati Elysia II",
+      "coverImage": "/images/projects/project-4.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Paranjape Blue Ridge",
+      "coverImage": "/images/projects/project-5.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcoverImage\n1\tPride Purple Park Eden\t/images/projects/project-1.jpg\n2\tKolte Patil 24K Glitterati\t/images/projects/project-2.jpg\n3\tKumar Privé\t/images/projects/project-3.jpg\n4\tNyati Elysia II\t/images/projects/project-4.jpg\n5\tParanjape Blue Ridge\t/images/projects/project-5.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 2607
+}

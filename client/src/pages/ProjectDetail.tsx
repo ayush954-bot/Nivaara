@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import {
   Building2,
   MapPin,
@@ -35,6 +38,20 @@ import {
   Music,
   BookOpen,
   Home,
+  Download,
+  Share2,
+  Calendar,
+  Calculator,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  MessageCircle,
+  Award,
+  Building,
+  Clock,
+  Star,
+  Image as ImageIcon,
+  Video,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -57,17 +74,42 @@ const iconMap: Record<string, any> = {
   Circle,
   Music,
   BookOpen,
+  Building,
+  Star,
+};
+
+// Helper to extract YouTube video ID
+const getYouTubeId = (url: string) => {
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  return match ? match[1] : null;
 };
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState("overview");
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [showEmiCalculator, setShowEmiCalculator] = useState(false);
+  
+  // EMI Calculator state
+  const [loanAmount, setLoanAmount] = useState(5000000);
+  const [interestRate, setInterestRate] = useState(8.5);
+  const [loanTenure, setLoanTenure] = useState(20);
 
   // Fetch project details
   const { data: project, isLoading, error } = trpc.projects.getById.useQuery(
     { id: parseInt(id || "0") },
     { enabled: !!id }
   );
+
+  // Calculate EMI
+  const emi = useMemo(() => {
+    const principal = loanAmount;
+    const rate = interestRate / 12 / 100;
+    const time = loanTenure * 12;
+    const emiValue = (principal * rate * Math.pow(1 + rate, time)) / (Math.pow(1 + rate, time) - 1);
+    return Math.round(emiValue);
+  }, [loanAmount, interestRate, loanTenure]);
 
   // Get status badge color
   const getStatusColor = (status: string) => {
@@ -93,6 +135,39 @@ export default function ProjectDetail() {
       return `₹${(numPrice / 100000).toFixed(0)} L`;
     }
     return `₹${numPrice.toLocaleString('en-IN')}`;
+  };
+
+  // Get all images for gallery
+  const allImages = useMemo(() => {
+    if (!project) return [];
+    const images = [];
+    if (project.coverImage) {
+      images.push({ url: project.coverImage, caption: "Cover Image" });
+    }
+    if (project.masterPlanUrl) {
+      images.push({ url: project.masterPlanUrl, caption: "Master Plan" });
+    }
+    if (project.images) {
+      project.images.forEach((img: any) => {
+        images.push({ url: img.imageUrl, caption: img.caption || "Project Image" });
+      });
+    }
+    return images;
+  }, [project]);
+
+  // Open lightbox
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  // Navigate lightbox
+  const navigateLightbox = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setLightboxIndex((prev) => (prev > 0 ? prev - 1 : allImages.length - 1));
+    } else {
+      setLightboxIndex((prev) => (prev < allImages.length - 1 ? prev + 1 : 0));
+    }
   };
 
   if (isLoading) {
@@ -134,6 +209,40 @@ export default function ProjectDetail() {
     <div className="flex flex-col min-h-screen">
       <Header />
 
+      {/* Lightbox */}
+      {lightboxOpen && allImages.length > 0 && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+          >
+            <X className="h-8 w-8" />
+          </button>
+          <button
+            onClick={() => navigateLightbox('prev')}
+            className="absolute left-4 text-white hover:text-gray-300"
+          >
+            <ChevronLeft className="h-12 w-12" />
+          </button>
+          <div className="max-w-5xl max-h-[80vh] px-16">
+            <img
+              src={allImages[lightboxIndex]?.url}
+              alt={allImages[lightboxIndex]?.caption}
+              className="max-w-full max-h-[80vh] object-contain"
+            />
+            <p className="text-white text-center mt-4">
+              {allImages[lightboxIndex]?.caption} ({lightboxIndex + 1} / {allImages.length})
+            </p>
+          </div>
+          <button
+            onClick={() => navigateLightbox('next')}
+            className="absolute right-4 text-white hover:text-gray-300"
+          >
+            <ChevronRight className="h-12 w-12" />
+          </button>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <div className="bg-secondary/30 py-4">
         <div className="container">
@@ -151,14 +260,17 @@ export default function ProjectDetail() {
       <section className="py-8 bg-background">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Image */}
+            {/* Main Image with Gallery Preview */}
             <div className="lg:col-span-2">
-              <div className="relative h-[400px] rounded-xl overflow-hidden bg-secondary">
+              <div 
+                className="relative h-[400px] rounded-xl overflow-hidden bg-secondary cursor-pointer group"
+                onClick={() => openLightbox(0)}
+              >
                 {project.coverImage && !project.coverImage.includes('placeholder') ? (
                   <img
                     src={project.coverImage}
                     alt={project.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
@@ -177,12 +289,43 @@ export default function ProjectDetail() {
                     Featured Project
                   </Badge>
                 )}
+
+                {/* View Gallery Overlay */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="text-white text-center">
+                    <ImageIcon className="h-12 w-12 mx-auto mb-2" />
+                    <p className="font-medium">View Gallery ({allImages.length} images)</p>
+                  </div>
+                </div>
               </div>
+
+              {/* Thumbnail Strip */}
+              {allImages.length > 1 && (
+                <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                  {allImages.slice(0, 6).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => openLightbox(idx)}
+                      className="flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden cursor-pointer hover:ring-2 ring-primary transition-all"
+                    >
+                      <img src={img.url} alt={img.caption} className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                  {allImages.length > 6 && (
+                    <div
+                      onClick={() => openLightbox(6)}
+                      className="flex-shrink-0 w-20 h-16 rounded-lg bg-secondary flex items-center justify-center cursor-pointer hover:bg-secondary/80"
+                    >
+                      <span className="text-sm font-medium">+{allImages.length - 6}</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Project Info Card */}
             <div className="lg:col-span-1">
-              <Card className="h-full">
+              <Card className="sticky top-4">
                 <CardContent className="p-6">
                   {/* Builder Name */}
                   <p className="text-sm text-primary font-medium mb-2">
@@ -232,21 +375,109 @@ export default function ProjectDetail() {
                         <span className="font-medium text-xs">{project.reraNumber}</span>
                       </div>
                     )}
-                    {project.totalUnits && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Total Units</span>
-                        <span className="font-medium">{project.totalUnits}</span>
-                      </div>
-                    )}
                   </div>
 
-                  {/* Contact Button */}
-                  <Link href="/contact">
-                    <Button className="w-full" size="lg">
-                      <Phone className="h-4 w-4 mr-2" />
-                      Contact for Details
-                    </Button>
-                  </Link>
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    <a href="tel:+919764515697" className="block">
+                      <Button className="w-full" size="lg">
+                        <Phone className="h-4 w-4 mr-2" />
+                        Call Now
+                      </Button>
+                    </a>
+                    <a 
+                      href={`https://wa.me/919764515697?text=Hi, I'm interested in ${project.name} project in ${project.location}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      <Button className="w-full bg-green-600 hover:bg-green-700" size="lg">
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        WhatsApp
+                      </Button>
+                    </a>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => setShowEmiCalculator(!showEmiCalculator)}
+                      >
+                        <Calculator className="h-4 w-4 mr-2" />
+                        EMI
+                      </Button>
+                      {project.brochureUrl && (
+                        <a href={project.brochureUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
+                          <Button variant="outline" className="w-full">
+                            <Download className="h-4 w-4 mr-2" />
+                            Brochure
+                          </Button>
+                        </a>
+                      )}
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          navigator.share?.({
+                            title: project.name,
+                            text: `Check out ${project.name} by ${project.builderName}`,
+                            url: window.location.href
+                          });
+                        }}
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* EMI Calculator */}
+                  {showEmiCalculator && (
+                    <div className="mt-4 p-4 bg-secondary/50 rounded-lg">
+                      <h4 className="font-semibold mb-3 flex items-center">
+                        <Calculator className="h-4 w-4 mr-2" />
+                        EMI Calculator
+                      </h4>
+                      <div className="space-y-4">
+                        <div>
+                          <Label className="text-sm">Loan Amount: ₹{(loanAmount / 100000).toFixed(0)} L</Label>
+                          <Slider
+                            value={[loanAmount]}
+                            onValueChange={(v) => setLoanAmount(v[0])}
+                            min={1000000}
+                            max={50000000}
+                            step={500000}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-sm">Interest Rate: {interestRate}%</Label>
+                          <Slider
+                            value={[interestRate]}
+                            onValueChange={(v) => setInterestRate(v[0])}
+                            min={6}
+                            max={15}
+                            step={0.1}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-sm">Tenure: {loanTenure} years</Label>
+                          <Slider
+                            value={[loanTenure]}
+                            onValueChange={(v) => setLoanTenure(v[0])}
+                            min={5}
+                            max={30}
+                            step={1}
+                            className="mt-2"
+                          />
+                        </div>
+                        <div className="bg-primary/10 rounded-lg p-3 text-center">
+                          <p className="text-sm text-muted-foreground">Monthly EMI</p>
+                          <p className="text-2xl font-bold text-primary">
+                            ₹{emi.toLocaleString('en-IN')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -254,35 +485,98 @@ export default function ProjectDetail() {
         </div>
       </section>
 
+      {/* Video Tour Section */}
+      {project.videoUrl && (
+        <section className="py-8 bg-secondary/20">
+          <div className="container">
+            <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <Video className="h-6 w-6 mr-2 text-primary" />
+              Video Tour
+            </h2>
+            <div className="aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden shadow-lg">
+              {getYouTubeId(project.videoUrl) ? (
+                <iframe
+                  src={`https://www.youtube.com/embed/${getYouTubeId(project.videoUrl)}`}
+                  title="Project Video Tour"
+                  className="w-full h-full"
+                  allowFullScreen
+                />
+              ) : (
+                <a
+                  href={project.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full h-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors"
+                >
+                  <Play className="h-16 w-16 text-primary" />
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Tabs Section */}
-      <section className="py-8 bg-secondary/20 flex-1">
+      <section className="py-8 bg-background flex-1">
         <div className="container">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full justify-start mb-8 bg-background">
-              <TabsTrigger value="overview" className="px-6">Overview</TabsTrigger>
-              <TabsTrigger value="floorplans" className="px-6">Floor Plans</TabsTrigger>
-              <TabsTrigger value="amenities" className="px-6">Amenities</TabsTrigger>
-              <TabsTrigger value="gallery" className="px-6">Gallery</TabsTrigger>
-              <TabsTrigger value="location" className="px-6">Location</TabsTrigger>
+            <TabsList className="w-full justify-start mb-8 bg-secondary/50 flex-wrap h-auto gap-1 p-1">
+              <TabsTrigger value="overview" className="px-4 py-2">Overview</TabsTrigger>
+              <TabsTrigger value="floorplans" className="px-4 py-2">Floor Plans</TabsTrigger>
+              <TabsTrigger value="amenities" className="px-4 py-2">Amenities</TabsTrigger>
+              <TabsTrigger value="gallery" className="px-4 py-2">Gallery</TabsTrigger>
+              <TabsTrigger value="builder" className="px-4 py-2">Builder</TabsTrigger>
+              <TabsTrigger value="location" className="px-4 py-2">Location</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
             <TabsContent value="overview">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 space-y-6">
                   <Card>
                     <CardHeader>
                       <CardTitle>About {project.name}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                         {project.description}
                       </p>
                     </CardContent>
                   </Card>
+
+                  {/* Price Table */}
+                  {project.floorPlans && project.floorPlans.length > 0 && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Price List</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="overflow-x-auto">
+                          <table className="w-full">
+                            <thead>
+                              <tr className="border-b">
+                                <th className="text-left py-3 px-4 font-semibold">Configuration</th>
+                                <th className="text-left py-3 px-4 font-semibold">Area (sq.ft)</th>
+                                <th className="text-left py-3 px-4 font-semibold">Price</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {project.floorPlans.map((plan: any) => (
+                                <tr key={plan.id} className="border-b hover:bg-secondary/30">
+                                  <td className="py-3 px-4">{plan.name}</td>
+                                  <td className="py-3 px-4">{plan.area}</td>
+                                  <td className="py-3 px-4 font-semibold text-primary">{formatPrice(plan.price)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
 
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-1 space-y-6">
                   <Card>
                     <CardHeader>
                       <CardTitle>Project Highlights</CardTitle>
@@ -323,18 +617,67 @@ export default function ProjectDetail() {
                           </div>
                         </div>
                       )}
+                      {project.possessionDate && (
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-primary/10 rounded-lg">
+                            <Calendar className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium">Possession</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(project.possessionDate).toLocaleDateString('en-IN', { 
+                                month: 'long', 
+                                year: 'numeric' 
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
+
+                  {/* Master Plan */}
+                  {project.masterPlanUrl && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Master Plan</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div 
+                          className="rounded-lg overflow-hidden cursor-pointer"
+                          onClick={() => {
+                            const idx = allImages.findIndex(img => img.url === project.masterPlanUrl);
+                            if (idx >= 0) openLightbox(idx);
+                          }}
+                        >
+                          <img
+                            src={project.masterPlanUrl}
+                            alt="Master Plan"
+                            className="w-full h-auto hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               </div>
             </TabsContent>
 
             {/* Floor Plans Tab */}
             <TabsContent value="floorplans">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {project.floorPlans && project.floorPlans.length > 0 ? (
                   project.floorPlans.map((plan: any) => (
-                    <Card key={plan.id} className="hover:shadow-lg transition-shadow">
+                    <Card key={plan.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                      {plan.imageUrl && (
+                        <div className="aspect-[4/3] bg-secondary">
+                          <img
+                            src={plan.imageUrl}
+                            alt={plan.name}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      )}
                       <CardContent className="p-6">
                         <h3 className="text-lg font-bold mb-4">{plan.name}</h3>
                         
@@ -418,14 +761,18 @@ export default function ProjectDetail() {
                   <CardTitle>Project Gallery</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {project.images && project.images.length > 0 ? (
+                  {allImages.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {project.images.map((image: any) => (
-                        <div key={image.id} className="aspect-video rounded-lg overflow-hidden bg-secondary">
+                      {allImages.map((image, idx) => (
+                        <div 
+                          key={idx} 
+                          onClick={() => openLightbox(idx)}
+                          className="aspect-video rounded-lg overflow-hidden bg-secondary cursor-pointer group"
+                        >
                           <img
-                            src={image.imageUrl}
-                            alt={image.caption || project.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            src={image.url}
+                            alt={image.caption}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                       ))}
@@ -440,32 +787,111 @@ export default function ProjectDetail() {
                   {/* Videos Section */}
                   {project.videos && project.videos.length > 0 && (
                     <div className="mt-8">
-                      <h3 className="text-lg font-semibold mb-4">Videos</h3>
+                      <h3 className="text-lg font-semibold mb-4 flex items-center">
+                        <Video className="h-5 w-5 mr-2 text-primary" />
+                        Project Videos
+                      </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {project.videos.map((video: any) => (
-                          <div key={video.id} className="aspect-video rounded-lg overflow-hidden bg-secondary">
-                            {video.videoType === 'youtube' ? (
-                              <iframe
-                                src={video.videoUrl.replace('watch?v=', 'embed/')}
-                                title={video.title || 'Project Video'}
-                                className="w-full h-full"
-                                allowFullScreen
-                              />
-                            ) : (
-                              <a
-                                href={video.videoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full h-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors"
-                              >
-                                <Play className="h-12 w-12 text-primary" />
-                              </a>
-                            )}
-                          </div>
-                        ))}
+                        {project.videos.map((video: any) => {
+                          const videoId = getYouTubeId(video.videoUrl);
+                          return (
+                            <div key={video.id} className="aspect-video rounded-lg overflow-hidden bg-secondary">
+                              {videoId ? (
+                                <iframe
+                                  src={`https://www.youtube.com/embed/${videoId}`}
+                                  title={video.title || 'Project Video'}
+                                  className="w-full h-full"
+                                  allowFullScreen
+                                />
+                              ) : (
+                                <a
+                                  href={video.videoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-full h-full flex items-center justify-center bg-secondary hover:bg-secondary/80 transition-colors"
+                                >
+                                  <Play className="h-12 w-12 text-primary" />
+                                </a>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Builder Tab */}
+            <TabsContent value="builder">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    {project.builderLogo && (
+                      <img 
+                        src={project.builderLogo} 
+                        alt={project.builderName}
+                        className="h-12 w-12 object-contain rounded-lg"
+                      />
+                    )}
+                    <div>
+                      <p className="text-xl">{project.builderName}</p>
+                      {project.builderEstablished && (
+                        <p className="text-sm text-muted-foreground font-normal">
+                          Established {project.builderEstablished}
+                        </p>
+                      )}
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2">
+                      {project.builderDescription ? (
+                        <div className="prose prose-sm max-w-none">
+                          <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                            {project.builderDescription}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">
+                          {project.builderName} is a reputed real estate developer known for quality construction and timely delivery. 
+                          Contact us for more information about the builder's track record and completed projects.
+                        </p>
+                      )}
+                    </div>
+                    <div className="lg:col-span-1">
+                      <div className="bg-secondary/50 rounded-lg p-6 space-y-4">
+                        <h4 className="font-semibold">Builder Highlights</h4>
+                        {project.builderEstablished && (
+                          <div className="flex items-center gap-3">
+                            <Clock className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Established</p>
+                              <p className="font-medium">{project.builderEstablished}</p>
+                            </div>
+                          </div>
+                        )}
+                        {project.builderProjects && (
+                          <div className="flex items-center gap-3">
+                            <Building className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Total Projects</p>
+                              <p className="font-medium">{project.builderProjects}+ Projects</p>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-3">
+                          <Award className="h-5 w-5 text-primary" />
+                          <div>
+                            <p className="text-sm text-muted-foreground">Trust Factor</p>
+                            <p className="font-medium">RERA Registered</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -485,7 +911,7 @@ export default function ProjectDetail() {
                   {project.latitude && project.longitude ? (
                     <div className="aspect-video rounded-lg overflow-hidden">
                       <iframe
-                        src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782!2d${project.longitude}!3d${project.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzQ4LjAiTiA3M8KwNTYnMjQuMCJF!5e0!3m2!1sen!2sin!4v1234567890`}
+                        src={`https://www.google.com/maps?q=${project.latitude},${project.longitude}&z=15&output=embed`}
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}
@@ -502,6 +928,30 @@ export default function ProjectDetail() {
                       </div>
                     </div>
                   )}
+
+                  {/* Connectivity Section */}
+                  <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="p-4 bg-secondary/50 rounded-lg text-center">
+                      <Car className="h-6 w-6 mx-auto text-primary mb-2" />
+                      <p className="text-sm text-muted-foreground">Airport</p>
+                      <p className="font-medium">15-20 mins</p>
+                    </div>
+                    <div className="p-4 bg-secondary/50 rounded-lg text-center">
+                      <Building2 className="h-6 w-6 mx-auto text-primary mb-2" />
+                      <p className="text-sm text-muted-foreground">IT Hub</p>
+                      <p className="font-medium">5-10 mins</p>
+                    </div>
+                    <div className="p-4 bg-secondary/50 rounded-lg text-center">
+                      <Heart className="h-6 w-6 mx-auto text-primary mb-2" />
+                      <p className="text-sm text-muted-foreground">Hospital</p>
+                      <p className="font-medium">10 mins</p>
+                    </div>
+                    <div className="p-4 bg-secondary/50 rounded-lg text-center">
+                      <BookOpen className="h-6 w-6 mx-auto text-primary mb-2" />
+                      <p className="text-sm text-muted-foreground">Schools</p>
+                      <p className="font-medium">5 mins</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -517,18 +967,22 @@ export default function ProjectDetail() {
             Contact us today for exclusive offers and site visits
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact">
+            <a href="tel:+919764515697">
               <Button size="lg" variant="secondary">
                 <Phone className="h-4 w-4 mr-2" />
-                Schedule a Visit
+                Call: +91 9764515697
               </Button>
-            </Link>
-            <Link href="/projects">
+            </a>
+            <a 
+              href={`https://wa.me/919764515697?text=Hi, I want to schedule a site visit for ${project.name}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                View All Projects
+                <Calendar className="h-4 w-4 mr-2" />
+                Schedule Site Visit
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </section>

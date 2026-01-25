@@ -16,7 +16,9 @@ import {
   Upload,
   LogOut,
   Users,
+  Layers,
 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import { getLoginUrl } from "@/const";
@@ -26,10 +28,12 @@ export default function AdminDashboard() {
   const { user, canManageProperties, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
   const [selectedProperty, setSelectedProperty] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState("properties");
   
   const { data: properties = [], refetch: refetchProperties } = trpc.admin.properties.list.useQuery(undefined, {
     enabled: canManageProperties,
   });
+  const { data: projects = [], refetch: refetchProjects } = trpc.projects.list.useQuery();
   const { data: inquiries = [] } = trpc.admin.inquiries.list.useQuery(undefined, {
     enabled: canManageProperties,
   });
@@ -37,6 +41,16 @@ export default function AdminDashboard() {
   const deleteProperty = trpc.admin.properties.delete.useMutation({
     onSuccess: () => {
       refetchProperties();
+    },
+  });
+
+  const deleteProject = trpc.admin.projects.delete.useMutation({
+    onSuccess: () => {
+      refetchProjects();
+      toast.success("Project deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(`Failed to delete project: ${error.message}`);
     },
   });
 
@@ -98,6 +112,12 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteProject = async (id: number) => {
+    if (confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+      await deleteProject.mutateAsync({ id });
+    }
+  };
+
   const newInquiries = inquiries.filter(i => i.status === "new").length;
 
   const handleLogout = async () => {
@@ -132,7 +152,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -167,6 +187,18 @@ export default function AdminDashboard() {
                 <p className="text-3xl font-bold">{newInquiries}</p>
               </div>
               <Mail className="h-12 w-12 text-green-500 opacity-20" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Projects</p>
+                <p className="text-3xl font-bold">{projects.length}</p>
+              </div>
+              <Layers className="h-12 w-12 text-blue-500 opacity-20" />
             </div>
           </CardContent>
         </Card>
@@ -256,6 +288,103 @@ export default function AdminDashboard() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleDelete(property.id)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Projects Management */}
+      <Card className="mt-8">
+        <CardHeader>
+          <div className="flex flex-col gap-4">
+            <CardTitle className="flex items-center gap-2">
+              <Layers className="h-5 w-5" />
+              Builder Projects Management
+            </CardTitle>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button asChild>
+                <Link href="/admin/projects/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Project
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {projects.length === 0 ? (
+            <div className="text-center py-12">
+              <Layers className="h-16 w-16 mx-auto text-muted-foreground opacity-50 mb-4" />
+              <p className="text-muted-foreground mb-4">No projects yet</p>
+              <Button asChild>
+                <Link href="/admin/projects/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Your First Project
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {projects.map((project) => (
+                <div
+                  key={project.id}
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 border rounded-lg hover:bg-secondary/50 transition-colors"
+                >
+                  {project.coverImage && (
+                    <img
+                      src={project.coverImage}
+                      alt={project.name}
+                      className="w-24 h-24 object-cover rounded"
+                    />
+                  )}
+                  {!project.coverImage && (
+                    <div className="w-24 h-24 bg-secondary rounded flex items-center justify-center">
+                      <Layers className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold">{project.name}</h3>
+                      {project.featured && (
+                        <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                      )}
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        project.status === 'Ready to Move' ? 'bg-green-100 text-green-700' :
+                        project.status === 'Under Construction' ? 'bg-amber-100 text-amber-700' :
+                        'bg-blue-100 text-blue-700'
+                      }`}>
+                        {project.status}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {project.builderName} • {project.location}
+                    </p>
+                    <p className="text-sm font-semibold text-primary">
+                      {project.priceRange}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/projects/${project.id}`}>
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/admin/projects/edit/${project.id}`}>
+                        <Edit className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteProject(project.id)}
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
