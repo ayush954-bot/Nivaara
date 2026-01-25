@@ -5,6 +5,7 @@ import { trpc } from "@/lib/trpc";
 import Partners from "@/components/Partners";
 import PropertySearch from "@/components/PropertySearch";
 import FeaturedProperties from "@/components/FeaturedProperties";
+import FeaturedProjects from "@/components/FeaturedProjects";
 
 import TrustIndicators from "@/components/TrustIndicators";
 import InteractivePuneMap from "@/components/InteractivePuneMap";
@@ -81,6 +82,9 @@ export default function Home() {
 
       {/* Featured Properties Section */}
       <FeaturedProperties />
+
+      {/* Featured Projects Section */}
+      <FeaturedProjects />
 
       {/* Services Overview */}
       <section className="py-16 bg-background">

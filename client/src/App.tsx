@@ -21,6 +21,8 @@ import BulkImport from "./pages/admin/BulkImport";
 import StaffLogin from "./pages/StaffLogin";
 import StaffManagement from "./pages/admin/StaffManagement";
 import PropertyDetail from "./pages/PropertyDetail";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -33,6 +35,8 @@ function Router() {
           <Route path={"/services"} component={Services} />
           <Route path={"/properties"} component={Properties} />
           <Route path={"/properties/:id"} component={PropertyDetail} />
+          <Route path={"/projects"} component={Projects} />
+          <Route path={"/projects/:id"} component={ProjectDetail} />
           <Route path={"/team"} component={Team} />
           <Route path={"/contact"} component={Contact} />
           <Route path={"/faq"} component={FAQ} />
