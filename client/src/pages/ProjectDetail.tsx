@@ -237,12 +237,12 @@ export default function ProjectDetail() {
       {/* Breadcrumb */}
       <div className="bg-white py-4 border-b">
         <div className="container">
-          <nav className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-gray-700 hover:text-primary whitespace-nowrap">Home</Link>
-            <span className="text-gray-500">/</span>
-            <Link href="/projects" className="text-gray-700 hover:text-primary whitespace-nowrap">Projects</Link>
-            <span className="text-gray-500">/</span>
-            <span className="text-gray-900 font-medium whitespace-nowrap overflow-hidden text-ellipsis">{project.name}</span>
+          <nav className="flex flex-row flex-nowrap items-center gap-2 text-sm overflow-x-auto">
+            <Link href="/" className="text-gray-700 hover:text-primary whitespace-nowrap flex-shrink-0">Home</Link>
+            <span className="text-gray-500 flex-shrink-0">/</span>
+            <Link href="/projects" className="text-gray-700 hover:text-primary whitespace-nowrap flex-shrink-0">Projects</Link>
+            <span className="text-gray-500 flex-shrink-0">/</span>
+            <span className="text-gray-900 font-medium whitespace-nowrap flex-shrink-0">{project.name}</span>
           </nav>
         </div>
       </div>

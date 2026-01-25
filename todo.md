@@ -1458,3 +1458,8 @@
 - [x] Fix breadcrumb path visibility issue (text not visible on mobile) ✅
 - [x] Fix amenity images not displaying (images stopped showing) ✅
 - [x] Fix badge display and persistence - replicate exact Property section implementation ✅
+
+
+## Breadcrumb Layout Fix (Jan 25, 2026)
+
+- [x] Fix breadcrumb wrapping issue - keep Home / Projects / Pride Purple Park Eden on single line ✅
