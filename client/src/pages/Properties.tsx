@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { trpc } from "@/lib/trpc";
-import LocationSelect from "@/components/LocationSelect";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,73 +9,89 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
+import { Building2, MapPin, Ruler, IndianRupee } from "lucide-react";
 import { Link } from "wouter";
-import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function Properties() {
-  const [location] = useLocation();
   const [locationFilter, setLocationFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [budgetFilter, setBudgetFilter] = useState("all");
-  const [bhkFilter, setBhkFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  // State for zone filter
-  const [zoneFilter, setZoneFilter] = useState<string | undefined>(undefined);
+  // Sample property data
+  const properties = [
+    {
+      id: 1,
+      title: "Luxury 3BHK Apartment",
+      location: "Kharadi",
+      type: "Flat",
+      status: "Ready",
+      price: "₹95 Lakhs",
+      area: "1450 sq.ft",
+      image: "/images/luxury-home.jpg",
+      builder: "Premium Developers",
+    },
+    {
+      id: 2,
+      title: "Modern 2BHK Flat",
+      location: "Viman Nagar",
+      type: "Flat",
+      status: "Under-Construction",
+      price: "₹72 Lakhs",
+      area: "1100 sq.ft",
+      image: "/images/hero-building.jpg",
+      builder: "Skyline Builders",
+    },
+    {
+      id: 3,
+      title: "Commercial Office Space",
+      location: "Hinjewadi",
+      type: "Office",
+      status: "Ready",
+      price: "₹1.2 Crores",
+      area: "2500 sq.ft",
+      image: "/images/office-interior.jpg",
+      builder: "Corporate Realty",
+    },
+    {
+      id: 4,
+      title: "Spacious 4BHK Penthouse",
+      location: "Koregaon Park",
+      type: "Flat",
+      status: "Ready",
+      price: "₹2.5 Crores",
+      area: "3200 sq.ft",
+      image: "/images/luxury-home.jpg",
+      builder: "Elite Constructions",
+    },
+    {
+      id: 5,
+      title: "Retail Shop Space",
+      location: "Baner",
+      type: "Shop",
+      status: "Ready",
+      price: "₹85 Lakhs",
+      area: "800 sq.ft",
+      image: "/images/office-interior.jpg",
+      builder: "Retail Spaces Ltd",
+    },
+    {
+      id: 6,
+      title: "Residential Plot",
+      location: "Wagholi",
+      type: "Land",
+      status: "Ready",
+      price: "₹45 Lakhs",
+      area: "1200 sq.ft",
+      image: "/images/hero-building.jpg",
+      builder: "Land Developers",
+    },
+  ];
 
-  // Read zone or location parameter from URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    
-    // Check for zone parameter (from zone map clicks)
-    const zone = params.get('zone');
-    if (zone) {
-      setZoneFilter(zone);
-    }
-    
-    // Check for location parameter (from homepage search)
-    const locationParam = params.get('location');
-    if (locationParam && locationParam !== 'all') {
-      setLocationFilter(locationParam);
-    }
-  }, [location]);
-
-  // Reset BHK filter when switching to non-residential property types
-  useEffect(() => {
-    if (typeFilter !== "all" && typeFilter !== "Flat" && typeFilter !== "Rental") {
-      setBhkFilter("all");
-    }
-  }, [typeFilter]);
-
-  // Parse budget filter to min/max price in lakhs (1L = 100000)
-  const getBudgetRange = (budget: string): { minPrice?: number; maxPrice?: number } => {
-    if (budget === "all") return {};
-    
-    const ranges: Record<string, { minPrice?: number; maxPrice?: number }> = {
-      "0-50": { minPrice: 0, maxPrice: 50 * 100000 },
-      "50-75": { minPrice: 50 * 100000, maxPrice: 75 * 100000 },
-      "75-100": { minPrice: 75 * 100000, maxPrice: 100 * 100000 },
-      "100-150": { minPrice: 100 * 100000, maxPrice: 150 * 100000 },
-      "150-200": { minPrice: 150 * 100000, maxPrice: 200 * 100000 },
-      "200-300": { minPrice: 200 * 100000, maxPrice: 300 * 100000 },
-      "300-plus": { minPrice: 300 * 100000 },
-    };
-    
-    return ranges[budget] || {};
-  };
-
-  const budgetRange = getBudgetRange(budgetFilter);
-  const bedroomsValue = bhkFilter !== "all" ? parseInt(bhkFilter) : undefined;
-
-  // Fetch properties from database
-  const { data: properties = [], isLoading } = trpc.properties.search.useQuery({
-    location: locationFilter !== "all" ? locationFilter : undefined,
-    zone: zoneFilter,
-    propertyType: typeFilter !== "all" ? typeFilter : undefined,
-    minPrice: budgetRange.minPrice,
-    maxPrice: budgetRange.maxPrice,
-    bedrooms: bedroomsValue,
+  const filteredProperties = properties.filter((property) => {
+    if (locationFilter !== "all" && property.location !== locationFilter) return false;
+    if (typeFilter !== "all" && property.type !== typeFilter) return false;
+    if (statusFilter !== "all" && property.status !== statusFilter) return false;
+    return true;
   });
 
   return (
@@ -86,9 +100,9 @@ export default function Properties() {
       <section className="py-20 bg-secondary/30">
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6 text-foreground">Our Properties</h1>
+            <h1 className="text-5xl font-bold mb-6 text-foreground">Properties</h1>
             <p className="text-xl text-muted-foreground">
-              Explore our curated selection of properties across India and international markets
+              Discover your perfect property from our curated selection across Pune
             </p>
           </div>
         </div>
@@ -97,13 +111,24 @@ export default function Properties() {
       {/* Filters Section */}
       <section className="py-8 bg-background border-b">
         <div className="container">
-          <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="flex-1 w-full md:w-auto">
-              <LocationSelect
-                value={locationFilter}
-                onValueChange={setLocationFilter}
-                placeholder="All Locations"
-              />
+              <Select value={locationFilter} onValueChange={setLocationFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Locations</SelectItem>
+                  <SelectItem value="pune-east">Pune - East Zone</SelectItem>
+                  <SelectItem value="pune-west">Pune - West Zone</SelectItem>
+                  <SelectItem value="pune-north">Pune - North Zone</SelectItem>
+                  <SelectItem value="pune-south">Pune - South Zone</SelectItem>
+                  <SelectItem value="mumbai">Mumbai</SelectItem>
+                  <SelectItem value="delhi">Delhi NCR</SelectItem>
+                  <SelectItem value="bangalore">Bangalore</SelectItem>
+                  <SelectItem value="dubai">Dubai, UAE</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex-1 w-full md:w-auto">
@@ -114,51 +139,37 @@ export default function Properties() {
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="Flat">Flat</SelectItem>
-                  <SelectItem value="Shop">Shop</SelectItem>
                   <SelectItem value="Office">Office</SelectItem>
+                  <SelectItem value="Shop">Shop</SelectItem>
                   <SelectItem value="Land">Land</SelectItem>
                   <SelectItem value="Rental">Rental</SelectItem>
-                  <SelectItem value="Bank Auction">Bank Auction</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="flex-1 w-full md:w-auto">
-              <Select value={budgetFilter} onValueChange={setBudgetFilter}>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Budget" />
+                  <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Budgets</SelectItem>
-                  <SelectItem value="0-50">Under ₹50 Lakhs</SelectItem>
-                  <SelectItem value="50-75">₹50L - ₹75L</SelectItem>
-                  <SelectItem value="75-100">₹75L - ₹1 Cr</SelectItem>
-                  <SelectItem value="100-150">₹1 Cr - ₹1.5 Cr</SelectItem>
-                  <SelectItem value="150-200">₹1.5 Cr - ₹2 Cr</SelectItem>
-                  <SelectItem value="200-300">₹2 Cr - ₹3 Cr</SelectItem>
-                  <SelectItem value="300-plus">Above ₹3 Cr</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Ready">Ready to Move</SelectItem>
+                  <SelectItem value="Under-Construction">Under Construction</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Only show BHK filter for Flat and Rental property types */}
-            {(typeFilter === "all" || typeFilter === "Flat" || typeFilter === "Rental") && (
-              <div className="flex-1 w-full md:w-auto">
-                <Select value={bhkFilter} onValueChange={setBhkFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="BHK" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All BHK</SelectItem>
-                    <SelectItem value="1">1 BHK</SelectItem>
-                    <SelectItem value="2">2 BHK</SelectItem>
-                    <SelectItem value="3">3 BHK</SelectItem>
-                    <SelectItem value="4">4 BHK</SelectItem>
-                    <SelectItem value="5">5+ BHK</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setLocationFilter("all");
+                setTypeFilter("all");
+                setStatusFilter("all");
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
         </div>
       </section>
@@ -166,108 +177,89 @@ export default function Properties() {
       {/* Properties Grid */}
       <section className="py-16 bg-background">
         <div className="container">
-          {isLoading ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            </div>
-          ) : properties.length === 0 ? (
-            <div className="text-center py-20">
-              <Building2 className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-2xl font-semibold mb-2">No Properties Found</h3>
-              <p className="text-muted-foreground">
+          <div className="mb-6">
+            <p className="text-muted-foreground">
+              Showing {filteredProperties.length} of {properties.length} properties
+            </p>
+          </div>
+
+          {filteredProperties.length === 0 ? (
+            <div className="text-center py-16">
+              <Building2 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-2xl font-semibold mb-2">No properties found</h3>
+              <p className="text-muted-foreground mb-6">
                 Try adjusting your filters to see more results
               </p>
+              <Button
+                onClick={() => {
+                  setLocationFilter("all");
+                  setTypeFilter("all");
+                  setStatusFilter("all");
+                }}
+              >
+                Clear All Filters
+              </Button>
             </div>
           ) : (
-            <>
-              <div className="mb-6 text-muted-foreground">
-                Showing {properties.length} {properties.length === 1 ? "property" : "properties"}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {properties.map((property) => (
-                  <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div
-                      className="h-48 bg-cover bg-center relative"
-                      style={{
-                        backgroundImage: `url(${property.imageUrl || "/images/hero-building.jpg"})`,
-                      }}
-                    >
-                      {(() => {
-                        const badges = getPropertyBadges(property);
-                        if (badges.length > 0) {
-                          return (
-                            <div className="absolute top-3 left-3 flex flex-col gap-2">
-                              {badges.map((badge, idx) => (
-                                <Badge key={idx} className={`${badge.colorClass} shadow-md`}>
-                                  {badge.text}
-                                </Badge>
-                              ))}
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </div>
-                    <CardHeader>
-                      <div className="flex justify-between items-start mb-2">
-                        <Badge variant={property.status === "Ready" ? "default" : "secondary"}>
-                          {property.status}
-                        </Badge>
-                        <Badge variant="outline">{property.propertyType}</Badge>
-                      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProperties.map((property) => (
+                <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div
+                    className="h-48 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${property.image})` }}
+                  />
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
                       <CardTitle className="text-xl">{property.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <MapPin className="h-4 w-4 mr-2" />
-                          {property.area ? `${property.area}, ${property.location}` : property.location}
+                      <Badge variant={property.status === "Ready" ? "default" : "secondary"}>
+                        {property.status}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      {property.location}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm">
+                          <Ruler className="h-4 w-4 mr-2 text-primary" />
+                          <span>{property.area}</span>
                         </div>
-                        {property.area_sqft && (
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Ruler className="h-4 w-4 mr-2" />
-                            {property.area_sqft} sq.ft
-                          </div>
-                        )}
-                        {property.builder && (
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Building2 className="h-4 w-4 mr-2" />
-                            {property.builder}
-                          </div>
-                        )}
-                        <div className="flex items-center justify-between pt-2 border-t">
-                          <div className="flex items-center text-lg font-bold text-primary">
-                            <IndianRupee className="h-5 w-5 mr-1" />
-                            {property.priceLabel || `₹${(Number(property.price) / 100000).toFixed(0)}L`}
-                          </div>
-                        </div>
-                        <div className="flex gap-2 mt-3">
-                          <Button size="sm" className="flex-1" asChild>
-                            <Link href={`/properties/${property.id}`}>View Details</Link>
-                          </Button>
-                          <Button size="sm" variant="outline" className="flex-1" asChild>
-                            <Link href="/contact">Inquire</Link>
-                          </Button>
+                        <div className="flex items-center text-sm">
+                          <Building2 className="h-4 w-4 mr-2 text-primary" />
+                          <span>{property.type}</span>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </>
+                      <div className="flex items-center text-2xl font-bold text-primary">
+                        <IndianRupee className="h-6 w-6" />
+                        <span>{property.price.replace("₹", "")}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">By {property.builder}</p>
+                      <Button className="w-full" asChild>
+                        <Link href="/contact">Enquire Now</Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 bg-secondary/30">
         <div className="container text-center">
-          <h2 className="text-4xl font-bold mb-6">Can't Find What You're Looking For?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Let us know your requirements and we'll find the perfect property for you.
+          <h2 className="text-4xl font-bold mb-6 text-foreground">
+            Can't Find What You're Looking For?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            We have access to many more properties that aren't listed online. Contact us with your requirements and we'll find the perfect match.
           </p>
-          <Button size="lg" variant="secondary" asChild>
-            <Link href="/contact">Contact Us</Link>
+          <Button size="lg" asChild>
+            <Link href="/contact">Contact Our Team</Link>
           </Button>
         </div>
       </section>

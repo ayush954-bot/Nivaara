@@ -1,1 +1,0 @@
-ALTER TABLE `properties` ADD `zone` enum('east_pune','west_pune','north_pune','south_pune','other');

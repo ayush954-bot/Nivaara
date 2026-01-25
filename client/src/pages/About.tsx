@@ -26,7 +26,7 @@ export default function About() {
                 Nivaara was founded with a simple yet powerful vision: to transform the real estate experience across India and international markets by building relationships based on trust, transparency, and excellence. The name "Nivaara" itself embodies our core purpose — it means shelter, protection, and settlement in Sanskrit, reflecting our commitment to helping people find not just properties, but homes and opportunities that truly serve their needs.
               </p>
               <p>
-                Based in the heart of Kharadi, Pune, we have expanded our operations across major Indian cities and international markets including Dubai. As a RERA registered real estate consultancy, our team combines deep market knowledge with strong relationships across India's real estate ecosystem, from established builders to emerging developers, from residential communities to commercial hubs.
+                Based in the heart of Kharadi, Pune, we have expanded our operations across major Indian cities and international markets including Dubai. Our team combines deep market knowledge with strong relationships across India's real estate ecosystem, from established builders to emerging developers, from residential communities to commercial hubs.
               </p>
               <p>
                 What sets us apart is our holistic approach and geographic reach. We don't just facilitate transactions; we provide end-to-end support throughout your real estate journey across India and beyond. Whether you're a first-time homebuyer in Pune, a seasoned investor exploring opportunities in Mumbai or Dubai, or a business looking for the perfect commercial space in Bangalore, we bring the same level of dedication, professionalism, and transparency to every engagement.
@@ -145,7 +145,7 @@ export default function About() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-6 text-foreground">Our Leadership</h2>
             <p className="text-lg text-muted-foreground mb-12">
-              Nivaara is led by two partners who bring together decades of combined experience in real estate, technology, and business development. Paresh and Ayush share a common vision of transforming Pune's real estate landscape through ethical practices and client-focused service.
+              Nivaara is led by four partners who bring together decades of combined experience in real estate, finance, and business development. Paresh, Anshul, Anuj, and Ayush share a common vision of transforming Pune's real estate landscape through ethical practices and client-focused service.
             </p>
             <p className="text-lg text-muted-foreground">
               Each partner brings unique expertise to the table, ensuring that our clients benefit from comprehensive guidance across all aspects of real estate transactions. Together, they have built Nivaara into a trusted name in Pune's property market.

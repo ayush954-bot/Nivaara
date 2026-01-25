@@ -18,7 +18,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center space-x-2 text-sm">
               <MapPin className="h-4 w-4 text-primary" />
-              <span>Office No. 203, Zen Square, Kharadi, Pune</span>
+              <span>Kharadi, Pune</span>
             </div>
           </div>
 
@@ -67,22 +67,19 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <div className="flex flex-col">
-                  <span>+91 9764515697</span>
-                  <span>+91 9022813423</span>
-                </div>
+                <span>+91 XXXXX XXXXX</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>info@nivaararealty.com</span>
+                <span>info@nivaara.com</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/70">
-          <p>&copy; 2026 Nivaara Realty Solutions LLP. All rights reserved.</p>
-          <p className="mt-2">RERA Registered | Transparency. Trust. Excellence.</p>
+          <p>&copy; {new Date().getFullYear()} {APP_TITLE}. All rights reserved.</p>
+          <p className="mt-2">Transparency. Trust. Excellence.</p>
         </div>
       </div>
     </footer>
