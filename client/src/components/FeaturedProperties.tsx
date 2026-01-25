@@ -13,13 +13,34 @@ import {
   ChevronRight,
   Star,
 } from "lucide-react";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function FeaturedProperties() {
   const { data: featuredProperties = [] } = trpc.properties.featured.useQuery();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [itemsPerView, setItemsPerView] = useState(3);
 
-  const itemsPerView = 3;
+  // Update itemsPerView based on window width for responsive carousel
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerView(1); // Mobile: 1 card
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2); // Tablet: 2 cards
+      } else {
+        setItemsPerView(3); // Desktop: 3 cards
+      }
+    };
+
+    // Set initial value
+    updateItemsPerView();
+
+    // Add resize listener
+    window.addEventListener('resize', updateItemsPerView);
+    return () => window.removeEventListener('resize', updateItemsPerView);
+  }, []);
+
   const maxIndex = Math.max(0, featuredProperties.length - itemsPerView);
 
   useEffect(() => {
@@ -126,9 +147,20 @@ export default function FeaturedProperties() {
                         alt={property.title}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                      <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
-                        {property.status === "Under-Construction" ? "New Launch" : "Featured"}
-                      </Badge>
+                      {/* Stacked Badges */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-2">
+                        {getPropertyBadges(property).map((badge, idx) => (
+                          <Badge key={idx} className={`${badge.colorClass} shadow-md`}>
+                            {badge.text}
+                          </Badge>
+                        ))}
+                        {/* Fallback to Featured badge if no other badges */}
+                        {getPropertyBadges(property).length === 0 && (
+                          <Badge className="bg-primary text-primary-foreground shadow-md">
+                            Featured
+                          </Badge>
+                        )}
+                      </div>
                     </div>
 
                     <CardContent className="p-6">
@@ -167,7 +199,7 @@ export default function FeaturedProperties() {
                       </div>
 
                       <Button asChild className="w-full">
-                        <Link href={`/properties/${property.id}`}>View Details</Link>
+                        <Link href={`/properties/${property.slug || property.id}`}>View Details</Link>
                       </Button>
                     </CardContent>
                   </Card>

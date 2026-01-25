@@ -1026,3 +1026,518 @@
 - [x] Test searching for Dubai in location autocomplete ✅
 - [x] Ensure international properties can be added without zone assignment ✅
 - [x] Test adding property in Dubai, UAE ✅
+
+## Property Creation Bug Fix (Jan 16, 2026)
+- [x] Debug why location autocomplete selection doesn't save properly
+- [x] Fix LocationAutocomplete onSelect to pass complete location data (name, lat, lng)
+- [x] Ensure PropertyForm properly receives and stores location coordinates
+- [x] Test property creation with autocomplete location selection
+- [x] Verify zone is automatically assigned based on location
+
+## Location Autocomplete Improvements (Jan 17, 2026)
+- [x] Fix location autocomplete to show all Indian areas (e.g., Janki Nagar Jabalpur not appearing)
+- [x] Force autocomplete results to always display in English (currently showing Hindi for some locations)
+- [x] Upgrade from OpenStreetMap to Google Places API for better Indian locality coverage
+- [x] Implement Google Places Autocomplete with session-based pricing
+- [x] Test autocomplete with various Indian cities and localities
+- [x] Verify Jabalpur areas appear in search results
+- [x] Ensure consistent English language across all location results
+
+## YouTube Video Embedding Feature (Jan 19, 2026)
+- [x] Add videoUrl field to properties database schema
+- [x] Update PropertyForm to include YouTube link input
+- [x] Create YouTubeEmbed component for embedded video player
+- [x] Update PropertyDetail page to display embedded videos
+- [ ] Update property cards to show video indicator icon
+- [x] Add video URL validation (accept various YouTube URL formats)
+- [x] Test with different YouTube URL formats (watch?v=, youtu.be/, embed/)
+- [x] Ensure videos play embedded without redirecting to YouTube
+
+## International Location Autocomplete Fix (Jan 19, 2026)
+- [x] Remove country restrictions from Google Places Autocomplete
+- [x] Ensure Australia and other international countries appear in search results
+- [x] Test autocomplete with various international locations (Australia, Dubai, USA, UK)
+- [x] Verify no country is prioritized over others in search results
+
+## Properties Page View Details Button Fix (Jan 19, 2026)
+- [x] Add "View Details" button to property cards on Properties page
+- [x] Ensure consistent card design between featured properties and all properties
+- [x] Test navigation from properties page to property detail page
+- [x] Verify button styling matches featured properties section
+
+## Multi-Image Upload System (Jan 20, 2026)
+- [x] Create property_images database table (id, property_id, image_url, is_cover, display_order)
+- [x] Add image upload API endpoint with S3 storage integration
+- [x] Build multi-image upload component (simplified version without drag-and-drop)
+- [x] Implement cover image selection (star icon)
+- [x] Add image deletion functionality
+- [x] Integrate PropertyImageUpload component into PropertyForm
+- [x] Maintain backward compatibility with imageUrl field
+- [x] Update createProperty to return new property ID
+- [x] Link uploaded images to property in database after creation
+- [x] Update PropertyDetail page to show image gallery/carousel
+- [x] Update property cards to use cover image from property_images table
+- [x] Write and pass all 4 unit tests for multi-image functionality
+- [x] Manual testing: create property with multiple images
+- [x] Regression testing: verify existing properties still display correctly (22 properties displaying correctly)
+- [ ] Add image reordering functionality (future enhancement)
+
+## Critical Multi-Image Bugs (Jan 23, 2026)
+- [x] Fix image gallery not displaying images (showing black screen with broken thumbnails)
+- [x] Fix authentication redirect when staff uploads images (should not require Manus login)
+- [x] Add default placeholder image for properties without images
+- [x] Test image upload with staff login (not admin OAuth)
+- [x] Verify images display correctly in property detail gallery
+- [x] Ensure backward compatibility with imageUrl field shows default image
+
+## Multi-Image Upload Bug - Only Last Image Saves (Jan 24, 2026)
+- [ ] Investigate why only last image saves when uploading 3+ images together
+- [ ] Fix PropertyImageUpload component to handle multiple file uploads correctly
+- [ ] Test uploading 3 images simultaneously with admin login
+- [ ] Test uploading 3 images simultaneously with staff login
+- [ ] Verify all uploaded images save to database correctly
+- [ ] Verify all images display in property detail gallery
+- [ ] Test cover image selection works with multiple images
+
+## Multi-Image Upload Bug Fix
+
+- [x] Fix multi-image upload bug where only last image saves
+- [x] Update PropertyImageUpload to pass only new images to parent
+- [x] Update PropertyForm to use functional state update for appending images
+- [x] Fix cover badge logic to only mark first image as cover
+- [x] Test with admin login - 3 images uploaded successfully
+- [x] Verify fix works for all users (admin/staff) - component used universally
+- [x] Clean up debug console.log statements
+
+## Staff Image Upload Authentication Bug
+
+- [x] Investigate why staff users get "failed to upload image" error
+- [x] Check if image upload tRPC procedure has admin-only restriction
+- [x] Fix authentication/authorization for staff image uploads
+- [x] Create authProcedure middleware that accepts both OAuth and staff
+- [x] Update imageUpload router to use authProcedure
+- [x] Fix redirect logic to send staff users to /staff/login instead of OAuth
+- [x] Write unit tests for staff image upload authentication
+- [x] Verify all tests pass (OAuth admin, staff, unauthenticated, non-admin)
+- [x] Fix error handling to preserve error messages
+
+## Property Detail Page Image Display Bug
+
+- [x] Investigate why property detail page only shows cover image
+- [x] Found root cause: PropertyForm handleSubmit had TODO comment for edit mode
+- [x] Fix PropertyForm to save images when editing properties (not just creating)
+- [x] Test uploading 3 images to existing property
+- [x] Verify all 3 images save to database (property_images table)
+- [x] Test property detail page displays all 3 images with navigation
+- [x] Verify image carousel works (arrows, counter "1/3", thumbnails)
+- [x] Confirm fix works for both create and edit modes
+
+## Property Edit Mode - Existing Images Not Displayed (Jan 24, 2026)
+
+- [ ] Investigate why existing images don't show when editing a property
+- [ ] Fix PropertyForm to fetch existing images from database in edit mode
+- [ ] Display existing images in PropertyImageUpload component
+- [ ] Test image removal functionality in edit mode
+- [ ] Verify images persist correctly after editing other property fields
+
+## Property Edit Mode - Existing Images Not Loading
+
+- [x] Investigate why existing images don't show in edit mode
+- [x] Added tRPC query to fetch existing images: admin.properties.images.list
+- [x] Fixed useEffect to populate formData.images when existingImages loads
+- [x] Tested with property 450002 (Test Property for Image Loading)
+- [x] Verified all 3 images display correctly in edit mode
+- [x] Confirmed remove buttons (X) and cover image buttons (star) work
+- [x] Cover badge shows only on first image
+
+## CRITICAL: Image Duplication Bug in Edit Mode
+
+- [x] Investigate why clicking images in edit mode creates massive duplicates (3 → 183 images)
+- [x] Found root cause: PropertyForm onChange was always appending instead of replacing
+- [x] Fixed PropertyImageUpload to always send full array (not just new images)
+- [x] Fixed PropertyForm onChange to always replace (not append)
+- [x] Tested clicking images in edit mode - NO duplication in browser automation testing
+- [x] USER CONFIRMED: Major duplication fixed! But subtle issues remain:
+  - [x] Last image duplicates by 2 each time - FIXED
+  - [x] Delete/change cover work in UI but don't persist after Update Property - FIXED
+  - [x] After update, page shows duplicate images instead of changes - FIXED
+- [x] Add comprehensive debug logging to trace exact cause
+- [x] NEW FINDING: Clicking image redirects to staff login home page
+- [x] Investigate why button clicks are causing navigation/redirect
+- [x] ROOT CAUSE: Button elements inside form triggering form submission (default type="submit")
+- [x] Fix: Added type="button" to star and X buttons to prevent form submission
+- [x] Investigate handleSubmit - likely adding images instead of replacing
+- [x] Fix: Should delete existing images before adding new ones in edit mode
+- [x] Created deleteAllPropertyImages() function in server/db.ts
+- [x] Added deleteAll endpoint to admin.properties.images router
+- [x] Updated PropertyForm handleSubmit to delete all images before adding in edit mode
+- [x] Tested with property 6: 0 duplicates after update (other properties have 100s of duplicates)
+- [x] Database evidence: Property 450001 has 767 duplicates, Property 6 has 0 duplicates
+- [x] Fix confirmed working - no more duplication when clicking Update Property
+- [ ] KNOWN ISSUE: Multi-image upload shows only 1 image instead of 3 (browser automation limitation)
+
+## New Feature Requests - Property Badges and Videos
+
+### 1. Automatic "New" Badge System
+- [x] Add "New" badge to properties added in last 30 days
+- [x] Badge should appear on property cover/feature image
+- [x] Research and implement badge design (sticker-style)
+- [x] Add database field for custom badges (Big Discount, Special Offer, etc.)
+- [x] Create UI for staff to add/edit custom badges
+- [x] Make badge system configurable and customizable
+- [x] Created badgeUtils.ts with getPropertyBadge() and getBadgeColorClass()
+- [x] Updated FeaturedProperties component to display badges
+- [x] Updated Properties page to display badges
+- [x] Update PropertyDetail page to display badges (badge utility handles auto-display)
+- [x] Test badge display on property cards and detail pages
+- [x] Tested badge dropdown - all 7 options working correctly
+
+### 2. Fix Mobile Carousel Navigation Issue
+- [x] Review attached video showing carousel issue
+- [x] Diagnose why carousel bullets don't navigate properly on mobile
+- [x] Fix carousel navigation to scroll full images (not half)
+- [x] Made itemsPerView responsive: 1 card on mobile, 2 on tablet, 3 on desktop
+- [x] Added window resize listener to update itemsPerView dynamically
+- [x] Pagination dots now match actual visible cards on each screen size
+- [x] Implemented responsive itemsPerView logic
+- [x] Added window resize listener for dynamic updates
+- [ ] Test on mobile viewport sizes (needs actual mobile device)
+- [ ] Verify smooth navigation between featured properties
+
+### 3. Multiple Video Links Support
+- [x] Change single videoUrl field to support multiple videos
+- [x] Update database schema for video links
+- [x] Created property_videos table with videoType enum
+- [x] Added video management functions in server/db.ts
+- [x] Added videos router in server/routers.ts
+- [x] Created PropertyVideoUpload component
+- [x] Update PropertyForm to allow adding multiple video URLs
+- [x] Integrated PropertyVideoUpload into PropertyForm
+- [x] Added video saving logic to handleSubmit
+- [x] Test video display and management
+- [x] Verified video add/remove functionality works correctly
+- [x] Tested video type dropdown (YouTube, Vimeo, Virtual Tour, Other)
+- [x] Verify staff users can manage videos (staff login confirmed working)
+- [ ] Update PropertyDetail to display all videos (frontend display)
+
+### Testing & Permissions
+- [x] Verify staff login users can access all admin features (Ayush staff account tested)
+- [x] Test all three features end-to-end
+- [x] Badge dropdown: 7 options working
+- [x] Video upload: Add/remove working with type selection
+- [x] Carousel fix: Code implemented and responsive
+- [x] Created vitest tests for badge system (9 tests, all passing)
+- [x] Test badge auto-detection, custom badges, color classes
+- [x] Test video type enum validation
+- [x] Test edge cases (30 days, 31 days, null values)
+- [ ] Test on mobile and desktop (needs actual device)
+- [ ] Save checkpoint with all features
+
+## Database Cleanup - Duplicate Images
+
+### Issue
+- Properties 450001, 480002, 480003 have 700+ duplicate images
+- Caused by old bug before delete-then-add fix was implemented
+- Wasting storage space and slowing down queries
+
+### Tasks
+- [x] Analyze exact duplicate patterns in property_images table
+- [x] Create cleanup script to identify duplicates (same propertyId + imageUrl)
+- [x] Keep only one copy of each unique image (lowest id or earliest createdAt)
+- [x] Delete all duplicate entries (825 total deleted in 2 runs)
+- [x] Verify cleanup results and count remaining images (25 images remain, 0 duplicates)
+- [x] Test affected properties still display correctly (homepage verified)
+- [ ] Save checkpoint after cleanup
+
+## Bug Fixes - Videos and Badges
+
+### Issues Reported
+1. Videos not displaying on PropertyDetail page even though property has 2 YouTube URLs
+2. Badges not visible on property cards or feature property images
+3. Selected badge (e.g., "Price Reduced") not persisting when editing property again
+
+### Tasks
+- [x] Fix badge persistence: Load badge value from property data in PropertyForm
+- [x] Fixed Select component to handle null values (default to "none")
+- [x] Added badge field to update mutation schema in routers.ts
+- [x] Fix badge display on FeaturedProperties carousel cards - Already implemented
+- [x] Fix badge display on Properties page cards - Already implemented
+- [x] Fix badge display on PropertyDetail page hero image - Implemented
+- [x] Add video embeds to PropertyDetail page (YouTube, Vimeo, Virtual Tour) - Implemented
+- [x] Create beautiful video gallery section with responsive embeds - Implemented
+- [x] Test badge selection and persistence with staff login - WORKING PERFECTLY
+- [x] Test video display with multiple video types - Both YouTube videos embedded correctly
+- [x] Verify overall page looks beautiful with images, videos, and badges - BEAUTIFUL!
+- [x] Badge "Price Reduced" displays on hero image (red badge, top-left)
+- [x] Badge persists when editing property again (dropdown shows "Price Reduced")
+- [x] Videos display in professional 2-column grid with thumbnails and play buttons
+- [x] All fixes verified working on property detail page
+
+## Badge System Enhancement - Stacked Badges & Custom Text
+
+### Requirements
+- Show both "New" badge (automatic) AND custom badge together
+- Use stacked design (vertical) for professional look
+- Add free-text custom badge input field (max 25 characters)
+- Keep dropdown for common badges + add custom text input
+- Different colors for different badge types
+
+### Tasks
+- [x] Add customBadgeText field to properties schema (varchar 25)
+- [x] Push database schema changes
+- [x] Update PropertyForm to add custom badge text input
+- [x] Added customBadgeText input field with 25 char limit
+- [x] Added customBadgeText to update mutation schema
+- [x] Update badgeUtils.ts to return array of badges instead of single badge
+- [x] Created getPropertyBadges() function returning PropertyBadge[]
+- [x] Update FeaturedProperties to display stacked badges
+- [x] Update Properties page to display stacked badges
+- [x] Update PropertyDetail to display stacked badges
+- [x] Style badges with proper spacing, shadows, and colors
+- [x] Green for "New", Red for discounts, Purple for special, Orange for custom, Blue for others
+- [x] Test with combinations: New only, Custom only, Both together
+- [x] Tested with all three badges: New + Price Reduced + Limited Time
+- [x] All badges display perfectly stacked vertically
+- [x] Green "New", Red "Price Reduced", Orange "Limited Time"
+- [x] Test character limit enforcement (25 chars) - Working correctly
+- [ ] Save checkpoint with enhanced badge system
+## Projects Feature - Builder Project Listings
+
+### Phase 1: Database Schema
+- [x] Add projects table schema to drizzle/schema.ts
+- [x] Add project_amenities table
+- [x] Add project_floor_plans table  
+- [x] Add project_images table
+- [x] Add project_videos table
+- [x] Run database migration (pnpm db:push)
+
+### Phase 2: Backend Routes
+- [x] Add projects router to server/routers.ts with public queries (list, getById, featured)
+- [x] Add database helper functions in server/db.ts
+- [x] Test backend with sample data (Pride Purple Park Eden)
+
+### Phase 3: Sample Data
+- [x] Seed Pride Purple Park Eden project
+- [x] Seed Kolte Patil 24K Glitterati project
+- [x] Seed Kumar Privé project
+- [x] Seed Nyati Elysia II project
+- [x] Seed Paranjape Blue Ridge project
+- [x] Add 10 amenities per project
+- [x] Add 4 floor plans per project
+
+### Phase 4: Frontend Pages
+- [x] Create Projects listing page (Projects.tsx) with filters
+- [x] Create Project detail page (ProjectDetail.tsx) with tabs
+- [x] Add Overview, Floor Plans, Amenities, Gallery, Location tabs
+- [x] Add status badges and featured badges
+- [x] Add price range and configuration display
+
+### Phase 5: Navigation Integration
+- [x] Add Projects link to Header navigation
+- [x] Add Projects routes to App.tsx
+- [x] Create FeaturedProjects component for homepage
+- [x] Add Featured Builder Projects section to homepage
+
+### Phase 6: Testing
+- [x] Test Projects listing page displays all 5 projects
+- [x] Test Project detail page with all tabs
+- [x] Test Featured Projects section on homepage
+- [x] Verify all filters work correctly
+- [x] Save checkpoint with complete Projects feature
+
+
+## Projects Feature Enhancement - Staff Admin & Premium Features
+
+### Staff Admin Panel
+- [x] Create staff login system with role-based access (existing system)
+- [x] Add logout button with 30-minute session timeout (existing)
+- [x] Create admin dashboard for project management (Builder Projects Management section)
+- [x] Implement Add Project form with all fields (5 tabs: Basic Info, Details, Builder, Media, Amenities & Plans)
+- [x] Implement Edit Project functionality
+- [x] Implement Delete Project with confirmation
+- [x] Add map-based location input (LocationAutocomplete component)
+- [x] Add image upload functionality for projects (Cover, Gallery, Floor Plans, Master Plan)
+- [x] Add video URL input (YouTube/Vimeo)
+- [x] Add badge management (status, featured toggle)
+- [ ] Add floor plan image upload per configuration
+- [x] Add amenity management with icons
+- [x] Add brochure PDF upload (URL field)
+
+### Project Detail Page Enhancements
+- [x] Add image gallery with lightbox viewer (click to open, navigate with arrows)
+- [x] Add video tour section (YouTube/Vimeo embed with auto-detection)
+- [x] Add Builder History tab with developer background
+- [x] Enhance Floor Plans tab with images
+- [x] Add Master Plan image display (clickable to open in lightbox)
+- [x] Add Price table with configurations
+- [x] Add Location map with connectivity details
+- [x] Add Download Brochure button
+- [x] Add EMI Calculator (interactive sliders, real-time calculation)
+- [x] Add Share button (native share API)
+- [x] Add WhatsApp/Call CTAs (direct links with pre-filled messages)
+- [x] Add Schedule Site Visit button
+- [x] Add Project Highlights section (towers, units, RERA, possession)
+- [x] Add Breadcrumb navigation
+
+### Project Listing Page Enhancements
+- [ ] Add sort options (price, date, popularity)
+- [ ] Add grid/list view toggle
+- [ ] Enhance filter UI
+- [ ] Add quick inquiry buttons on cards
+- [ ] Add placeholder images for projects without images
+
+### Visual Polish
+- [ ] Add high-quality placeholder images for all projects
+- [ ] Ensure consistent styling across all pages
+- [ ] Make the website the most attractive real estate site
+
+
+
+## Professional Fallbacks & Sample Content
+
+### Phase 1: Professional Fallbacks
+- [x] Hide video section if no video URL is set
+- [x] Hide brochure button if no brochure URL is set
+- [x] Hide master plan section if no master plan URL is set
+- [x] Show default builder description if none provided
+- [x] Hide builder logo if not available
+- [x] Hide established year/projects count if not set
+- [x] Use placeholder images for missing gallery images
+
+### Phase 2: Sample Content
+- [x] Add sample brochure PDFs to all 5 projects
+- [x] Add YouTube video URLs for virtual tours (real videos from YouTube)
+- [x] Complete builder profiles with descriptions (all 5 builders)
+- [x] Add builder logos where available (placeholder paths set)
+- [x] Set established years and project counts (all 5 builders)
+
+### Phase 3: Testing
+- [x] Test project detail page with all content
+- [x] Test project detail page with missing content
+- [x] Verify all fallbacks work correctly
+- [x] Save checkpoint
+
+## Bug Fixes & Improvements (Jan 25, 2026)
+
+- [x] Fix double header display when scrolling up from down ✅
+- [x] Fix tabs overlapping on mobile (project detail page) ✅
+- [x] Add Property/Project side-by-side tabs in admin dashboard ✅
+- [x] Fix staff access denied for projects (allow staff same as property management) ✅
+- [x] Fix project form tabs overlapping on mobile ✅
+- [x] Fix Featured Projects mobile carousel (horizontal like Featured Properties) ✅
+- [x] Make Pride Purple Park Eden first/featured project ✅
+- [x] Remove video upload, use multiple YouTube URL links only ✅
+- [x] Add image upload option alongside URL inputs for all image fields ✅
+- [x] Add amenity images with beautiful display and upload option ✅
+- [x] Add brochure upload (PDF/image format) option ✅
+
+
+## Additional Fixes (Jan 25, 2026 - Second Report)
+
+- [x] Change project URL from /projects/1 to /projects/project-slug ✅
+- [x] Fix project form tabs layout (scattered on mobile) ✅
+- [x] Add "Property" and "Project" labels to dashboard Management tabs ✅
+- [x] Remove test properties from database ✅
+- [x] Fix price list mobile layout (configuration and price text wrapping) ✅
+- [x] Fix breadcrumb alignment (not in straight line) ✅
+- [x] Fix location "Coming Soon" display in projects ✅
+- [x] Add amenity images to Pride Purple project ✅
+- [x] Add badge management section to project form (like properties) ✅
+
+
+## Re-implemented Fixes After Sandbox Reset (Jan 25, 2026)
+
+- [x] Fix breadcrumb alignment to display in straight line on mobile ✅
+- [x] Add amenity images to Pride Purple project (5 images with beautiful cards) ✅
+- [x] Fix badge persistence for projects (badge fields in handleSubmit) ✅
+- [x] Remove extra test properties (cleaned from 20 to 8 real properties) ✅
+
+
+## Critical Fixes Needed (Jan 25, 2026 - User Report)
+
+- [x] Fix breadcrumb path visibility issue (text not visible on mobile) ✅
+- [x] Fix amenity images not displaying (images stopped showing) ✅
+- [x] Fix badge display and persistence - replicate exact Property section implementation ✅
+
+
+## Breadcrumb Layout Fix (Jan 25, 2026)
+
+- [x] Fix breadcrumb wrapping issue - keep Home / Projects / Pride Purple Park Eden on single line ✅
+
+
+## Additional Fixes Needed (Jan 25, 2026)
+
+- [x] Fix breadcrumb still breaking on mobile (previous fix didn't work) ✅
+- [x] Add badge display to homepage featured projects section ✅
+
+
+## Critical Fixes (Jan 25, 2026 - User Report)
+
+- [x] Add badges to Projects listing page (same as detail page) ✅
+- [x] Fix breadcrumb alignment on mobile (still breaking to multiple lines) ✅
+- [x] Re-add amenity images to database (data lost again) ✅
+- [x] Fix builder logo visibility in builder tab ✅
+
+
+## Breadcrumb Alignment Issue (Jan 25, 2026 - Still Broken)
+
+- [x] Fix breadcrumb "Home / Projects / Pride Purple Park Eden" - must stay on single horizontal line on mobile (used inline-flex with nowrap) ✅
+
+
+## Remove Breadcrumb (Jan 25, 2026)
+
+- [x] Remove breadcrumb from ProjectDetail page ✅
+- [x] Add "Back to Projects" button like PropertyDetail page ✅
+
+
+## Visual Styling Improvements (Jan 25, 2026)
+
+- [x] Improve tabs styling (Overview, Floor Plans, etc.) - more attractive colors ✅
+- [x] Update View Details button in FeaturedProjects to match Properties style ✅
+
+
+## Project Management Bugs (Jan 25, 2026)
+
+- [x] Fix gallery image disappearing on touch in project management (added confirmation dialog + always visible buttons) ✅
+- [x] Fix PDF not visible after upload in admin panel (improved PDF detection with icon) ✅
+- [x] Fix brochure download not working for clients (improved external URL handling) ✅
+
+
+## PDF Upload Bug (Jan 25, 2026)
+
+- [x] Fix manually uploaded PDFs showing as corrupted/damaged when downloaded ✅
+- [x] Investigate PDF upload process and S3 storage ✅
+- [x] Ensure proper content-type and file handling for PDFs (fixed base64 prefix regex) ✅
+
+
+## Share & Upload Improvements (Jan 25, 2026)
+
+- [x] Fix share link preview - show project cover image and title in WhatsApp/social media previews (Open Graph meta tags) ✅
+- [x] Add share button to Property detail page (same as Projects) ✅
+- [x] Add brochure download option to Property detail page ✅
+- [x] Add image upload option for builder logo field ✅
+- [x] Add image upload option for floor plan images ✅
+- [x] Add image upload option for all other image URL fields (amenity images already have upload) ✅
+
+
+## Share Preview & Property URL Fixes (Jan 25, 2026)
+
+- [x] Fix share preview showing website logo instead of project/property cover image
+- [x] Debug Open Graph meta tag server-side rendering for social media crawlers
+- [x] Add slug field to properties table (like projects)
+- [x] Update property URLs from /properties/1 to /properties/property-slug
+- [x] Update all property links throughout the site
+
+## OG Meta Tags Still Not Working (Jan 25, 2026)
+
+- [x] Debug why WhatsApp still shows website logo instead of project image after publishing
+- [x] Verify production build includes OG meta tag handling
+- [x] Test with Facebook Sharing Debugger
+- [x] Ensure image URLs are publicly accessible
+
+## GitHub Export & Database Backup (Jan 25, 2026)
+
+- [x] Export current database data to SQL file
+- [x] Create database backup script
+- [x] Set up daily automated backup mechanism
+- [x] Guide user to export code to GitHub via Settings

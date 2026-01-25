@@ -20,8 +20,16 @@ export function useGeolocation(): GeolocationResult {
     const fetchIPLocation = async () => {
       try {
         // Using ipapi.co - free tier: 1000 requests/day, no API key required
-        const response = await fetch("https://ipapi.co/json/");
+        // Add timeout to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch("https://ipapi.co/json/", {
+          signal: controller.signal,
+        });
         
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
           throw new Error("Failed to fetch location data");
         }
@@ -35,12 +43,13 @@ export function useGeolocation(): GeolocationResult {
           error: null,
         });
       } catch (error) {
-        console.error("Error fetching IP location:", error);
+        // Silently handle the error - geolocation is not critical
+        // Don't log to console to avoid cluttering
         setResult({
           city: null,
           country: null,
           isLoading: false,
-          error: "Failed to determine your location",
+          error: null, // Don't show error to user - it's not critical
         });
       }
     };

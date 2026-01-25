@@ -18,6 +18,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save, AlertCircle } from "lucide-react";
 import { getAllLocationsWithAreas, detectZone } from "@/lib/locations";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
+import { PropertyImageUpload } from "@/components/PropertyImageUpload";
+import { PropertyVideoUpload } from "@/components/PropertyVideoUpload";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -30,6 +33,22 @@ export default function PropertyForm() {
     { id: propertyId! },
     { enabled: isEdit && !!propertyId }
   );
+
+  // Fetch existing images for edit mode
+  const { data: existingImages = [], isLoading: imagesLoading } = trpc.admin.properties.images.list.useQuery(
+    { propertyId: propertyId! },
+    { enabled: isEdit && !!propertyId }
+  );
+
+  // Fetch existing videos for edit mode
+  const { data: existingVideos = [] } = trpc.admin.properties.videos.list.useQuery(
+    { propertyId: propertyId! },
+    { enabled: isEdit && !!propertyId }
+  );
+
+  console.log('[PropertyForm] Edit mode:', isEdit, 'PropertyId:', propertyId);
+  console.log('[PropertyForm] existingImages:', existingImages, 'Loading:', imagesLoading);
+  console.log('[PropertyForm] existingVideos:', existingVideos);
 
   const createProperty = trpc.admin.properties.create.useMutation({
     onSuccess: () => {
@@ -60,12 +79,19 @@ export default function PropertyForm() {
     area_sqft: "",
     builder: "",
     imageUrl: "",
+    videoUrl: "",
+    badge: "",
+    customBadgeText: "",
     featured: false,
+    brochureUrl: "",
+    images: [] as Array<{ id?: number; imageUrl: string; isCover: boolean; displayOrder: number }>,
+    videos: [] as Array<{ id?: number; videoUrl: string; videoType: "youtube" | "vimeo" | "virtual_tour" | "other"; displayOrder: number }>,
   });
 
 
 
   useEffect(() => {
+    console.log('[PropertyForm useEffect] property:', property, 'existingImages:', existingImages);
     if (property) {
       const allLocations = getAllLocationsWithAreas();
       const isCustomLocation = !allLocations.includes(property.location);
@@ -87,12 +113,28 @@ export default function PropertyForm() {
         area_sqft: property.area_sqft?.toString() || "",
         builder: property.builder || "",
         imageUrl: property.imageUrl || "",
+        videoUrl: property.videoUrl || "",
+        badge: property.badge || "",
+        customBadgeText: property.customBadgeText || "",
         featured: property.featured,
+        brochureUrl: property.brochureUrl || "",
+        images: existingImages.map(img => ({
+          id: img.id,
+          imageUrl: img.imageUrl,
+          isCover: img.isCover,
+          displayOrder: img.displayOrder
+        })),
+        videos: existingVideos.map(video => ({
+          id: video.id,
+          videoUrl: video.videoUrl,
+          videoType: video.videoType,
+          displayOrder: video.displayOrder
+        })),
       });
       
 
     }
-  }, [property]);
+  }, [property, existingImages, existingVideos]);
 
   // Auto-clear bedrooms/bathrooms when switching to non-residential property types
   useEffect(() => {
@@ -107,11 +149,27 @@ export default function PropertyForm() {
     }
   }, [formData.propertyType]);
 
+  const addImageMutation = trpc.admin.properties.images.add.useMutation();
+  const deleteAllImagesMutation = trpc.admin.properties.images.deleteAll.useMutation();
+  const addVideoMutation = trpc.admin.properties.videos.add.useMutation();
+  const deleteAllVideosMutation = trpc.admin.properties.videos.deleteAll.useMutation();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate that location has coordinates (user must select from dropdown)
+    if (!formData.latitude || !formData.longitude) {
+      alert("Please select a location from the dropdown suggestions. Type to search and click on a suggestion.");
+      return;
+    }
+
+    // Get cover image URL for backward compatibility with imageUrl field
+    const coverImage = formData.images.find(img => img.isCover);
+    const imageUrl = coverImage?.imageUrl || formData.images[0]?.imageUrl || "";
+
     const data = {
       ...formData,
+      imageUrl, // Set imageUrl to cover image for backward compatibility
       bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : undefined,
       bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : undefined,
       area_sqft: formData.area_sqft ? parseInt(formData.area_sqft) : undefined,
@@ -119,8 +177,62 @@ export default function PropertyForm() {
 
     if (isEdit && propertyId) {
       await updateProperty.mutateAsync({ id: propertyId, ...data });
+      
+      // Handle image updates for edit mode
+      // First, delete ALL existing images
+      await deleteAllImagesMutation.mutateAsync({ propertyId });
+      
+      // Then add the current images from formData (which reflects user's changes)
+      if (formData.images.length > 0) {
+        for (const image of formData.images) {
+          await addImageMutation.mutateAsync({
+            propertyId: propertyId,
+            imageUrl: image.imageUrl,
+            isCover: image.isCover,
+            displayOrder: image.displayOrder,
+          });
+        }
+      }
+
+      // Handle video updates for edit mode
+      await deleteAllVideosMutation.mutateAsync({ propertyId });
+      if (formData.videos.length > 0) {
+        for (const video of formData.videos) {
+          await addVideoMutation.mutateAsync({
+            propertyId: propertyId,
+            videoUrl: video.videoUrl,
+            videoType: video.videoType,
+            displayOrder: video.displayOrder,
+          });
+        }
+      }
     } else {
-      await createProperty.mutateAsync(data as any);
+      // Create property first
+      const result = await createProperty.mutateAsync(data as any);
+      
+      // Then add images to property_images table
+      if (result && result.id && formData.images.length > 0) {
+        for (const image of formData.images) {
+          await addImageMutation.mutateAsync({
+            propertyId: result.id,
+            imageUrl: image.imageUrl,
+            isCover: image.isCover,
+            displayOrder: image.displayOrder,
+          });
+        }
+      }
+
+      // Then add videos to property_videos table
+      if (result && result.id && formData.videos.length > 0) {
+        for (const video of formData.videos) {
+          await addVideoMutation.mutateAsync({
+            propertyId: result.id,
+            videoUrl: video.videoUrl,
+            videoType: video.videoType,
+            displayOrder: video.displayOrder,
+          });
+        }
+      }
     }
   };
 
@@ -261,9 +373,18 @@ export default function PropertyForm() {
                   }}
                   placeholder="Type to search location (e.g., Kharadi, Pune)"
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Start typing to see location suggestions
-                </p>
+                {formData.latitude && formData.longitude ? (
+                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Location coordinates captured (Lat: {formData.latitude.toFixed(4)}, Lon: {formData.longitude.toFixed(4)})
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-600 mt-1">
+                    ⚠️ Please select a location from the dropdown suggestions (coordinates required)
+                  </p>
+                )}
               </div>
 
               <div>
@@ -389,32 +510,88 @@ export default function PropertyForm() {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Media</h3>
 
+              <PropertyImageUpload
+                propertyId={propertyId || undefined}
+                images={formData.images}
+                onChange={(newImages) => {
+                  console.log('[PropertyForm] onChange called with newImages.length:', newImages.length);
+                  // Simply replace the images array (component handles appending for uploads)
+                  setFormData(prev => {
+                    console.log('[PropertyForm] prev.images.length:', prev.images.length);
+                    console.log('[PropertyForm] Setting images to newImages.length:', newImages.length);
+                    return {
+                      ...prev,
+                      images: newImages
+                    };
+                  });
+                }}
+              />
+
+              <PropertyVideoUpload
+                videos={formData.videos}
+                onChange={(newVideos) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    videos: newVideos
+                  }));
+                }}
+              />
+
               <div>
-                <Label htmlFor="imageUrl">Image URL</Label>
-                <Input
-                  id="imageUrl"
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, imageUrl: e.target.value })
-                  }
-                  placeholder="https://example.com/image.jpg"
+                <Label htmlFor="brochureUrl">Brochure PDF (Optional)</Label>
+                <ImageUpload
+                  value={formData.brochureUrl}
+                  onChange={(url: string | null) => setFormData({ ...formData, brochureUrl: url || "" })}
+                  accept="application/pdf"
+                  placeholder="Upload brochure PDF or enter URL"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Upload your image to a hosting service and paste the URL here
+                  Upload a PDF brochure for this property
                 </p>
               </div>
 
-              {formData.imageUrl && (
-                <div>
-                  <Label>Preview</Label>
-                  <img
-                    src={formData.imageUrl}
-                    alt="Preview"
-                    className="w-full max-w-md h-48 object-cover rounded-lg border"
-                  />
-                </div>
-              )}
+              <div>
+                <Label htmlFor="badge">Property Badge (Optional)</Label>
+                <Select
+                  value={formData.badge || "none"}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, badge: value === "none" ? "" : value })
+                  }
+                >
+                  <SelectTrigger id="badge">
+                    <SelectValue placeholder="Select badge or leave empty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Badge</SelectItem>
+                    <SelectItem value="New">New</SelectItem>
+                    <SelectItem value="Big Discount">Big Discount</SelectItem>
+                    <SelectItem value="Special Offer">Special Offer</SelectItem>
+                    <SelectItem value="Hot Deal">Hot Deal</SelectItem>
+                    <SelectItem value="Price Reduced">Price Reduced</SelectItem>
+                    <SelectItem value="Exclusive">Exclusive</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Select a predefined badge. "New" badge is automatically shown for properties added in the last 30 days.
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="customBadgeText">Custom Badge Text (Optional)</Label>
+                <Input
+                  id="customBadgeText"
+                  value={formData.customBadgeText}
+                  onChange={(e) => {
+                    const value = e.target.value.slice(0, 25); // Limit to 25 characters
+                    setFormData({ ...formData, customBadgeText: value });
+                  }}
+                  placeholder="e.g., Bank Auction, Owner Motivated"
+                  maxLength={25}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Add custom badge text (max 25 characters). This will display along with the predefined badge and automatic "New" badge if applicable.
+                </p>
+              </div>
             </div>
 
             {/* Featured */}

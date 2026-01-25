@@ -1,0 +1,1 @@
+ALTER TABLE `properties` ADD `brochureUrl` text;

@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import {
   Bed,
   Bath,
@@ -14,18 +15,32 @@ import {
   Phone,
   Mail,
   Star,
+  Share2,
+  Download,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function PropertyDetail() {
   const params = useParams();
   const [, setLocation] = useLocation();
-  const propertyId = params.id ? parseInt(params.id) : null;
+  const slug = params.slug || "";
 
-  const { data: property, isLoading } = trpc.properties.getById.useQuery(
-    { id: propertyId! },
-    { enabled: !!propertyId }
+  const { data: property, isLoading } = trpc.properties.getBySlug.useQuery(
+    { slug },
+    { enabled: !!slug }
+  );
+
+  const { data: propertyImages = [] } = trpc.admin.properties.images.list.useQuery(
+    { propertyId: property?.id! },
+    { enabled: !!property?.id }
+  );
+
+  const { data: propertyVideos = [] } = trpc.admin.properties.videos.list.useQuery(
+    { propertyId: property?.id! },
+    { enabled: !!property?.id }
   );
 
   const createInquiry = trpc.inquiries.create.useMutation({
@@ -46,6 +61,14 @@ export default function PropertyDetail() {
     phone: "",
     message: "",
   });
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Determine which images to display
+  const displayImages = propertyImages.length > 0 
+    ? propertyImages.map(img => img.imageUrl)
+    : property?.imageUrl 
+    ? [property.imageUrl] 
+    : ["/images/hero-building.jpg"];
 
   const handleInquirySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +88,18 @@ export default function PropertyDetail() {
       return `₹${(num / 100000).toFixed(0)} L`;
     }
     return `₹${num.toLocaleString("en-IN")}`;
+  };
+
+  const extractYouTubeId = (url: string): string => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : '';
+  };
+
+  const extractVimeoId = (url: string): string => {
+    const regExp = /vimeo.*\/(\d+)/i;
+    const match = url.match(regExp);
+    return match ? match[1] : '';
   };
 
   if (isLoading) {
@@ -108,20 +143,78 @@ export default function PropertyDetail() {
         </Button>
       </div>
 
-      {/* Hero Image */}
-      <div className="relative h-[400px] md:h-[500px] overflow-hidden">
+      {/* Image Gallery */}
+      <div className="relative h-[400px] md:h-[500px] overflow-hidden bg-black">
         <img
-          src={property.imageUrl || "/images/hero-building.jpg"}
-          alt={property.title}
-          className="w-full h-full object-cover"
+          src={displayImages[selectedImageIndex]}
+          alt={`${property.title} - Image ${selectedImageIndex + 1}`}
+          className="w-full h-full object-contain"
         />
-        {property.featured && (
-          <Badge className="absolute top-8 left-8 bg-primary text-primary-foreground flex items-center gap-1 text-base px-4 py-2">
-            <Star className="h-4 w-4 fill-current" />
-            Featured
-          </Badge>
+        {/* Badge Display */}
+        {(() => {
+          const badges = getPropertyBadges(property);
+          if (badges.length > 0) {
+            return (
+              <div className="absolute top-8 left-8 flex flex-col gap-3">
+                {badges.map((badge, idx) => (
+                  <Badge key={idx} className={`${badge.colorClass} text-base px-4 py-2 shadow-lg`}>
+                    {badge.text}
+                  </Badge>
+                ))}
+              </div>
+            );
+          }
+          return null;
+        })()}
+        
+        {/* Image navigation arrows */}
+        {displayImages.length > 1 && (
+          <>
+            <button
+              onClick={() => setSelectedImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white p-3 rounded-full transition-colors"
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => setSelectedImageIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1))}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white p-3 rounded-full transition-colors"
+              aria-label="Next image"
+            >
+              →
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              {selectedImageIndex + 1} / {displayImages.length}
+            </div>
+          </>
         )}
       </div>
+      
+      {/* Thumbnail strip */}
+      {displayImages.length > 1 && (
+        <div className="container py-4">
+          <div className="flex gap-2 overflow-x-auto">
+            {displayImages.map((img, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImageIndex(index)}
+                className={`flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 transition-all ${
+                  selectedImageIndex === index 
+                    ? "border-primary ring-2 ring-primary/20" 
+                    : "border-transparent hover:border-muted-foreground/30"
+                }`}
+              >
+                <img
+                  src={img}
+                  alt={`Thumbnail ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -196,6 +289,64 @@ export default function PropertyDetail() {
                 </p>
               </CardContent>
             </Card>
+
+            {/* Video Gallery */}
+            {propertyVideos.length > 0 && (
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-bold mb-4">
+                    {propertyVideos.length === 1 ? 'Video Tour' : 'Video Gallery'}
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {propertyVideos.map((video, index) => (
+                      <div key={video.id || index} className="space-y-2">
+                        {video.videoType === 'youtube' && (
+                          <div className="aspect-video rounded-lg overflow-hidden">
+                            <iframe
+                              src={`https://www.youtube.com/embed/${extractYouTubeId(video.videoUrl)}`}
+                              title={`${property.title} - Video ${index + 1}`}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
+                        {video.videoType === 'vimeo' && (
+                          <div className="aspect-video rounded-lg overflow-hidden">
+                            <iframe
+                              src={`https://player.vimeo.com/video/${extractVimeoId(video.videoUrl)}`}
+                              title={`${property.title} - Video ${index + 1}`}
+                              allow="autoplay; fullscreen; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
+                        {(video.videoType === 'virtual_tour' || video.videoType === 'other') && (
+                          <div className="aspect-video rounded-lg overflow-hidden">
+                            <iframe
+                              src={video.videoUrl}
+                              title={`${property.title} - Video ${index + 1}`}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="w-full h-full"
+                            />
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <Badge variant="outline">
+                            {video.videoType === 'youtube' && 'YouTube'}
+                            {video.videoType === 'vimeo' && 'Vimeo'}
+                            {video.videoType === 'virtual_tour' && 'Virtual Tour'}
+                            {video.videoType === 'other' && 'Video'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar - Contact Form */}
@@ -309,7 +460,44 @@ export default function PropertyDetail() {
                   </form>
                 )}
 
-                <div className="mt-6 pt-6 border-t">
+                {/* Share and Brochure Buttons */}
+                <div className="mt-6 pt-6 border-t space-y-3">
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => {
+                        if (navigator.share) {
+                          navigator.share({
+                            title: property.title,
+                            text: `Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`,
+                            url: window.location.href
+                          });
+                        } else {
+                          navigator.clipboard.writeText(window.location.href);
+                          toast.success("Link copied to clipboard!");
+                        }
+                      }}
+                    >
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                    {property.brochureUrl && (
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => {
+                          const url = property.brochureUrl;
+                          if (url) {
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }
+                        }}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Brochure
+                      </Button>
+                    )}
+                  </div>
                   <p className="text-sm text-muted-foreground text-center">
                     We'll respond within 24 hours
                   </p>

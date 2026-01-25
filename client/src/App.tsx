@@ -17,10 +17,13 @@ import Locations from "./pages/Locations";
 import ChatWidget from "./components/ChatWidget";
 import AdminDashboard from "./pages/admin/Dashboard";
 import PropertyForm from "./pages/admin/PropertyForm";
+import ProjectForm from "./pages/admin/ProjectForm";
 import BulkImport from "./pages/admin/BulkImport";
 import StaffLogin from "./pages/StaffLogin";
 import StaffManagement from "./pages/admin/StaffManagement";
 import PropertyDetail from "./pages/PropertyDetail";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -32,7 +35,9 @@ function Router() {
           <Route path={"/about"} component={About} />
           <Route path={"/services"} component={Services} />
           <Route path={"/properties"} component={Properties} />
-          <Route path={"/properties/:id"} component={PropertyDetail} />
+          <Route path={"/properties/:slug"} component={PropertyDetail} />
+          <Route path={"/projects"} component={Projects} />
+          <Route path={"/projects/:id"} component={ProjectDetail} />
           <Route path={"/team"} component={Team} />
           <Route path={"/contact"} component={Contact} />
           <Route path={"/faq"} component={FAQ} />
@@ -43,6 +48,8 @@ function Router() {
           <Route path={"/admin/properties/new"} component={PropertyForm} />
           <Route path={"/admin/properties/edit/:id"} component={PropertyForm} />
           <Route path={"/admin/properties/bulk-import"} component={BulkImport} />
+          <Route path={"/admin/projects/new"} component={ProjectForm} />
+          <Route path={"/admin/projects/edit/:id"} component={ProjectForm} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>

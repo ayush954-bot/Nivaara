@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
 import { Link } from "wouter";
+import { getPropertyBadges } from "@/lib/badgeUtils";
 
 export default function Properties() {
   const [location] = useLocation();
@@ -186,11 +187,27 @@ export default function Properties() {
                 {properties.map((property) => (
                   <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div
-                      className="h-48 bg-cover bg-center"
+                      className="h-48 bg-cover bg-center relative"
                       style={{
                         backgroundImage: `url(${property.imageUrl || "/images/hero-building.jpg"})`,
                       }}
-                    />
+                    >
+                      {(() => {
+                        const badges = getPropertyBadges(property);
+                        if (badges.length > 0) {
+                          return (
+                            <div className="absolute top-3 left-3 flex flex-col gap-2">
+                              {badges.map((badge, idx) => (
+                                <Badge key={idx} className={`${badge.colorClass} shadow-md`}>
+                                  {badge.text}
+                                </Badge>
+                              ))}
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
                     <CardHeader>
                       <div className="flex justify-between items-start mb-2">
                         <Badge variant={property.status === "Ready" ? "default" : "secondary"}>
@@ -223,7 +240,12 @@ export default function Properties() {
                             <IndianRupee className="h-5 w-5 mr-1" />
                             {property.priceLabel || `₹${(Number(property.price) / 100000).toFixed(0)}L`}
                           </div>
-                          <Button size="sm" asChild>
+                        </div>
+                        <div className="flex gap-2 mt-3">
+                          <Button size="sm" className="flex-1" asChild>
+                            <Link href={`/properties/${property.slug || property.id}`}>View Details</Link>
+                          </Button>
+                          <Button size="sm" variant="outline" className="flex-1" asChild>
                             <Link href="/contact">Inquire</Link>
                           </Button>
                         </div>

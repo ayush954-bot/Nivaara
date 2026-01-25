@@ -1,0 +1,1 @@
+ALTER TABLE `properties` ADD `badge` varchar(100);
