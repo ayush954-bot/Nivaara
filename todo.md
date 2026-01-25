@@ -1391,3 +1391,28 @@
 - [ ] Ensure consistent styling across all pages
 - [ ] Make the website the most attractive real estate site
 
+
+
+## Professional Fallbacks & Sample Content
+
+### Phase 1: Professional Fallbacks
+- [x] Hide video section if no video URL is set
+- [x] Hide brochure button if no brochure URL is set
+- [x] Hide master plan section if no master plan URL is set
+- [x] Show default builder description if none provided
+- [x] Hide builder logo if not available
+- [x] Hide established year/projects count if not set
+- [x] Use placeholder images for missing gallery images
+
+### Phase 2: Sample Content
+- [x] Add sample brochure PDFs to all 5 projects
+- [x] Add YouTube video URLs for virtual tours (real videos from YouTube)
+- [x] Complete builder profiles with descriptions (all 5 builders)
+- [x] Add builder logos where available (placeholder paths set)
+- [x] Set established years and project counts (all 5 builders)
+
+### Phase 3: Testing
+- [x] Test project detail page with all content
+- [x] Test project detail page with missing content
+- [x] Verify all fallbacks work correctly
+- [x] Save checkpoint

@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE projects SET \n  videoUrl = 'https://www.youtube.com/watch?v=T3KGtgWEGW0',\n  builderDescription = 'Kumar Properties is one of Pune''s most trusted and established real estate developers, founded in 1966. With over 55 years of excellence, they have delivered 140+ projects and created homes for 42,000+ happy families across 36 million sq.ft. Known for their commitment to quality, innovation, and customer-centric approach, Kumar Properties has won numerous awards including ''Developer of the Year''. Their projects are synonymous with premium living and sustainable development.',\n  builderLogo = '/images/partners/kumar-properties.png',\n  builderEstablished = 1966,\n  builderProjects = 140\nWHERE id = 3;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute UPDATE projects SET \n  videoUrl = 'https://www.youtube.com/watch?v=T3KGtgWEGW0',\n  builderDescription = 'Kumar Properties is one of Pune''s most trusted and established real estate developers, founded in 1966. With over 55 years of excellence, they have delivered 140+ projects and created homes for 42,000+ happy families across 36 million sq.ft. Known for their commitment to quality, innovation, and customer-centric approach, Kumar Properties has won numerous awards including ''Developer of the Year''. Their projects are synonymous with premium living and sustainable development.',\n  builderLogo = '/images/partners/kumar-properties.png',\n  builderEstablished = 1966,\n  builderProjects = 140\nWHERE id = 3;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1547
+}

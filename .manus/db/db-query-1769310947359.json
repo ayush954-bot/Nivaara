@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE projects SET brochureUrl = 'https://www.pridepurpleproperties.com/brochure/park-eden-brochure.pdf' WHERE id = 1;\nUPDATE projects SET brochureUrl = 'https://www.koltepatil.com/brochure/24k-glitterati-brochure.pdf' WHERE id = 2;\nUPDATE projects SET brochureUrl = 'https://www.kumarworld.com/brochure/kumar-prive-brochure.pdf' WHERE id = 3;\nUPDATE projects SET brochureUrl = 'https://www.nyatigroup.com/brochure/nyati-elysia-brochure.pdf' WHERE id = 4;\nUPDATE projects SET brochureUrl = 'https://www.pscl.in/brochure/blue-ridge-brochure.pdf' WHERE id = 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute UPDATE projects SET brochureUrl = 'https://www.pridepurpleproperties.com/brochure/park-eden-brochure.pdf' WHERE id = 1;\nUPDATE projects SET brochureUrl = 'https://www.koltepatil.com/brochure/24k-glitterati-brochure.pdf' WHERE id = 2;\nUPDATE projects SET brochureUrl = 'https://www.kumarworld.com/brochure/kumar-prive-brochure.pdf' WHERE id = 3;\nUPDATE projects SET brochureUrl = 'https://www.nyatigroup.com/brochure/nyati-elysia-brochure.pdf' WHERE id = 4;\nUPDATE projects SET brochureUrl = 'https://www.pscl.in/brochure/blue-ridge-brochure.pdf' WHERE id = 5;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2383
+}
