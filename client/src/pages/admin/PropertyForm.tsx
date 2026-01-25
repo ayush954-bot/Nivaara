@@ -20,6 +20,7 @@ import { getAllLocationsWithAreas, detectZone } from "@/lib/locations";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import { PropertyImageUpload } from "@/components/PropertyImageUpload";
 import { PropertyVideoUpload } from "@/components/PropertyVideoUpload";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export default function PropertyForm() {
   const params = useParams();
@@ -82,6 +83,7 @@ export default function PropertyForm() {
     badge: "",
     customBadgeText: "",
     featured: false,
+    brochureUrl: "",
     images: [] as Array<{ id?: number; imageUrl: string; isCover: boolean; displayOrder: number }>,
     videos: [] as Array<{ id?: number; videoUrl: string; videoType: "youtube" | "vimeo" | "virtual_tour" | "other"; displayOrder: number }>,
   });
@@ -115,6 +117,7 @@ export default function PropertyForm() {
         badge: property.badge || "",
         customBadgeText: property.customBadgeText || "",
         featured: property.featured,
+        brochureUrl: property.brochureUrl || "",
         images: existingImages.map(img => ({
           id: img.id,
           imageUrl: img.imageUrl,
@@ -533,6 +536,19 @@ export default function PropertyForm() {
                   }));
                 }}
               />
+
+              <div>
+                <Label htmlFor="brochureUrl">Brochure PDF (Optional)</Label>
+                <ImageUpload
+                  value={formData.brochureUrl}
+                  onChange={(url: string | null) => setFormData({ ...formData, brochureUrl: url || "" })}
+                  accept="application/pdf"
+                  placeholder="Upload brochure PDF or enter URL"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Upload a PDF brochure for this property
+                </p>
+              </div>
 
               <div>
                 <Label htmlFor="badge">Property Badge (Optional)</Label>

@@ -50,6 +50,7 @@ export const properties = mysqlTable("properties", {
   badge: varchar("badge", { length: 100 }), // Predefined badge (e.g., "Big Discount", "Special Offer", "Price Reduced")
   customBadgeText: varchar("customBadgeText", { length: 25 }), // Free-text custom badge (max 25 chars)
   featured: boolean("featured").default(false).notNull(), // Featured properties
+  brochureUrl: text("brochureUrl"), // Brochure PDF URL
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

@@ -132,6 +132,7 @@ export const appRouter = router({
             imageUrl: z.string().optional(),
             videoUrl: z.string().optional(),
             featured: z.boolean().default(false),
+            brochureUrl: z.string().optional(),
           })
         )
         .mutation(async ({ input, ctx }) => {
@@ -169,6 +170,7 @@ export const appRouter = router({
             badge: z.string().optional(),
             customBadgeText: z.string().max(25).optional(),
             featured: z.boolean().optional(),
+            brochureUrl: z.string().optional(),
           })
         )
         .mutation(async ({ input, ctx }) => {

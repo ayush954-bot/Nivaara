@@ -1508,3 +1508,13 @@
 - [x] Fix manually uploaded PDFs showing as corrupted/damaged when downloaded ✅
 - [x] Investigate PDF upload process and S3 storage ✅
 - [x] Ensure proper content-type and file handling for PDFs (fixed base64 prefix regex) ✅
+
+
+## Share & Upload Improvements (Jan 25, 2026)
+
+- [x] Fix share link preview - show project cover image and title in WhatsApp/social media previews (Open Graph meta tags) ✅
+- [x] Add share button to Property detail page (same as Projects) ✅
+- [x] Add brochure download option to Property detail page ✅
+- [x] Add image upload option for builder logo field ✅
+- [x] Add image upload option for floor plan images ✅
+- [x] Add image upload option for all other image URL fields (amenity images already have upload) ✅

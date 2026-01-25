@@ -666,12 +666,11 @@ export default function ProjectForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="builderLogo">Builder Logo URL</Label>
-                    <Input
-                      id="builderLogo"
+                    <Label htmlFor="builderLogo">Builder Logo</Label>
+                    <ImageUpload
                       value={formData.builderLogo}
-                      onChange={(e) => setFormData({ ...formData, builderLogo: e.target.value })}
-                      placeholder="https://..."
+                      onChange={(url: string | null) => setFormData({ ...formData, builderLogo: url || "" })}
+                      placeholder="Upload builder logo or enter URL"
                     />
                   </div>
 
@@ -1004,15 +1003,15 @@ export default function ProjectForm() {
                           />
                         </div>
                         <div className="col-span-2 md:col-span-5">
-                          <Label>Floor Plan Image URL</Label>
-                          <Input
+                          <Label>Floor Plan Image</Label>
+                          <ImageUpload
                             value={plan.imageUrl}
-                            onChange={(e) => {
+                            onChange={(url: string | null) => {
                               const newPlans = [...floorPlans];
-                              newPlans[index].imageUrl = e.target.value;
+                              newPlans[index].imageUrl = url || "";
                               setFloorPlans(newPlans);
                             }}
-                            placeholder="https://..."
+                            placeholder="Upload floor plan image or enter URL"
                           />
                         </div>
                         <div className="flex items-end">

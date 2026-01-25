@@ -15,6 +15,9 @@ import {
   Phone,
   Mail,
   Star,
+  Share2,
+  Download,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -457,7 +460,44 @@ export default function PropertyDetail() {
                   </form>
                 )}
 
-                <div className="mt-6 pt-6 border-t">
+                {/* Share and Brochure Buttons */}
+                <div className="mt-6 pt-6 border-t space-y-3">
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => {
+                        if (navigator.share) {
+                          navigator.share({
+                            title: property.title,
+                            text: `Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`,
+                            url: window.location.href
+                          });
+                        } else {
+                          navigator.clipboard.writeText(window.location.href);
+                          toast.success("Link copied to clipboard!");
+                        }
+                      }}
+                    >
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                    {property.brochureUrl && (
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => {
+                          const url = property.brochureUrl;
+                          if (url) {
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          }
+                        }}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Brochure
+                      </Button>
+                    )}
+                  </div>
                   <p className="text-sm text-muted-foreground text-center">
                     We'll respond within 24 hours
                   </p>
