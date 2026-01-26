@@ -1581,3 +1581,9 @@
 - [x] Include "Check out this property" or similar message
 - [x] Ensure image and link are included in share
 - [x] Test share on WhatsApp and other platforms
+
+## Add Image to Share (Jan 26, 2026)
+
+- [x] Include property/project image in WhatsApp share
+- [x] Use Web Share API with files for image sharing on mobile
+- [x] Test on mobile devices

@@ -1,7 +1,7 @@
-// Share component - includes formatted text with property/project details
+// Share component - includes formatted text with property/project details and image
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Share2, Check, Copy, MessageCircle } from "lucide-react";
+import { Share2, Check, Copy, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -31,6 +31,7 @@ export function ShareWithImage({
 }: ShareWithImageProps) {
   const [copied, setCopied] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   // Format the share message with property details
   const formatShareMessage = () => {
@@ -49,19 +50,54 @@ Shared via Nivaara Realty Solutions`;
     return `🏠 ${title}\n\n${text}\n\n🔗 ${url}\n\nShared via Nivaara Realty Solutions`;
   };
 
+  // Fetch image and convert to File object for sharing
+  const fetchImageAsFile = async (imageUrl: string): Promise<File | null> => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const fileName = `${title.replace(/[^a-zA-Z0-9]/g, '_')}.jpg`;
+      return new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+    } catch (error) {
+      console.error('Failed to fetch image:', error);
+      return null;
+    }
+  };
+
   const handleShare = async () => {
-    const shareMessage = formatPlainMessage();
-    
-    // On mobile, use native share with text and URL
+    // On mobile, try to use native share with image
     if (navigator.share) {
+      setIsSharing(true);
       try {
+        // Try to share with image if available
+        if (imageUrl && navigator.canShare) {
+          const imageFile = await fetchImageAsFile(imageUrl);
+          if (imageFile) {
+            const shareData = {
+              title: title,
+              text: `🏠 ${title}\n\n${text}\n\nShared via Nivaara Realty Solutions`,
+              url: url,
+              files: [imageFile],
+            };
+            
+            // Check if we can share with files
+            if (navigator.canShare(shareData)) {
+              await navigator.share(shareData);
+              setIsSharing(false);
+              return;
+            }
+          }
+        }
+        
+        // Fallback to sharing without image
         await navigator.share({
           title: title,
           text: `🏠 ${title}\n\n${text}\n\nShared via Nivaara Realty Solutions`,
           url: url,
         });
+        setIsSharing(false);
         return;
       } catch (e) {
+        setIsSharing(false);
         // User cancelled - do nothing
         if ((e as Error).name === "AbortError") return;
         // If native share fails, show dialog
@@ -85,10 +121,40 @@ Shared via Nivaara Realty Solutions`;
     }
   };
 
-  const handleWhatsAppShare = () => {
+  const handleWhatsAppShare = async () => {
+    setIsSharing(true);
+    
+    // On mobile, try to share image + text via WhatsApp using Web Share API
+    if (navigator.share && imageUrl) {
+      try {
+        const imageFile = await fetchImageAsFile(imageUrl);
+        if (imageFile && navigator.canShare) {
+          const shareData = {
+            text: formatPlainMessage(),
+            files: [imageFile],
+          };
+          
+          if (navigator.canShare(shareData)) {
+            await navigator.share(shareData);
+            setIsSharing(false);
+            setShowDialog(false);
+            return;
+          }
+        }
+      } catch (e) {
+        // If sharing with image fails, fall back to URL method
+        if ((e as Error).name === "AbortError") {
+          setIsSharing(false);
+          return;
+        }
+      }
+    }
+    
+    // Fallback: Open WhatsApp with just text (no image)
     const message = formatShareMessage();
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
+    setIsSharing(false);
     setShowDialog(false);
   };
 
@@ -109,9 +175,20 @@ Shared via Nivaara Realty Solutions`;
         size={size}
         onClick={handleShare}
         className={className}
+        disabled={isSharing}
       >
-        {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
-        {size !== "icon" && <span className="ml-2">{copied ? "Copied!" : "Share"}</span>}
+        {isSharing ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : copied ? (
+          <Check className="h-4 w-4" />
+        ) : (
+          <Share2 className="h-4 w-4" />
+        )}
+        {size !== "icon" && (
+          <span className="ml-2">
+            {isSharing ? "Sharing..." : copied ? "Copied!" : "Share"}
+          </span>
+        )}
       </Button>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -143,9 +220,14 @@ Shared via Nivaara Realty Solutions`;
             <Button 
               onClick={handleWhatsAppShare} 
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white"
+              disabled={isSharing}
             >
-              <MessageCircle className="h-4 w-4 mr-2" />
-              Share on WhatsApp
+              {isSharing ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <MessageCircle className="h-4 w-4 mr-2" />
+              )}
+              {imageUrl ? "Share with Image on WhatsApp" : "Share on WhatsApp"}
             </Button>
             
             <Button 
@@ -165,6 +247,13 @@ Shared via Nivaara Realty Solutions`;
               Copy Link Only
             </Button>
           </div>
+
+          {/* Info about image sharing */}
+          {imageUrl && (
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              📷 Image will be included when sharing on mobile devices
+            </p>
+          )}
 
           {/* Message preview */}
           <div className="mt-2 pt-2 border-t">
