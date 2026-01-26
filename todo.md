@@ -1599,3 +1599,9 @@
 - [x] Ensure link is included in the share text
 - [x] Image + "Check out [property]" text + link should all appear
 - [x] Test on mobile to verify all three elements are shared
+
+## Fix Share - Text Not Appearing with Image (Jan 26, 2026)
+
+- [x] Research why Web Share API with files strips text (known browser limitation)
+- [x] Find alternative approach - two-step process: copy text first, then share image
+- [x] Implement and test thoroughly on mobile
