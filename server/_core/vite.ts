@@ -120,7 +120,7 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // Handle dynamic OG meta for production
+  // Handle all other routes - serve pre-generated static files for social crawlers
   app.use("*", async (req, res) => {
     const url = req.originalUrl;
     const userAgent = req.get("user-agent") || "";
@@ -128,16 +128,52 @@ export function serveStatic(app: Express) {
     
     // Check if this is a social media crawler requesting a project/property page
     if (isSocialMediaCrawler(userAgent)) {
+      console.log("[Production OG] Social crawler detected:", userAgent.substring(0, 50), "URL:", url);
+      
+      // Try to serve pre-generated static file for projects
+      const projectMatch = url.match(/\/projects\/([^/?]+)/);
+      if (projectMatch) {
+        const slug = projectMatch[1];
+        const staticFilePath = path.join(distPath, "projects", slug, "index.html");
+        console.log("[Production OG] Looking for project file:", staticFilePath);
+        
+        if (fs.existsSync(staticFilePath)) {
+          console.log("[Production OG] Serving pre-generated file for project:", slug);
+          const html = await fs.promises.readFile(staticFilePath, "utf-8");
+          res.status(200).set({ "Content-Type": "text/html" }).end(html);
+          return;
+        }
+        console.log("[Production OG] Project file not found, falling back to dynamic");
+      }
+      
+      // Try to serve pre-generated static file for properties
+      const propertyMatch = url.match(/\/properties\/([^/?]+)/);
+      if (propertyMatch) {
+        const slug = propertyMatch[1];
+        const staticFilePath = path.join(distPath, "properties", slug, "index.html");
+        console.log("[Production OG] Looking for property file:", staticFilePath);
+        
+        if (fs.existsSync(staticFilePath)) {
+          console.log("[Production OG] Serving pre-generated file for property:", slug);
+          const html = await fs.promises.readFile(staticFilePath, "utf-8");
+          res.status(200).set({ "Content-Type": "text/html" }).end(html);
+          return;
+        }
+        console.log("[Production OG] Property file not found, falling back to dynamic");
+      }
+      
+      // Fallback to dynamic generation if static file not found
       try {
         let html = await fs.promises.readFile(indexPath, "utf-8");
         const dynamicMeta = await getDynamicOGMeta(url);
         if (dynamicMeta) {
+          console.log("[Production OG] Using dynamic meta generation");
           html = replaceOGTags(html, dynamicMeta);
         }
         res.status(200).set({ "Content-Type": "text/html" }).end(html);
         return;
       } catch (error) {
-        console.error("[OG Meta] Error in production:", error);
+        console.error("[Production OG] Error:", error);
       }
     }
     
