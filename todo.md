@@ -1553,3 +1553,9 @@
 
 - [x] Fix share to include image + headline + description + URL together
 - [x] Ensure WhatsApp share shows all content not just image
+
+## Simplify Share & Fix OG Meta (Jan 26, 2026)
+
+- [x] Simplify share button to basic copy link functionality
+- [x] Fix production OG meta tags so social media shows correct thumbnails
+- [x] Test with Facebook Sharing Debugger on published site
