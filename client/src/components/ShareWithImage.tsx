@@ -33,7 +33,7 @@ export function ShareWithImage({
   const [showDialog, setShowDialog] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
-  // Format the share message with property details
+  // Format the share message with property details (WhatsApp markdown)
   const formatShareMessage = () => {
     const message = `🏠 *${title}*
 
@@ -45,7 +45,7 @@ Shared via Nivaara Realty Solutions`;
     return message;
   };
 
-  // Plain text version (without markdown)
+  // Plain text version (without markdown bold)
   const formatPlainMessage = () => {
     return `🏠 ${title}\n\n${text}\n\n🔗 ${url}\n\nShared via Nivaara Realty Solutions`;
   };
@@ -63,35 +63,41 @@ Shared via Nivaara Realty Solutions`;
     }
   };
 
+  // Create a text file with the message to share alongside image
+  const createTextFile = (message: string): File => {
+    const blob = new Blob([message], { type: 'text/plain' });
+    return new File([blob], 'property-details.txt', { type: 'text/plain' });
+  };
+
   const handleShare = async () => {
-    // On mobile, try to use native share with image
+    // On mobile, try to use native share with image + text
     if (navigator.share) {
       setIsSharing(true);
       try {
+        const shareText = formatPlainMessage();
+        
         // Try to share with image if available
         if (imageUrl && navigator.canShare) {
           const imageFile = await fetchImageAsFile(imageUrl);
           if (imageFile) {
-            const shareData = {
-              title: title,
-              text: `🏠 ${title}\n\n${text}\n\nShared via Nivaara Realty Solutions`,
-              url: url,
+            // First try: image + text + url (best case)
+            const shareDataWithAll = {
+              text: shareText,
               files: [imageFile],
             };
             
-            // Check if we can share with files
-            if (navigator.canShare(shareData)) {
-              await navigator.share(shareData);
+            if (navigator.canShare(shareDataWithAll)) {
+              await navigator.share(shareDataWithAll);
               setIsSharing(false);
               return;
             }
           }
         }
         
-        // Fallback to sharing without image
+        // Fallback to sharing without image but with text
         await navigator.share({
           title: title,
-          text: `🏠 ${title}\n\n${text}\n\nShared via Nivaara Realty Solutions`,
+          text: shareText,
           url: url,
         });
         setIsSharing(false);
@@ -123,14 +129,16 @@ Shared via Nivaara Realty Solutions`;
 
   const handleWhatsAppShare = async () => {
     setIsSharing(true);
+    const shareText = formatPlainMessage();
     
     // On mobile, try to share image + text via WhatsApp using Web Share API
     if (navigator.share && imageUrl) {
       try {
         const imageFile = await fetchImageAsFile(imageUrl);
         if (imageFile && navigator.canShare) {
+          // Share image with full text message
           const shareData = {
-            text: formatPlainMessage(),
+            text: shareText,
             files: [imageFile],
           };
           
@@ -150,7 +158,7 @@ Shared via Nivaara Realty Solutions`;
       }
     }
     
-    // Fallback: Open WhatsApp with just text (no image)
+    // Fallback: Open WhatsApp with text (no image but full message)
     const message = formatShareMessage();
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
@@ -251,13 +259,13 @@ Shared via Nivaara Realty Solutions`;
           {/* Info about image sharing */}
           {imageUrl && (
             <p className="text-xs text-muted-foreground text-center mt-2">
-              📷 Image will be included when sharing on mobile devices
+              📷 Image + text will be shared together on mobile
             </p>
           )}
 
           {/* Message preview */}
           <div className="mt-2 pt-2 border-t">
-            <p className="text-xs text-muted-foreground mb-2">Message preview:</p>
+            <p className="text-xs text-muted-foreground mb-2">Message that will be shared:</p>
             <pre className="text-xs bg-muted p-2 rounded whitespace-pre-wrap font-sans">
               {formatShareMessage()}
             </pre>

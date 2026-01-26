@@ -1587,3 +1587,9 @@
 - [x] Include property/project image in WhatsApp share
 - [x] Use Web Share API with files for image sharing on mobile
 - [x] Test on mobile devices
+
+## Fix Share Image + Text Together (Jan 26, 2026)
+
+- [x] Ensure text message is included when sharing with image
+- [x] Text should include "Check out [property name]" and details
+- [x] Both image and text should appear in WhatsApp share
