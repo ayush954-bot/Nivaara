@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { getPropertyBadges } from "@/lib/badgeUtils";
+import { ShareWithImage } from "@/components/ShareWithImage";
 import {
   Building2,
   MapPin,
@@ -437,18 +438,14 @@ export default function ProjectDetail() {
                           </Button>
                         </a>
                       )}
-                      <Button 
+                      <ShareWithImage
+                        title={project.name}
+                        text={`Check out ${project.name} by ${project.builderName}`}
+                        url={window.location.href}
+                        imageUrl={project.coverImage || undefined}
                         variant="outline"
-                        onClick={() => {
-                          navigator.share?.({
-                            title: project.name,
-                            text: `Check out ${project.name} by ${project.builderName}`,
-                            url: window.location.href
-                          });
-                        }}
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
+                        size="icon"
+                      />
                     </div>
                   </div>
 

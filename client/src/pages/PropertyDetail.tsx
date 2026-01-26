@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { getPropertyBadges } from "@/lib/badgeUtils";
+import { ShareWithImage } from "@/components/ShareWithImage";
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -463,25 +464,14 @@ export default function PropertyDetail() {
                 {/* Share and Brochure Buttons */}
                 <div className="mt-6 pt-6 border-t space-y-3">
                   <div className="flex gap-2">
-                    <Button
+                    <ShareWithImage
+                      title={property.title}
+                      text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
+                      url={window.location.href}
+                      imageUrl={property.imageUrl || undefined}
                       variant="outline"
                       className="flex-1"
-                      onClick={() => {
-                        if (navigator.share) {
-                          navigator.share({
-                            title: property.title,
-                            text: `Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`,
-                            url: window.location.href
-                          });
-                        } else {
-                          navigator.clipboard.writeText(window.location.href);
-                          toast.success("Link copied to clipboard!");
-                        }
-                      }}
-                    >
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
-                    </Button>
+                    />
                     {property.brochureUrl && (
                       <Button
                         variant="outline"
