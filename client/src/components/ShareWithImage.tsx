@@ -1,4 +1,4 @@
-// Share component - includes formatted text with property/project details and image
+// Share component - includes image + formatted text with property details + link
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Check, Copy, MessageCircle, Loader2 } from "lucide-react";
@@ -33,21 +33,26 @@ export function ShareWithImage({
   const [showDialog, setShowDialog] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
-  // Format the share message with property details (WhatsApp markdown)
+  // Format the share message with property details and link
   const formatShareMessage = () => {
-    const message = `🏠 *${title}*
+    return `🏠 *${title}*
 
 ${text}
 
 🔗 ${url}
 
 Shared via Nivaara Realty Solutions`;
-    return message;
   };
 
-  // Plain text version (without markdown bold)
-  const formatPlainMessage = () => {
-    return `🏠 ${title}\n\n${text}\n\n🔗 ${url}\n\nShared via Nivaara Realty Solutions`;
+  // Plain text version for sharing (link included in text)
+  const formatPlainMessageWithLink = () => {
+    return `🏠 ${title}
+
+${text}
+
+🔗 ${url}
+
+Shared via Nivaara Realty Solutions`;
   };
 
   // Fetch image and convert to File object for sharing
@@ -63,50 +68,41 @@ Shared via Nivaara Realty Solutions`;
     }
   };
 
-  // Create a text file with the message to share alongside image
-  const createTextFile = (message: string): File => {
-    const blob = new Blob([message], { type: 'text/plain' });
-    return new File([blob], 'property-details.txt', { type: 'text/plain' });
-  };
-
   const handleShare = async () => {
-    // On mobile, try to use native share with image + text
+    // On mobile, try to use native share
     if (navigator.share) {
       setIsSharing(true);
       try {
-        const shareText = formatPlainMessage();
+        const shareTextWithLink = formatPlainMessageWithLink();
         
         // Try to share with image if available
         if (imageUrl && navigator.canShare) {
           const imageFile = await fetchImageAsFile(imageUrl);
           if (imageFile) {
-            // First try: image + text + url (best case)
-            const shareDataWithAll = {
-              text: shareText,
+            // Share image + text (text includes the link)
+            const shareData = {
+              text: shareTextWithLink,
               files: [imageFile],
             };
             
-            if (navigator.canShare(shareDataWithAll)) {
-              await navigator.share(shareDataWithAll);
+            if (navigator.canShare(shareData)) {
+              await navigator.share(shareData);
               setIsSharing(false);
               return;
             }
           }
         }
         
-        // Fallback to sharing without image but with text
+        // Fallback to sharing without image but with text + link
         await navigator.share({
           title: title,
-          text: shareText,
-          url: url,
+          text: shareTextWithLink,
         });
         setIsSharing(false);
         return;
       } catch (e) {
         setIsSharing(false);
-        // User cancelled - do nothing
         if ((e as Error).name === "AbortError") return;
-        // If native share fails, show dialog
       }
     }
 
@@ -129,16 +125,16 @@ Shared via Nivaara Realty Solutions`;
 
   const handleWhatsAppShare = async () => {
     setIsSharing(true);
-    const shareText = formatPlainMessage();
+    const shareTextWithLink = formatPlainMessageWithLink();
     
-    // On mobile, try to share image + text via WhatsApp using Web Share API
+    // On mobile, try to share image + text (with link in text) via Web Share API
     if (navigator.share && imageUrl) {
       try {
         const imageFile = await fetchImageAsFile(imageUrl);
         if (imageFile && navigator.canShare) {
-          // Share image with full text message
+          // Share image + text (text includes the link)
           const shareData = {
-            text: shareText,
+            text: shareTextWithLink,
             files: [imageFile],
           };
           
@@ -150,7 +146,6 @@ Shared via Nivaara Realty Solutions`;
           }
         }
       } catch (e) {
-        // If sharing with image fails, fall back to URL method
         if ((e as Error).name === "AbortError") {
           setIsSharing(false);
           return;
@@ -158,7 +153,7 @@ Shared via Nivaara Realty Solutions`;
       }
     }
     
-    // Fallback: Open WhatsApp with text (no image but full message)
+    // Fallback: Open WhatsApp with text + link (no image)
     const message = formatShareMessage();
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
@@ -256,10 +251,10 @@ Shared via Nivaara Realty Solutions`;
             </Button>
           </div>
 
-          {/* Info about image sharing */}
+          {/* Info about sharing */}
           {imageUrl && (
             <p className="text-xs text-muted-foreground text-center mt-2">
-              📷 Image + text will be shared together on mobile
+              📷 Image + text + link will be shared together on mobile
             </p>
           )}
 

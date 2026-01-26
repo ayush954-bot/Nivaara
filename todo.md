@@ -1593,3 +1593,9 @@
 - [x] Ensure text message is included when sharing with image
 - [x] Text should include "Check out [property name]" and details
 - [x] Both image and text should appear in WhatsApp share
+
+## Fix Share - Image + Text + Link (Jan 26, 2026)
+
+- [x] Ensure link is included in the share text
+- [x] Image + "Check out [property]" text + link should all appear
+- [x] Test on mobile to verify all three elements are shared
