@@ -1548,3 +1548,8 @@
 - [x] Fix browser share dialog showing website logo instead of project/property image
 - [x] Implement Web Share API with file sharing for project images
 - [x] Test share functionality on mobile devices
+
+## Share with Complete Content (Jan 26, 2026)
+
+- [x] Fix share to include image + headline + description + URL together
+- [x] Ensure WhatsApp share shows all content not just image
