@@ -1,43 +1,22 @@
 import { Router } from "express";
 import fs from "fs";
 import path from "path";
-import { getProjectOGMeta, getPropertyOGMeta, generateOGMetaTags, isSocialMediaCrawler } from "./og-meta";
+import { isSocialMediaCrawler } from "./og-meta";
 
 const router = Router();
 
 /**
- * Middleware to handle social media crawlers for project and property pages
- * This runs BEFORE static file serving to intercept crawler requests
+ * Middleware to serve pre-generated static HTML files with correct OG meta tags
+ * for social media crawlers. These files are generated during the build process.
  */
 
-// Get the index.html path based on environment
-function getIndexHtmlPath(): string {
+// Get the dist/public path based on environment
+function getPublicPath(): string {
   if (process.env.NODE_ENV === "development") {
-    // In development, og-routes.ts is in server/, so go up one level to project root, then into client/
-    return path.resolve(import.meta.dirname, "..", "client", "index.html");
+    return path.resolve(import.meta.dirname, "..", "dist", "public");
   }
-  // In production, the built file is in dist/, and public/ is at dist/public/
-  return path.resolve(import.meta.dirname, "..", "public", "index.html");
-}
-
-// Replace OG tags in HTML
-function replaceOGTags(html: string, newTags: string): string {
-  let result = html;
-  
-  // Remove existing og: meta tags
-  result = result.replace(/<meta property="og:[^"]*"[^>]*>\s*/g, "");
-  
-  // Remove twitter: meta tags
-  result = result.replace(/<meta name="twitter:[^"]*"[^>]*>\s*/g, "");
-  
-  // Remove the comment markers
-  result = result.replace(/<!-- Open Graph \/ Facebook -->\s*/g, "");
-  result = result.replace(/<!-- Twitter -->\s*/g, "");
-  
-  // Insert new tags before </head>
-  result = result.replace("</head>", `${newTags}\n  </head>`);
-  
-  return result;
+  // In production, the built file is at dist/public/
+  return path.resolve(import.meta.dirname, "..", "public");
 }
 
 // Handle project pages for social media crawlers
@@ -49,23 +28,25 @@ router.get("/projects/:slug", async (req, res, next) => {
     return next();
   }
   
-  console.log("[OG Routes] Social crawler detected for project:", req.params.slug);
+  const slug = req.params.slug;
+  console.log("[OG Routes] Social crawler detected for project:", slug, "UA:", userAgent.substring(0, 50));
   
   try {
-    const meta = await getProjectOGMeta(req.params.slug);
-    if (!meta) {
-      console.log("[OG Routes] Project not found:", req.params.slug);
-      return next();
+    // Try to serve the pre-generated static HTML file
+    const publicPath = getPublicPath();
+    const staticFilePath = path.join(publicPath, "projects", slug, "index.html");
+    
+    console.log("[OG Routes] Looking for static file:", staticFilePath);
+    
+    if (fs.existsSync(staticFilePath)) {
+      console.log("[OG Routes] Serving pre-generated static file for project:", slug);
+      const html = await fs.promises.readFile(staticFilePath, "utf-8");
+      res.status(200).set({ "Content-Type": "text/html" }).send(html);
+      return;
     }
     
-    const indexPath = getIndexHtmlPath();
-    let html = await fs.promises.readFile(indexPath, "utf-8");
-    
-    const ogTags = generateOGMetaTags(meta);
-    html = replaceOGTags(html, ogTags);
-    
-    console.log("[OG Routes] Serving dynamic OG for project:", meta.title);
-    res.status(200).set({ "Content-Type": "text/html" }).send(html);
+    console.log("[OG Routes] Static file not found, falling through:", staticFilePath);
+    next();
   } catch (error) {
     console.error("[OG Routes] Error:", error);
     next();
@@ -81,23 +62,25 @@ router.get("/properties/:slug", async (req, res, next) => {
     return next();
   }
   
-  console.log("[OG Routes] Social crawler detected for property:", req.params.slug);
+  const slug = req.params.slug;
+  console.log("[OG Routes] Social crawler detected for property:", slug, "UA:", userAgent.substring(0, 50));
   
   try {
-    const meta = await getPropertyOGMeta(req.params.slug);
-    if (!meta) {
-      console.log("[OG Routes] Property not found:", req.params.slug);
-      return next();
+    // Try to serve the pre-generated static HTML file
+    const publicPath = getPublicPath();
+    const staticFilePath = path.join(publicPath, "properties", slug, "index.html");
+    
+    console.log("[OG Routes] Looking for static file:", staticFilePath);
+    
+    if (fs.existsSync(staticFilePath)) {
+      console.log("[OG Routes] Serving pre-generated static file for property:", slug);
+      const html = await fs.promises.readFile(staticFilePath, "utf-8");
+      res.status(200).set({ "Content-Type": "text/html" }).send(html);
+      return;
     }
     
-    const indexPath = getIndexHtmlPath();
-    let html = await fs.promises.readFile(indexPath, "utf-8");
-    
-    const ogTags = generateOGMetaTags(meta);
-    html = replaceOGTags(html, ogTags);
-    
-    console.log("[OG Routes] Serving dynamic OG for property:", meta.title);
-    res.status(200).set({ "Content-Type": "text/html" }).send(html);
+    console.log("[OG Routes] Static file not found, falling through:", staticFilePath);
+    next();
   } catch (error) {
     console.error("[OG Routes] Error:", error);
     next();
