@@ -1573,3 +1573,11 @@
 - [x] Add more bottom padding to hero section on mobile
 - [x] Ensure Contact Us button has proper spacing from bottom edge
 - [x] Test on mobile viewport
+
+## Fix Share Button with Proper Text (Jan 26, 2026)
+
+- [x] Research how real estate sites handle sharing (99acres, MagicBricks, etc.)
+- [x] Implement share with formatted text including property/project name
+- [x] Include "Check out this property" or similar message
+- [x] Ensure image and link are included in share
+- [x] Test share on WhatsApp and other platforms
