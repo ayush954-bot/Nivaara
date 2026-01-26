@@ -1559,3 +1559,11 @@
 - [x] Simplify share button to basic copy link functionality
 - [x] Fix production OG meta tags so social media shows correct thumbnails
 - [x] Test with Facebook Sharing Debugger on published site
+
+## Fix Nested Anchor Tag Error (Jan 26, 2026)
+
+- [x] Fix React validation error for nested `<a>` tags in FeaturedProjects.tsx
+- [x] Restructure card layout to avoid wrapping entire card in Link
+- [x] Make image and title clickable separately
+- [x] Keep View Details and Inquire buttons as separate links
+- [x] Test console for validation errors - no errors found

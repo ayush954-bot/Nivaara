@@ -142,9 +142,9 @@ export default function FeaturedProjects() {
                   key={project.id}
                   className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-3"
                 >
-                  <Link href={`/projects/${project.slug}`}>
-                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer group h-full">
-                      {/* Project Image */}
+                  <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer group h-full">
+                    {/* Project Image - Clickable */}
+                    <Link href={`/projects/${project.slug}`}>
                       <div className="relative h-52 bg-secondary overflow-hidden">
                         {project.coverImage && !project.coverImage.includes('placeholder') ? (
                           <img
@@ -180,61 +180,63 @@ export default function FeaturedProjects() {
                           {project.status}
                         </Badge>
                       </div>
+                    </Link>
 
-                      <CardContent className="p-5">
-                        {/* Builder Name */}
-                        <p className="text-xs text-primary font-medium mb-1">
-                          {project.builderName}
-                        </p>
-                        
-                        {/* Project Name */}
-                        <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                    <CardContent className="p-5">
+                      {/* Builder Name */}
+                      <p className="text-xs text-primary font-medium mb-1">
+                        {project.builderName}
+                      </p>
+                      
+                      {/* Project Name - Clickable */}
+                      <Link href={`/projects/${project.slug}`}>
+                        <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1 cursor-pointer">
                           {project.name}
                         </h3>
+                      </Link>
 
-                        {/* Location */}
-                        <div className="flex items-center text-muted-foreground mb-3">
-                          <MapPin className="h-3 w-3 mr-1" />
-                          <span className="text-sm">{project.location}, {project.city}</span>
-                        </div>
+                      {/* Location */}
+                      <div className="flex items-center text-muted-foreground mb-3">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        <span className="text-sm">{project.location}, {project.city}</span>
+                      </div>
 
-                        {/* Price Range */}
-                        <div className="flex items-center text-primary font-bold mb-3">
-                          <IndianRupee className="h-4 w-4 mr-1" />
-                          <span className="text-base">{project.priceRange}</span>
-                        </div>
+                      {/* Price Range */}
+                      <div className="flex items-center text-primary font-bold mb-3">
+                        <IndianRupee className="h-4 w-4 mr-1" />
+                        <span className="text-base">{project.priceRange}</span>
+                      </div>
 
-                        {/* Configurations */}
-                        <div className="flex flex-wrap gap-1 mb-4">
-                          {project.configurations && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Home className="h-3 w-3 mr-1" />
-                              {project.configurations}
-                            </Badge>
-                          )}
-                          {project.possessionDate && (
-                            <Badge variant="secondary" className="text-xs">
-                              <Calendar className="h-3 w-3 mr-1" />
-                              {new Date(project.possessionDate).toLocaleDateString('en-IN', { 
-                                month: 'short', 
-                                year: 'numeric' 
-                              })}
-                            </Badge>
-                          )}
-                        </div>
+                      {/* Configurations */}
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {project.configurations && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Home className="h-3 w-3 mr-1" />
+                            {project.configurations}
+                          </Badge>
+                        )}
+                        {project.possessionDate && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            {new Date(project.possessionDate).toLocaleDateString('en-IN', { 
+                              month: 'short', 
+                              year: 'numeric' 
+                            })}
+                          </Badge>
+                        )}
+                      </div>
 
-                        {/* View Details - matching Properties style */}
-                        <div className="flex gap-2">
-                          <Button size="sm" className="flex-1">
-                            View Details
-                          </Button>
-                          <Button size="sm" variant="outline" className="flex-1" asChild>
-                            <Link href="/contact">Inquire</Link>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                      {/* View Details - matching Properties style */}
+                      <div className="flex gap-2">
+                        <Button size="sm" className="flex-1" asChild>
+                          <Link href={`/projects/${project.slug}`}>View Details</Link>
+                        </Button>
+                        <Button size="sm" variant="outline" className="flex-1" asChild>
+                          <Link href="/contact">Inquire</Link>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               ))}
             </div>
