@@ -29,7 +29,7 @@ export default function Home() {
 
 
       {/* Hero Section with Search */}
-      <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden pb-16 md:pb-0">
         <div
           className="absolute inset-0 z-0"
           style={{
@@ -52,7 +52,7 @@ export default function Home() {
             <PropertySearch variant="hero" />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 md:mb-0">
             <Button size="lg" asChild className="text-lg">
               <Link href="/properties">Explore Properties</Link>
             </Button>

@@ -1567,3 +1567,9 @@
 - [x] Make image and title clickable separately
 - [x] Keep View Details and Inquire buttons as separate links
 - [x] Test console for validation errors - no errors found
+
+## Fix Mobile Hero Button Positioning (Jan 26, 2026)
+
+- [x] Add more bottom padding to hero section on mobile
+- [x] Ensure Contact Us button has proper spacing from bottom edge
+- [x] Test on mobile viewport
