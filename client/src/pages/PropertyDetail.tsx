@@ -469,6 +469,8 @@ export default function PropertyDetail() {
                       text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
                       url={window.location.href}
                       imageUrl={property.imageUrl || undefined}
+                      location={property.location}
+                      price={property.priceLabel || `₹${property.price}`}
                       variant="outline"
                       className="flex-1"
                     />

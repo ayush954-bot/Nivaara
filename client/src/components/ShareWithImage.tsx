@@ -1,17 +1,9 @@
-// Share component - shares image + copies text to clipboard for user to paste
-// Note: Web Share API has a known limitation where text is stripped when sharing files
-// Solution: Copy text to clipboard first, then share image, user pastes text after
-import { useState } from "react";
+// Share component - generates a shareable image with property details overlaid
+// Single-tap share: creates image with photo + text + branding, then shares
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Share2, Check, Copy, MessageCircle, Loader2, Image } from "lucide-react";
+import { Share2, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 
 interface ShareWithImageProps {
   title: string;
@@ -21,6 +13,10 @@ interface ShareWithImageProps {
   variant?: "default" | "outline" | "ghost";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
+  // Additional property details for the overlay
+  location?: string;
+  price?: string;
+  builder?: string;
 }
 
 export function ShareWithImage({
@@ -31,98 +27,245 @@ export function ShareWithImage({
   variant = "outline",
   size = "default",
   className,
+  location,
+  price,
+  builder,
 }: ShareWithImageProps) {
-  const [copied, setCopied] = useState(false);
-  const [showDialog, setShowDialog] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-  const [step, setStep] = useState<1 | 2>(1);
+  const [shared, setShared] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Format the share message with property details and link
-  const formatShareMessage = () => {
-    return `🏠 *${title}*
+  // Generate shareable image with text overlay
+  const generateShareableImage = async (): Promise<Blob | null> => {
+    if (!imageUrl) return null;
 
-${text}
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(null);
+        return;
+      }
 
-🔗 ${url}
+      const img = new Image();
+      // Don't set crossOrigin for local images to avoid CORS issues
+      
+      img.onload = () => {
+        // Set canvas size (Instagram/WhatsApp friendly 1080x1350 or 4:5 ratio)
+        const canvasWidth = 1080;
+        const canvasHeight = 1350;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
-Shared via Nivaara Realty Solutions`;
+        // Calculate image dimensions to cover top portion (about 60% of canvas)
+        const imageHeight = canvasHeight * 0.55;
+        const imageAspect = img.width / img.height;
+        const targetAspect = canvasWidth / imageHeight;
+        
+        let drawWidth, drawHeight, drawX, drawY;
+        
+        if (imageAspect > targetAspect) {
+          // Image is wider - fit height, crop width
+          drawHeight = imageHeight;
+          drawWidth = imageHeight * imageAspect;
+          drawX = (canvasWidth - drawWidth) / 2;
+          drawY = 0;
+        } else {
+          // Image is taller - fit width, crop height
+          drawWidth = canvasWidth;
+          drawHeight = canvasWidth / imageAspect;
+          drawX = 0;
+          drawY = 0;
+        }
+
+        // Fill background with dark color
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        // Draw the property image at top
+        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+
+        // Add gradient overlay on image for better text visibility
+        const gradient = ctx.createLinearGradient(0, imageHeight - 150, 0, imageHeight);
+        gradient.addColorStop(0, 'rgba(15, 23, 42, 0)');
+        gradient.addColorStop(1, 'rgba(15, 23, 42, 1)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, imageHeight - 150, canvasWidth, 150);
+
+        // Text section starts after image
+        const textStartY = imageHeight + 40;
+        const padding = 60;
+
+        // Property name (large, bold, golden)
+        ctx.fillStyle = '#d4a853';
+        ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'left';
+        
+        // Word wrap for title
+        const maxWidth = canvasWidth - (padding * 2);
+        const titleLines = wrapText(ctx, title, maxWidth);
+        let currentY = textStartY;
+        
+        titleLines.forEach((line) => {
+          ctx.fillText(line, padding, currentY);
+          currentY += 65;
+        });
+
+        // Builder name
+        if (builder) {
+          currentY += 10;
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '36px system-ui, -apple-system, sans-serif';
+          ctx.fillText(`by ${builder}`, padding, currentY);
+          currentY += 55;
+        }
+
+        // Location with icon
+        if (location) {
+          currentY += 15;
+          ctx.fillStyle = '#e2e8f0';
+          ctx.font = '38px system-ui, -apple-system, sans-serif';
+          ctx.fillText(`📍 ${location}`, padding, currentY);
+          currentY += 55;
+        }
+
+        // Price
+        if (price) {
+          currentY += 5;
+          ctx.fillStyle = '#22c55e';
+          ctx.font = 'bold 48px system-ui, -apple-system, sans-serif';
+          ctx.fillText(`💰 ${price}`, padding, currentY);
+          currentY += 65;
+        }
+
+        // Divider line
+        currentY += 20;
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, currentY);
+        ctx.lineTo(canvasWidth - padding, currentY);
+        ctx.stroke();
+
+        // Link
+        currentY += 50;
+        ctx.fillStyle = '#60a5fa';
+        ctx.font = '32px system-ui, -apple-system, sans-serif';
+        const shortUrl = url.replace(/^https?:\/\//, '').substring(0, 45) + (url.length > 50 ? '...' : '');
+        ctx.fillText(`🔗 ${shortUrl}`, padding, currentY);
+
+        // Branding at bottom
+        const brandingY = canvasHeight - 80;
+        
+        // Branding background
+        ctx.fillStyle = 'rgba(212, 168, 83, 0.1)';
+        ctx.fillRect(0, brandingY - 40, canvasWidth, 120);
+        
+        // Branding text
+        ctx.fillStyle = '#d4a853';
+        ctx.font = 'bold 36px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Nivaara Realty Solutions', canvasWidth / 2, brandingY);
+        
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '28px system-ui, -apple-system, sans-serif';
+        ctx.fillText('"We Build Trust"', canvasWidth / 2, brandingY + 40);
+
+        // Convert to blob
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, 'image/jpeg', 0.9);
+      };
+
+      img.onerror = () => {
+        console.error('Failed to load image for sharing');
+        resolve(null);
+      };
+
+      img.src = imageUrl;
+    });
   };
 
-  // Fetch image and convert to File object for sharing
-  const fetchImageAsFile = async (imageUrl: string): Promise<File | null> => {
-    try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const fileName = `${title.replace(/[^a-zA-Z0-9]/g, '_')}.jpg`;
-      return new File([blob], fileName, { type: blob.type || 'image/jpeg' });
-    } catch (error) {
-      console.error('Failed to fetch image:', error);
-      return null;
-    }
-  };
+  // Helper function to wrap text
+  const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] => {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
 
-  const handleShare = () => {
-    setStep(1);
-    setShowDialog(true);
-  };
-
-  // Step 1: Copy text to clipboard
-  const handleCopyText = async () => {
-    const message = formatShareMessage();
-    try {
-      await navigator.clipboard.writeText(message);
-      setCopied(true);
-      toast.success("Text copied! Now share the image and paste the text.");
-      setStep(2);
-      setTimeout(() => setCopied(false), 3000);
-    } catch {
-      toast.error("Failed to copy text");
-    }
-  };
-
-  // Step 2: Share image only
-  const handleShareImage = async () => {
-    if (!imageUrl) return;
+    words.forEach((word) => {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const metrics = ctx.measureText(testLine);
+      
+      if (metrics.width > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    });
     
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+    
+    return lines;
+  };
+
+  const handleShare = async () => {
     setIsSharing(true);
+
     try {
-      const imageFile = await fetchImageAsFile(imageUrl);
-      if (imageFile && navigator.share && navigator.canShare) {
-        const shareData = { files: [imageFile] };
+      // Generate the shareable image
+      const imageBlob = await generateShareableImage();
+      
+      if (imageBlob && navigator.share && navigator.canShare) {
+        const file = new File([imageBlob], `${title.replace(/[^a-zA-Z0-9]/g, '_')}_nivaara.jpg`, {
+          type: 'image/jpeg',
+        });
+
+        const shareData = { files: [file] };
+        
         if (navigator.canShare(shareData)) {
           await navigator.share(shareData);
-          toast.success("Image shared! Now paste the copied text in WhatsApp.");
-          setShowDialog(false);
+          setShared(true);
+          toast.success("Shared successfully!");
+          setTimeout(() => setShared(false), 2000);
+        } else {
+          // Fallback: download the image
+          downloadImage(imageBlob);
         }
+      } else if (imageBlob) {
+        // Fallback for browsers without Web Share API
+        downloadImage(imageBlob);
+      } else {
+        // No image - share text only
+        shareTextOnly();
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
-        toast.error("Failed to share image");
+        toast.error("Failed to share. Try again.");
       }
     }
+
     setIsSharing(false);
   };
 
-  // Alternative: Share text only via WhatsApp URL (no image)
-  const handleWhatsAppTextOnly = () => {
-    const message = formatShareMessage();
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
-    setShowDialog(false);
+  const downloadImage = (blob: Blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_nivaara.jpg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("Image downloaded! Share it manually.");
   };
 
-  // Copy message only
-  const handleCopyMessage = async () => {
-    const message = formatShareMessage();
-    try {
-      await navigator.clipboard.writeText(message);
-      setCopied(true);
-      toast.success("Message copied!");
-      setTimeout(() => setCopied(false), 2000);
-      setShowDialog(false);
-    } catch {
-      toast.error("Failed to copy");
-    }
+  const shareTextOnly = () => {
+    const message = `🏠 *${title}*\n\n${text}\n\n🔗 ${url}\n\nShared via Nivaara Realty Solutions`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -136,140 +279,18 @@ Shared via Nivaara Realty Solutions`;
       >
         {isSharing ? (
           <Loader2 className="h-4 w-4 animate-spin" />
-        ) : copied ? (
+        ) : shared ? (
           <Check className="h-4 w-4" />
         ) : (
           <Share2 className="h-4 w-4" />
         )}
         {size !== "icon" && (
           <span className="ml-2">
-            {isSharing ? "Sharing..." : copied ? "Copied!" : "Share"}
+            {isSharing ? "Creating..." : shared ? "Shared!" : "Share"}
           </span>
         )}
       </Button>
-
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Share {title}</DialogTitle>
-            {imageUrl && (
-              <DialogDescription>
-                To share image with text on WhatsApp, follow these 2 steps:
-              </DialogDescription>
-            )}
-          </DialogHeader>
-          
-          {imageUrl ? (
-            <>
-              {/* Two-step process for image + text */}
-              <div className="space-y-4">
-                {/* Step 1: Copy Text */}
-                <div className={`p-4 rounded-lg border-2 ${step === 1 ? 'border-primary bg-primary/5' : 'border-muted bg-muted/50'}`}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${step === 1 ? 'bg-primary text-primary-foreground' : 'bg-muted-foreground/20 text-muted-foreground'}`}>
-                      1
-                    </div>
-                    <span className="font-semibold">Copy the message</span>
-                    {step === 2 && <Check className="h-4 w-4 text-green-500 ml-auto" />}
-                  </div>
-                  <Button 
-                    onClick={handleCopyText}
-                    variant={step === 1 ? "default" : "outline"}
-                    className="w-full"
-                    disabled={step !== 1}
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    {step === 2 ? "Text Copied ✓" : "Copy Text with Link"}
-                  </Button>
-                </div>
-
-                {/* Step 2: Share Image */}
-                <div className={`p-4 rounded-lg border-2 ${step === 2 ? 'border-primary bg-primary/5' : 'border-muted bg-muted/50'}`}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${step === 2 ? 'bg-primary text-primary-foreground' : 'bg-muted-foreground/20 text-muted-foreground'}`}>
-                      2
-                    </div>
-                    <span className="font-semibold">Share the image</span>
-                  </div>
-                  <Button 
-                    onClick={handleShareImage}
-                    className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white"
-                    disabled={step !== 2 || isSharing}
-                  >
-                    {isSharing ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Image className="h-4 w-4 mr-2" />
-                    )}
-                    Share Image on WhatsApp
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-2 text-center">
-                    After sharing, paste the copied text in the chat
-                  </p>
-                </div>
-
-                {/* Preview */}
-                <div className="bg-muted rounded-lg p-3">
-                  <div className="flex gap-3">
-                    <img 
-                      src={imageUrl} 
-                      alt={title} 
-                      className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                    />
-                    <div className="min-w-0 text-xs">
-                      <p className="font-semibold line-clamp-1">🏠 {title}</p>
-                      <p className="text-muted-foreground line-clamp-1">{text}</p>
-                      <p className="text-primary truncate">🔗 {url}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Alternative option */}
-                <div className="pt-2 border-t">
-                  <p className="text-xs text-muted-foreground mb-2 text-center">Or share text only (without image):</p>
-                  <Button 
-                    onClick={handleWhatsAppTextOnly}
-                    variant="outline"
-                    className="w-full"
-                    size="sm"
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Share Text Only on WhatsApp
-                  </Button>
-                </div>
-              </div>
-            </>
-          ) : (
-            /* No image - simple share options */
-            <div className="grid gap-3">
-              <Button 
-                onClick={handleWhatsAppTextOnly} 
-                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white"
-              >
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Share on WhatsApp
-              </Button>
-              
-              <Button 
-                onClick={handleCopyMessage} 
-                variant="outline" 
-                className="w-full"
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Message
-              </Button>
-
-              {/* Message preview */}
-              <div className="mt-2 pt-2 border-t">
-                <p className="text-xs text-muted-foreground mb-2">Message:</p>
-                <pre className="text-xs bg-muted p-2 rounded whitespace-pre-wrap font-sans">
-                  {formatShareMessage()}
-                </pre>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
     </>
   );
 }

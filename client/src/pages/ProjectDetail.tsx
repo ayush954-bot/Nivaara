@@ -443,6 +443,9 @@ export default function ProjectDetail() {
                         text={`Check out ${project.name} by ${project.builderName}`}
                         url={window.location.href}
                         imageUrl={project.coverImage || undefined}
+                        location={project.location}
+                        price={project.priceRange}
+                        builder={project.builderName}
                         variant="outline"
                         size="icon"
                       />

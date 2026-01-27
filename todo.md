@@ -1605,3 +1605,21 @@
 - [x] Research why Web Share API with files strips text (known browser limitation)
 - [x] Find alternative approach - two-step process: copy text first, then share image
 - [x] Implement and test thoroughly on mobile
+
+## Implement Shareable Image with Text Overlay (Jan 26, 2026)
+
+- [ ] Create canvas-based image generator
+- [ ] Overlay property name, location, price, and link on image
+- [ ] Add Nivaara branding to the generated image
+- [ ] Single-tap share to WhatsApp
+- [ ] Test on mobile
+
+## Implement Shareable Image with Text Overlay (Jan 26, 2026)
+
+- [x] Create canvas-based image generator
+- [x] Overlay property photo with text details (name, location, price, link)
+- [x] Add Nivaara branding at bottom
+- [x] Generate 1080x1350 image (WhatsApp/Instagram friendly)
+- [x] Single-tap share experience
+- [x] Fix CORS issue by removing crossOrigin attribute
+- [x] Test and verify generated image quality
