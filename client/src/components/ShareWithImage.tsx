@@ -97,7 +97,6 @@ export function ShareWithImage({
         const padding = 60;
 
         // Property name (large, bold, golden)
-        ctx.fillStyle = '#d4a853';
         ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'left';
         
@@ -106,6 +105,13 @@ export function ShareWithImage({
         const titleLines = wrapText(ctx, title, maxWidth);
         let currentY = textStartY;
         
+        // Add semi-transparent background behind title for better readability
+        const titleHeight = titleLines.length * 65;
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.fillRect(0, textStartY - 50, canvasWidth, titleHeight + 20);
+        
+        // Draw title text
+        ctx.fillStyle = '#d4a853';
         titleLines.forEach((line) => {
           ctx.fillText(line, padding, currentY);
           currentY += 65;
@@ -173,7 +179,13 @@ export function ShareWithImage({
 
         // Convert to blob
         canvas.toBlob((blob) => {
-          resolve(blob);
+          if (blob) {
+            console.log('Canvas blob created successfully:', blob.size, 'bytes');
+            resolve(blob);
+          } else {
+            console.error('Failed to create blob from canvas');
+            resolve(null);
+          }
         }, 'image/jpeg', 0.9);
       };
 
@@ -218,6 +230,18 @@ export function ShareWithImage({
       // Generate the shareable image
       const imageBlob = await generateShareableImage();
       
+      // Create beautifully formatted message with all details
+      const formattedMessage = `🏠 *${title}*${builder ? `\nby ${builder}` : ''}${location ? `\n📍 ${location}` : ''}${price ? `\n💰 ${price}` : ''}\n\n${text}\n\n🔗 ${url}\n\n_Shared via Nivaara Realty Solutions_\n"We Build Trust"`;
+      
+      // Copy the formatted message to clipboard
+      try {
+        await navigator.clipboard.writeText(formattedMessage);
+        toast.success("Message copied! Paste in WhatsApp and attach the downloaded image.");
+      } catch (err) {
+        console.error('Failed to copy message:', err);
+        toast.error("Failed to copy message");
+      }
+
       if (imageBlob && navigator.share && navigator.canShare) {
         const file = new File([imageBlob], `${title.replace(/[^a-zA-Z0-9]/g, '_')}_nivaara.jpg`, {
           type: 'image/jpeg',
@@ -228,7 +252,7 @@ export function ShareWithImage({
         if (navigator.canShare(shareData)) {
           await navigator.share(shareData);
           setShared(true);
-          toast.success("Shared successfully!");
+          toast.success("Image shared! Paste the link from clipboard.");
           setTimeout(() => setShared(false), 2000);
         } else {
           // Fallback: download the image

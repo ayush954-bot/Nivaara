@@ -1623,3 +1623,17 @@
 - [x] Single-tap share experience
 - [x] Fix CORS issue by removing crossOrigin attribute
 - [x] Test and verify generated image quality
+
+## Fix Shareable Image Text Visibility and Link Copy (Jan 27, 2026)
+
+- [ ] Add semi-transparent overlay behind text on shareable image for better readability
+- [ ] Copy link as separate text to clipboard alongside image
+- [ ] Test text visibility on light and dark property images
+- [ ] Test link copy functionality
+
+## Copy Full Formatted Message with Details (Jan 27, 2026)
+
+- [x] Create beautifully formatted message with property name, builder, location, price, link
+- [x] Copy full message to clipboard when sharing
+- [x] Download image automatically
+- [x] User just needs to paste and attach image in WhatsApp
