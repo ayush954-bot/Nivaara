@@ -17,6 +17,7 @@ interface ShareWithImageProps {
   location?: string;
   price?: string;
   builder?: string;
+  badges?: string[]; // Property badges like "New", "Premium", "Upcoming"
 }
 
 export function ShareWithImage({
@@ -30,6 +31,7 @@ export function ShareWithImage({
   location,
   price,
   builder,
+  badges = [],
 }: ShareWithImageProps) {
   const [isSharing, setIsSharing] = useState(false);
   const [shared, setShared] = useState(false);
@@ -84,6 +86,61 @@ export function ShareWithImage({
 
         // Draw the property image at top
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+
+        // Draw badges at top-left corner
+        if (badges && badges.length > 0) {
+          let badgeX = 30;
+          const badgeY = 30;
+          
+          badges.forEach((badge) => {
+            // Badge background
+            ctx.font = 'bold 28px system-ui, -apple-system, sans-serif';
+            const badgeWidth = ctx.measureText(badge).width + 30;
+            const badgeHeight = 45;
+            
+            // Different colors for different badge types
+            if (badge.toLowerCase() === 'new') {
+              ctx.fillStyle = '#10b981'; // Green
+            } else if (badge.toLowerCase() === 'premium') {
+              ctx.fillStyle = '#d4a853'; // Gold
+            } else if (badge.toLowerCase().includes('upcoming')) {
+              ctx.fillStyle = '#3b82f6'; // Blue
+            } else if (badge.toLowerCase().includes('featured')) {
+              ctx.fillStyle = '#f59e0b'; // Orange
+            } else {
+              ctx.fillStyle = '#6b7280'; // Gray
+            }
+            
+            // Draw rounded badge background
+            ctx.beginPath();
+            ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 8);
+            ctx.fill();
+            
+            // Draw badge text
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(badge, badgeX + 15, badgeY + 32);
+            
+            badgeX += badgeWidth + 15; // Space between badges
+          });
+        }
+
+        // Add phone number at top-right corner
+        const phoneNumber = '+91 9764515697';
+        ctx.font = 'bold 36px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'right';
+        const phoneWidth = ctx.measureText(phoneNumber).width + 40;
+        const phoneX = canvasWidth - 30;
+        const phoneY = 30;
+        
+        // Phone background (semi-transparent dark)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.beginPath();
+        ctx.roundRect(phoneX - phoneWidth, phoneY, phoneWidth, 50, 8);
+        ctx.fill();
+        
+        // Phone icon and text
+        ctx.fillStyle = '#d4a853';
+        ctx.fillText('📞 ' + phoneNumber, phoneX - 20, phoneY + 37);
 
         // Add gradient overlay on image for better text visibility
         const gradient = ctx.createLinearGradient(0, imageHeight - 150, 0, imageHeight);
@@ -231,7 +288,7 @@ export function ShareWithImage({
       const imageBlob = await generateShareableImage();
       
       // Create beautifully formatted message with all details
-      const formattedMessage = `🏠 *${title}*${builder ? `\nby ${builder}` : ''}${location ? `\n📍 ${location}` : ''}${price ? `\n💰 ${price}` : ''}\n\n${text}\n\n🔗 ${url}\n\n_Shared via Nivaara Realty Solutions_\n"We Build Trust"`;
+      const formattedMessage = `🏠 *${title}*${builder ? `\nby ${builder}` : ''}${location ? `\n📍 ${location}` : ''}${price ? `\n💰 ${price}` : ''}\n\n${text}\n\n🔗 ${url}\n\n📞 *Contact us: +91 9764515697*\n\n_Shared via Nivaara Realty Solutions_\n"We Build Trust"`;
       
       // Copy the formatted message to clipboard
       try {

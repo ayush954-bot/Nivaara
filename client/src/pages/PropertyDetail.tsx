@@ -471,6 +471,7 @@ export default function PropertyDetail() {
                       imageUrl={property.imageUrl || undefined}
                       location={property.location}
                       price={property.priceLabel || `₹${property.price}`}
+                      badges={getPropertyBadges(property).map(b => b.text)}
                       variant="outline"
                       className="flex-1"
                     />

@@ -1637,3 +1637,12 @@
 - [x] Copy full message to clipboard when sharing
 - [x] Download image automatically
 - [x] User just needs to paste and attach image in WhatsApp
+
+## Add Badges and Phone Number to Shareable Image (Jan 27, 2026)
+
+- [x] Pass badge data to ShareWithImage component
+- [x] Draw badges on canvas image (top-left corner)
+- [x] Style badges to match website design (not too big)
+- [x] Add phone number 9764515697 to image (bold, prominent)
+- [x] Add phone number to copied text message
+- [x] Test badge and phone number positioning

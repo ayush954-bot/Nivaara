@@ -446,6 +446,7 @@ export default function ProjectDetail() {
                         location={project.location}
                         price={project.priceRange}
                         builder={project.builderName}
+                        badges={getPropertyBadges(project).map(b => b.text)}
                         variant="outline"
                         size="icon"
                       />
