@@ -52,7 +52,13 @@ export function ShareWithImage({
       const img = new Image();
       // Don't set crossOrigin for local images to avoid CORS issues
       
+      // Clear timeout on successful load
+      const clearTimeoutOnLoad = () => {
+        if (timeoutId) clearTimeout(timeoutId);
+      };
+
       img.onload = () => {
+        clearTimeoutOnLoad();
         // Set canvas size (Instagram/WhatsApp friendly 1080x1350 or 4:5 ratio)
         const canvasWidth = 1080;
         const canvasHeight = 1350;
@@ -98,17 +104,26 @@ export function ShareWithImage({
             const badgeWidth = ctx.measureText(badge).width + 30;
             const badgeHeight = 45;
             
-            // Different colors for different badge types
-            if (badge.toLowerCase() === 'new') {
-              ctx.fillStyle = '#10b981'; // Green
-            } else if (badge.toLowerCase() === 'premium') {
+            // Different colors for different badge types (matching badgeUtils.ts)
+            const badgeLower = badge.toLowerCase();
+            if (badgeLower.includes('new')) {
+              ctx.fillStyle = '#059669'; // Green (bg-green-600)
+            } else if (badgeLower.includes('discount') || badgeLower.includes('reduced') || badgeLower.includes('hot')) {
+              ctx.fillStyle = '#dc2626'; // Red (bg-red-600)
+            } else if (badgeLower.includes('special') || badgeLower.includes('exclusive')) {
+              ctx.fillStyle = '#9333ea'; // Purple (bg-purple-600)
+            } else if (badgeLower.includes('best seller') || badgeLower.includes('bestseller')) {
+              ctx.fillStyle = '#2563eb'; // Blue (bg-blue-600)
+            } else if (badgeLower.includes('pre-launch') || badgeLower.includes('prelaunch') || badgeLower.includes('pre launch')) {
+              ctx.fillStyle = '#2563eb'; // Blue (bg-blue-600)
+            } else if (badgeLower.includes('premium')) {
               ctx.fillStyle = '#d4a853'; // Gold
-            } else if (badge.toLowerCase().includes('upcoming')) {
+            } else if (badgeLower.includes('upcoming')) {
               ctx.fillStyle = '#3b82f6'; // Blue
-            } else if (badge.toLowerCase().includes('featured')) {
+            } else if (badgeLower.includes('featured')) {
               ctx.fillStyle = '#f59e0b'; // Orange
             } else {
-              ctx.fillStyle = '#6b7280'; // Gray
+              ctx.fillStyle = '#ea580c'; // Orange for custom badges (bg-orange-600)
             }
             
             // Draw rounded badge background
@@ -247,9 +262,16 @@ export function ShareWithImage({
       };
 
       img.onerror = () => {
+        clearTimeoutOnLoad();
         console.error('Failed to load image for sharing');
         resolve(null);
       };
+
+      // Set timeout to prevent infinite hang
+      const timeoutId = setTimeout(() => {
+        console.error('Image loading timeout');
+        resolve(null);
+      }, 10000); // 10 second timeout
 
       img.src = imageUrl;
     });

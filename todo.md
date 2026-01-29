@@ -1646,3 +1646,12 @@
 - [x] Add phone number 9764515697 to image (bold, prominent)
 - [x] Add phone number to copied text message
 - [x] Test badge and phone number positioning
+
+## Fix Badge Colors and Share Button Issues (Jan 29, 2026)
+
+- [x] Fix "Best Seller" badge color to match website (blue)
+- [x] Fix "Pre-Launch" badge color to match website (blue)
+- [x] Fix share button stuck on "Creating..." for properties (added timeout)
+- [x] Improve share button placement for properties (already good in sidebar)
+- [x] Test all badge colors match website
+- [x] Test share functionality works for all properties
