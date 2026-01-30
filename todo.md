@@ -1655,3 +1655,13 @@
 - [x] Improve share button placement for properties (already good in sidebar)
 - [x] Test all badge colors match website
 - [x] Test share functionality works for all properties
+
+## Fix Pre-Launch Badge Color and Luxury Villa Share (Jan 29, 2026)
+
+- [x] Check website to see actual Pre-Launch badge color (red/orange)
+- [x] Fix Pre-Launch badge color in ShareWithImage (changed to orange #ea580c)
+- [x] Investigate why Luxury Villa in Mumbai share gets stuck (missing image file)
+- [x] Fix Luxury Villa share issue (updated imageUrl to existing file)
+- [x] Move "We will respond within 24 hours" text below contact details
+- [x] Test all properties share functionality
+- [x] Verify all badge colors match website exactly

@@ -380,6 +380,9 @@ export default function PropertyDetail() {
                         Call Now
                       </a>
                     </Button>
+                    <p className="text-sm text-muted-foreground text-center pt-2">
+                      We'll respond within 24 hours
+                    </p>
                   </div>
                 ) : (
                   <form onSubmit={handleInquirySubmit} className="space-y-4">
@@ -491,9 +494,6 @@ export default function PropertyDetail() {
                       </Button>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground text-center">
-                    We'll respond within 24 hours
-                  </p>
                 </div>
               </CardContent>
             </Card>

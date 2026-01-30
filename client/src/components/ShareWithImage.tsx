@@ -115,7 +115,7 @@ export function ShareWithImage({
             } else if (badgeLower.includes('best seller') || badgeLower.includes('bestseller')) {
               ctx.fillStyle = '#2563eb'; // Blue (bg-blue-600)
             } else if (badgeLower.includes('pre-launch') || badgeLower.includes('prelaunch') || badgeLower.includes('pre launch')) {
-              ctx.fillStyle = '#2563eb'; // Blue (bg-blue-600)
+              ctx.fillStyle = '#ea580c'; // Orange/Red (bg-orange-600)
             } else if (badgeLower.includes('premium')) {
               ctx.fillStyle = '#d4a853'; // Gold
             } else if (badgeLower.includes('upcoming')) {
