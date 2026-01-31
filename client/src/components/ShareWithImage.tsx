@@ -50,7 +50,9 @@ export function ShareWithImage({
       }
 
       const img = new Image();
-      // Don't set crossOrigin for local images to avoid CORS issues
+      // Set crossOrigin for CDN images to allow canvas access
+      // CloudFront and other CDNs need this to work with Canvas API
+      img.crossOrigin = 'anonymous';
       
       // Clear timeout on successful load
       const clearTimeoutOnLoad = () => {
