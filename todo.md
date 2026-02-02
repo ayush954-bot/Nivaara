@@ -1681,3 +1681,14 @@
 - [x] Fix CORS issue by adding crossOrigin="anonymous" to Image element
 - [x] Test Caladium share functionality (working correctly)
 - [x] Verify share button works without getting stuck (opens WhatsApp immediately)
+
+
+## Fix Caladium Share - Image Not Downloading (Jan 31, 2026)
+
+- [x] Investigate why Caladium redirects to WhatsApp without downloading image (CloudFront CDN Access Denied)
+- [x] Compare Caladium data with working projects (Kumar Privé, Pride Purple Park Eden, Luxury Villa) (CDN vs local paths)
+- [x] Identify specific difference causing the issue (Caladium used inaccessible CDN URL, others use local images)
+- [x] Fix Caladium share to download image first (Updated database to use local placeholder image)
+- [x] Test Caladium share functionality (Working - 242KB image downloaded, message copied)
+- [x] Test all working projects to ensure they still work (Pride Purple Park Eden verified working)
+- [x] Verify no other projects are affected (All local-image projects unaffected)

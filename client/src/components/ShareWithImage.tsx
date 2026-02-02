@@ -41,7 +41,7 @@ export function ShareWithImage({
   const generateShareableImage = async (): Promise<Blob | null> => {
     if (!imageUrl) return null;
 
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       if (!ctx) {
@@ -49,10 +49,10 @@ export function ShareWithImage({
         return;
       }
 
+      // Load image directly (works for local images)
+      const imageSource = imageUrl;
+
       const img = new Image();
-      // Set crossOrigin for CDN images to allow canvas access
-      // CloudFront and other CDNs need this to work with Canvas API
-      img.crossOrigin = 'anonymous';
       
       // Clear timeout on successful load
       const clearTimeoutOnLoad = () => {
@@ -275,7 +275,7 @@ export function ShareWithImage({
         resolve(null);
       }, 10000); // 10 second timeout
 
-      img.src = imageUrl;
+      img.src = imageSource;
     });
   };
 
@@ -343,8 +343,9 @@ export function ShareWithImage({
         // Fallback for browsers without Web Share API
         downloadImage(imageBlob);
       } else {
-        // No image - share text only
-        shareTextOnly();
+        // Image generation failed
+        toast.error("Failed to generate share image. Please try again.");
+        console.error('Image generation returned null');
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
