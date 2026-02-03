@@ -49,10 +49,12 @@ export function ShareWithImage({
         return;
       }
 
-      // Load image directly (works for local images)
-      const imageSource = imageUrl;
-
+      // Load image with proper CORS handling
       const img = new Image();
+      // Only set crossOrigin for external URLs (CDN), not for local images
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        img.crossOrigin = 'anonymous';
+      }
       
       // Clear timeout on successful load
       const clearTimeoutOnLoad = () => {
@@ -263,19 +265,23 @@ export function ShareWithImage({
         }, 'image/jpeg', 0.9);
       };
 
-      img.onerror = () => {
+      img.onerror = (error) => {
         clearTimeoutOnLoad();
-        console.error('Failed to load image for sharing');
+        console.error('Failed to load image for sharing:', error);
+        console.error('Image URL:', imageUrl);
+        console.error('Image format:', imageUrl.split('.').pop());
         resolve(null);
       };
 
       // Set timeout to prevent infinite hang
       const timeoutId = setTimeout(() => {
-        console.error('Image loading timeout');
+        console.error('Image loading timeout after 10 seconds');
+        console.error('Image URL:', imageUrl);
         resolve(null);
       }, 10000); // 10 second timeout
 
-      img.src = imageSource;
+      // Load the image
+      img.src = imageUrl;
     });
   };
 
