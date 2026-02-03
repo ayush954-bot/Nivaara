@@ -249,6 +249,7 @@ export default function ProjectForm() {
             projectId: projectIdToUse,
             name: amenities[i].name,
             icon: amenities[i].icon,
+            imageUrl: amenities[i].imageUrl || undefined,
             displayOrder: i,
           });
         }

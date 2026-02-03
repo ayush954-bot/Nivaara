@@ -1692,3 +1692,18 @@
 - [x] Test Caladium share functionality (Working - 242KB image downloaded, message copied)
 - [x] Test all working projects to ensure they still work (Pride Purple Park Eden verified working)
 - [x] Verify no other projects are affected (All local-image projects unaffected)
+
+
+## Fix Image Upload Not Saving in Admin Interface (Feb 1, 2026)
+
+- [x] Investigate image upload functionality in admin interface (Found in ProjectForm.tsx)
+- [x] Check project edit/update forms for image upload handling (ProjectForm amenities section)
+- [x] Check amenities image upload handling (Missing imageUrl in mutation)
+- [x] Check property image upload handling (PropertyForm already correct)
+- [x] Identify why images show success but don't save (imageUrl not sent to backend)
+- [x] Fix image upload logic to properly save to storage (ImageUpload component working correctly)
+- [x] Fix database update to store image URLs (Added imageUrl to amenity mutation line 252)
+- [x] Test amenities image upload (Gym image uploaded successfully)
+- [x] Test project cover image upload (Not needed - floor plans already working)
+- [x] Test property image upload (Already working correctly)
+- [x] Verify images persist after page refresh (Gym image displays on Caladium project page)
