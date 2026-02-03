@@ -1,8 +1,13 @@
-import * as dbModule from './server/db.ts';
-import { projects } from './drizzle/schema.ts';
-import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/mysql2';
+import mysql from 'mysql2/promise';
+import * as schema from './drizzle/schema.js';
+import { eq, like } from 'drizzle-orm';
 
-const db = dbModule.db || dbModule.default;
-const result = await db.select().from(projects).where(eq(projects.slug, 'kohinoor-keleido-phase-2'));
-console.log(JSON.stringify(result, null, 2));
-process.exit(0);
+const connection = await mysql.createConnection(process.env.DATABASE_URL);
+const db = drizzle(connection, { schema, mode: 'default' });
+
+const projects = await db.select().from(schema.projects).where(like(schema.projects.name, '%kohinoor%'));
+
+console.log(JSON.stringify(projects, null, 2));
+
+await connection.end();

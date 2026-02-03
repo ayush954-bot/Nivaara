@@ -268,18 +268,13 @@ export function ShareWithImage({
         }, 'image/jpeg', 0.9);
       };
 
-      img.onerror = (error) => {
+      img.onerror = () => {
         clearTimeoutOnLoad();
-        console.error('Failed to load image for sharing:', error);
-        console.error('Image URL:', imageUrl);
-        console.error('Image format:', imageUrl.split('.').pop());
         resolve(null);
       };
 
       // Set timeout to prevent infinite hang
       timeoutId = setTimeout(() => {
-        console.error('Image loading timeout after 10 seconds');
-        console.error('Image URL:', imageUrl);
         resolve(null);
       }, 10000); // 10 second timeout
 
