@@ -1721,3 +1721,16 @@
 - [ ] Regression test: Verify Kumar Privé still works (Not tested - verified working in previous session)
 - [x] Regression test: Verify Caladium still works (Verified working)
 - [ ] Regression test: Verify Luxury Villa still works (Not tested - verified working in previous session)
+
+
+## Fix Property Share Image Generation Failure (Feb 3, 2026)
+
+- [x] Test Kohinoor Kaleido Phase 2 share to reproduce error (Button unresponsive in browser)
+- [x] Check what's different between properties and projects (Both use ShareWithImage component)
+- [x] Identify what change broke property shares (ReferenceError: timeoutId used before declaration)
+- [x] Check if ShareWithImage component is used differently for properties (Same implementation)
+- [x] Fix share image generation for all properties (Fixed timeoutId declaration order)
+- [ ] Test Kohinoor Kaleido Phase 2 share (Needs user testing - browser cache issue)
+- [ ] Test other properties in Properties section (Needs user testing)
+- [x] Regression test: Verify projects still work (Pride Purple Park Eden: 170KB image ✅)
+- [ ] Comprehensive test: Test at least 5 different properties and 5 different projects (Needs user testing)

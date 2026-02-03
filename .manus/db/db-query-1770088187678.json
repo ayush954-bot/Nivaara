@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, slug, name, coverImage FROM projects WHERE slug = 'kohinoor-keleido-phase-2';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, slug, name, coverImage FROM projects WHERE slug = 'kohinoor-keleido-phase-2';",
+  "rows": [
+    {
+      "id": "60001",
+      "slug": "kohinoor-keleido-phase-2",
+      "name": "kohinoor keleido phase 2",
+      "coverImage": "https://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1769953753600-q1dvbgJqGn.webp"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tslug\tname\tcoverImage\n60001\tkohinoor-keleido-phase-2\tkohinoor keleido phase 2\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1769953753600-q1dvbgJqGn.webp\n",
+  "stderr": "",
+  "execution_time_ms": 1516
+}

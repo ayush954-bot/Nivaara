@@ -56,6 +56,9 @@ export function ShareWithImage({
         img.crossOrigin = 'anonymous';
       }
       
+      // Declare timeout ID variable
+      let timeoutId: NodeJS.Timeout | null = null;
+      
       // Clear timeout on successful load
       const clearTimeoutOnLoad = () => {
         if (timeoutId) clearTimeout(timeoutId);
@@ -274,7 +277,7 @@ export function ShareWithImage({
       };
 
       // Set timeout to prevent infinite hang
-      const timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         console.error('Image loading timeout after 10 seconds');
         console.error('Image URL:', imageUrl);
         resolve(null);
