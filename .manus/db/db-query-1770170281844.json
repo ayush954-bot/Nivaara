@@ -1,0 +1,34 @@
+{
+  "query": "SELECT id, name, slug, coverImage FROM projects ORDER BY name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, name, slug, coverImage FROM projects ORDER BY name;",
+  "rows": [
+    {
+      "id": "30001",
+      "name": " Caladium",
+      "slug": "caladium",
+      "coverImage": "https://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770125860768-zJ5zluUOec.jpeg"
+    },
+    {
+      "id": "60002",
+      "name": "Godrej River Crest",
+      "slug": "godrej-river-crest",
+      "coverImage": "https://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770117716258-yqIOreyFps.png"
+    },
+    {
+      "id": "60001",
+      "name": "kohinoor keleido phase 2",
+      "slug": "kohinoor-keleido-phase-2",
+      "coverImage": "https://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770126009475-4bPNDqpHXU.jpeg"
+    },
+    {
+      "id": "1",
+      "name": "Pride Purple ",
+      "slug": "pride-purple-park-eden",
+      "coverImage": "https://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770126329670-znGnHiTRg7.jpeg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tcoverImage\n30001\t Caladium\tcaladium\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770125860768-zJ5zluUOec.jpeg\n60002\tGodrej River Crest\tgodrej-river-crest\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770117716258-yqIOreyFps.png\n60001\tkohinoor keleido phase 2\tkohinoor-keleido-phase-2\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770126009475-4bPNDqpHXU.jpeg\n1\tPride Purple \tpride-purple-park-eden\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663026719415/aSHZEBwUmWTuA7HAwuTg3z/property-images/1770126329670-znGnHiTRg7.jpeg\n",
+  "stderr": "",
+  "execution_time_ms": 1543
+}

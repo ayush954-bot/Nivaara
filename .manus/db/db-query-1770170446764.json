@@ -1,0 +1,9 @@
+{
+  "query": "SELECT id, title, slug, imageUrl FROM properties WHERE imageUrl LIKE '%cloudfront%' OR imageUrl LIKE '%d3%' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, slug, imageUrl FROM properties WHERE imageUrl LIKE '%cloudfront%' OR imageUrl LIKE '%d3%' LIMIT 10;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1516
+}
