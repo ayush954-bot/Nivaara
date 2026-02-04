@@ -67,11 +67,18 @@ export const appRouter = router({
           minPrice: z.number().optional(),
           maxPrice: z.number().optional(),
           bedrooms: z.number().optional(),
+          latitude: z.number().optional(),
+          longitude: z.number().optional(),
+          radiusKm: z.number().optional(),
         })
       )
       .query(async ({ input }) => {
         return await db.searchProperties(input);
       }),
+    
+    locationSuggestions: publicProcedure.query(async () => {
+      return await db.getLocationSuggestions();
+    }),
   }),
 
   inquiries: router({
@@ -749,6 +756,9 @@ export const appRouter = router({
           minPrice: z.number().optional(),
           maxPrice: z.number().optional(),
           bedrooms: z.number().optional(),
+          latitude: z.number().optional(),
+          longitude: z.number().optional(),
+          radiusKm: z.number().optional(),
         })
       )
       .query(async ({ input }) => {

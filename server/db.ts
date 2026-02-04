@@ -140,6 +140,9 @@ export async function searchProperties(filters: {
   minPrice?: number;
   maxPrice?: number;
   bedrooms?: number;
+  latitude?: number;
+  longitude?: number;
+  radiusKm?: number;
 }) {
   const db = await getDb();
   if (!db) return [];
@@ -167,11 +170,29 @@ export async function searchProperties(filters: {
     conditions.push(eq(properties.bedrooms, filters.bedrooms));
   }
 
+  let results;
   if (conditions.length === 0) {
-    return db.select().from(properties).orderBy(desc(properties.createdAt));
+    results = await db.select().from(properties).orderBy(desc(properties.createdAt));
+  } else {
+    results = await db.select().from(properties).where(and(...conditions)).orderBy(desc(properties.createdAt));
   }
 
-  return db.select().from(properties).where(and(...conditions)).orderBy(desc(properties.createdAt));
+  // If radius search is requested, filter by distance
+  if (filters.latitude && filters.longitude && filters.radiusKm) {
+    const { calculateDistance } = await import('./locationUtils');
+    results = results.filter((property) => {
+      if (!property.latitude || !property.longitude) return false;
+      const distance = calculateDistance(
+        filters.latitude!,
+        filters.longitude!,
+        Number(property.latitude),
+        Number(property.longitude)
+      );
+      return distance <= filters.radiusKm!;
+    });
+  }
+
+  return results;
 }
 
 export async function createProperty(property: InsertProperty) {
@@ -555,6 +576,9 @@ export async function searchProjects(filters: {
   minPrice?: number;
   maxPrice?: number;
   bedrooms?: number;
+  latitude?: number;
+  longitude?: number;
+  radiusKm?: number;
 }) {
   const db = await getDb();
   if (!db) return [];
@@ -582,7 +606,22 @@ export async function searchProjects(filters: {
     query = query.where(and(...conditions)) as any;
   }
   
-  const projectsList = await query.orderBy(desc(projects.createdAt));
+  let projectsList = await query.orderBy(desc(projects.createdAt));
+  
+  // If radius search is requested, filter by distance
+  if (filters.latitude && filters.longitude && filters.radiusKm) {
+    const { calculateDistance } = await import('./locationUtils');
+    projectsList = projectsList.filter((project) => {
+      if (!project.latitude || !project.longitude) return false;
+      const distance = calculateDistance(
+        filters.latitude!,
+        filters.longitude!,
+        Number(project.latitude),
+        Number(project.longitude)
+      );
+      return distance <= filters.radiusKm!;
+    });
+  }
   
   // Fetch related data for each project
   const projectsWithData = await Promise.all(
@@ -961,4 +1000,30 @@ export async function deleteAllProjectVideos(projectId: number) {
   
   await db.delete(projectVideos).where(eq(projectVideos.projectId, projectId));
   return { success: true };
+}
+
+
+/**
+ * Get unique location suggestions for autocomplete
+ */
+export async function getLocationSuggestions() {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get all unique locations from properties and projects
+  const [propertiesData, projectsData] = await Promise.all([
+    db.select({ location: properties.location }).from(properties),
+    db.select({ location: projects.location }).from(projects),
+  ]);
+
+  const allLocations = [
+    ...propertiesData.map((p) => p.location),
+    ...projectsData.map((p) => p.location),
+  ];
+
+  // Extract areas from addresses
+  const { getUniqueAreas } = await import('./locationUtils');
+  const uniqueAreas = getUniqueAreas(allLocations);
+
+  return uniqueAreas;
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
+import { LocationSearch } from "@/components/LocationSearch";
 import {
   Select,
   SelectContent,
@@ -31,6 +32,7 @@ export default function Projects() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [bhkFilter, setBhkFilter] = useState("all");
+  const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
 
   // Read location parameter from URL
   useEffect(() => {
@@ -65,6 +67,9 @@ export default function Projects() {
     minPrice: budgetRange.minPrice,
     maxPrice: budgetRange.maxPrice,
     bedrooms: bhkFilter !== "all" ? parseInt(bhkFilter) : undefined,
+    latitude: coordinates?.lat,
+    longitude: coordinates?.lon,
+    radiusKm: coordinates?.radius,
   });
 
   // Get status badge color
@@ -100,22 +105,21 @@ export default function Projects() {
       {/* Filters Section */}
       <section className="py-8 bg-background border-b">
         <div className="container">
+          {/* Location Search with Autocomplete, Radius, and Near Me */}
+          <LocationSearch
+            onLocationChange={(loc) => {
+              setLocationFilter(loc || "all");
+              setCoordinates(null); // Clear coordinates when typing location
+            }}
+            onCoordinatesChange={(lat, lon, radius) => {
+              setCoordinates({ lat, lon, radius });
+              setLocationFilter("all"); // Clear text filter when using coordinates
+            }}
+            placeholder="Search projects by location..."
+            className="max-w-5xl mx-auto mb-4"
+          />
+
           <div className="flex flex-col md:flex-row gap-4 max-w-5xl mx-auto">
-            {/* Location Filter */}
-            <Select value={locationFilter} onValueChange={setLocationFilter}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Locations</SelectItem>
-                <SelectItem value="Kharadi">Kharadi</SelectItem>
-                <SelectItem value="Viman Nagar">Viman Nagar</SelectItem>
-                <SelectItem value="Wagholi">Wagholi</SelectItem>
-                <SelectItem value="Hinjewadi">Hinjewadi</SelectItem>
-                <SelectItem value="Baner">Baner</SelectItem>
-                <SelectItem value="Wakad">Wakad</SelectItem>
-              </SelectContent>
-            </Select>
 
             {/* Status Filter */}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -168,6 +172,7 @@ export default function Projects() {
                 setStatusFilter("all");
                 setBudgetFilter("all");
                 setBhkFilter("all");
+                setCoordinates(null);
               }}
               className="w-full md:w-auto"
             >

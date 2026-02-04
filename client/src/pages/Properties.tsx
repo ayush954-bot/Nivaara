@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
-import LocationSelect from "@/components/LocationSelect";
+import { LocationSearch } from "@/components/LocationSearch";
 import {
   Select,
   SelectContent,
@@ -25,6 +25,7 @@ export default function Properties() {
 
   // State for zone filter
   const [zoneFilter, setZoneFilter] = useState<string | undefined>(undefined);
+  const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
 
   // Read zone or location parameter from URL
   useEffect(() => {
@@ -78,6 +79,9 @@ export default function Properties() {
     minPrice: budgetRange.minPrice,
     maxPrice: budgetRange.maxPrice,
     bedrooms: bedroomsValue,
+    latitude: coordinates?.lat,
+    longitude: coordinates?.lon,
+    radiusKm: coordinates?.radius,
   });
 
   return (
@@ -97,14 +101,22 @@ export default function Properties() {
       {/* Filters Section */}
       <section className="py-8 bg-background border-b">
         <div className="container">
+          {/* Location Search with Autocomplete, Radius, and Near Me */}
+          <LocationSearch
+            onLocationChange={(loc) => {
+              setLocationFilter(loc || "all");
+              setCoordinates(null); // Clear coordinates when typing location
+            }}
+            onCoordinatesChange={(lat, lon, radius) => {
+              setCoordinates({ lat, lon, radius });
+              setLocationFilter("all"); // Clear text filter when using coordinates
+              setZoneFilter(undefined); // Clear zone filter when using coordinates
+            }}
+            placeholder="Search properties by location..."
+            className="max-w-4xl mx-auto mb-4"
+          />
+
           <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto">
-            <div className="flex-1 w-full md:w-auto">
-              <LocationSelect
-                value={locationFilter}
-                onValueChange={setLocationFilter}
-                placeholder="All Locations"
-              />
-            </div>
 
             <div className="flex-1 w-full md:w-auto">
               <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -159,6 +171,22 @@ export default function Properties() {
                 </Select>
               </div>
             )}
+
+            {/* Clear Filters */}
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setLocationFilter("all");
+                setTypeFilter("all");
+                setBudgetFilter("all");
+                setBhkFilter("all");
+                setZoneFilter(undefined);
+                setCoordinates(null);
+              }}
+              className="w-full md:w-auto"
+            >
+              Clear Filters
+            </Button>
           </div>
         </div>
       </section>
