@@ -562,8 +562,8 @@ export async function searchProjects(filters: {
   let query = db.select().from(projects);
   const conditions = [];
   
-  if (filters.location) {
-    conditions.push(eq(projects.location, filters.location));
+  if (filters.location && filters.location !== "all") {
+    conditions.push(like(projects.location, `%${filters.location}%`));
   }
   
   if (filters.status) {
