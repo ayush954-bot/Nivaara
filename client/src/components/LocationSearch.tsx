@@ -34,6 +34,23 @@ export function LocationSearch({
 
   // Fetch location suggestions
   const { data: suggestions = [] } = trpc.properties.locationSuggestions.useQuery();
+  
+  // State for triggering geocode
+  const [locationToGeocode, setLocationToGeocode] = useState<string | null>(null);
+  
+  // Geocode query (only runs when locationToGeocode is set)
+  const { data: geocodeData } = trpc.properties.geocode.useQuery(
+    { location: locationToGeocode! },
+    { enabled: !!locationToGeocode }
+  );
+  
+  // Effect to handle geocode results
+  useEffect(() => {
+    if (geocodeData && geocodeData.lat && geocodeData.lng && locationToGeocode) {
+      onCoordinatesChange(geocodeData.lat, geocodeData.lng, radiusKm);
+      setLocationToGeocode(null); // Reset after processing
+    }
+  }, [geocodeData, locationToGeocode, radiusKm, onCoordinatesChange]);
 
   // Filter suggestions based on search term
   const filteredSuggestions = suggestions.filter((suggestion) =>
@@ -67,6 +84,9 @@ export function LocationSearch({
     setSearchTerm(suggestion);
     setShowSuggestions(false);
     onLocationChange(suggestion);
+    
+    // Trigger geocoding for the selected location
+    setLocationToGeocode(suggestion);
   };
 
   const handleNearMe = () => {

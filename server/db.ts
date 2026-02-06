@@ -1027,3 +1027,26 @@ export async function getLocationSuggestions() {
 
   return uniqueAreas;
 }
+
+
+/**
+ * Geocode a location name to coordinates using Google Maps API
+ */
+export async function geocodeLocation(locationName: string): Promise<{ lat: number; lng: number } | null> {
+  try {
+    const { makeRequest } = await import('./_core/map');
+    const result = await makeRequest<any>('/maps/api/geocode/json', {
+      address: locationName + ', India', // Add India for better results
+    });
+
+    if (result.status === 'OK' && result.results && result.results.length > 0) {
+      const location = result.results[0].geometry.location;
+      return { lat: location.lat, lng: location.lng };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return null;
+  }
+}

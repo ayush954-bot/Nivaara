@@ -1,0 +1,73 @@
+{
+  "query": "SELECT id, title, location, latitude, longitude FROM properties LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, location, latitude, longitude FROM properties LIMIT 20;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "location": "Kharadi, Pune",
+      "latitude": "18.55127630",
+      "longitude": "73.94165750"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "location": "Hinjawadi",
+      "latitude": "18.58835790",
+      "longitude": "73.73741320"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "location": "Wagholi",
+      "latitude": "18.58062990",
+      "longitude": "73.98330990"
+    },
+    {
+      "id": "4",
+      "title": "Commercial Shop in Viman Nagar",
+      "location": "Viman Nagar, Pune",
+      "latitude": "18.58037490",
+      "longitude": "73.91822650"
+    },
+    {
+      "id": "5",
+      "title": "Residential Plot in Baner",
+      "location": "Baner",
+      "latitude": "NULL",
+      "longitude": "NULL"
+    },
+    {
+      "id": "6",
+      "title": "Luxury Villa in Mumbai Suburbs",
+      "location": "Mumbai, Maharashtra",
+      "latitude": "19.05499900",
+      "longitude": "72.86920350"
+    },
+    {
+      "id": "7",
+      "title": "Modern Apartment in Dubai Marina",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "latitude": "25.22963410",
+      "longitude": "55.28958500"
+    },
+    {
+      "id": "8",
+      "title": "Commercial Space in Bangalore",
+      "location": "Bengaluru, Karnataka",
+      "latitude": "12.97679360",
+      "longitude": "77.59008200"
+    },
+    {
+      "id": "630001",
+      "title": "ultra luxury 4bhk penthouse",
+      "location": "Kharadi, Pune, Maharashtra, India",
+      "latitude": "18.55393110",
+      "longitude": "73.94762570"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tlocation\tlatitude\tlongitude\n1\tLuxury 3BHK Apartment in Kharadi\tKharadi, Pune\t18.55127630\t73.94165750\n2\tPremium Office Space in Hinjewadi\tHinjawadi\t18.58835790\t73.73741320\n3\tUnder Construction 2BHK in Wagholi\tWagholi\t18.58062990\t73.98330990\n4\tCommercial Shop in Viman Nagar\tViman Nagar, Pune\t18.58037490\t73.91822650\n5\tResidential Plot in Baner\tBaner\tNULL\tNULL\n6\tLuxury Villa in Mumbai Suburbs\tMumbai, Maharashtra\t19.05499900\t72.86920350\n7\tModern Apartment in Dubai Marina\tDubai, Dubai, United Arab Emirates\t25.22963410\t55.28958500\n8\tCommercial Space in Bangalore\tBengaluru, Karnataka\t12.97679360\t77.59008200\n630001\tultra luxury 4bhk penthouse\tKharadi, Pune, Maharashtra, India\t18.55393110\t73.94762570\n",
+  "stderr": "",
+  "execution_time_ms": 2043
+}

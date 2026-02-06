@@ -79,6 +79,12 @@ export const appRouter = router({
     locationSuggestions: publicProcedure.query(async () => {
       return await db.getLocationSuggestions();
     }),
+    
+    geocode: publicProcedure
+      .input(z.object({ location: z.string() }))
+      .query(async ({ input }) => {
+        return await db.geocodeLocation(input.location);
+      }),
   }),
 
   inquiries: router({

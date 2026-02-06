@@ -1840,10 +1840,31 @@
 
 ## Force Push to GitHub (Feb 4, 2026)
 
-- [ ] Verify GitHub CLI authentication
-- [ ] Check repository access (ayush954-bot/Nivaara)
-- [ ] Copy database backup to repository
-- [ ] Stage all files including backup
-- [ ] Commit with comprehensive message
-- [ ] Push to GitHub using gh CLI
-- [ ] Verify push succeeded on GitHub
+- [x] Verify GitHub CLI authentication - Used Personal Access Token ✅
+- [x] Check repository access (ayush954-bot/Nivaara) - Access confirmed ✅
+- [x] Copy database backup to repository - database_backup.sql added ✅
+- [x] Stage all files including backup - All files staged ✅
+- [x] Commit with comprehensive message - Commit d37aff1 created ✅
+- [x] Push to GitHub using git with token - Force pushed successfully ✅
+- [x] Verify push succeeded on GitHub - 1063 objects pushed, 4.62 MiB ✅
+
+
+## Debug Radius Search Issue (Hinjewadi → Baner)
+
+- [ ] Check if Baner property has latitude/longitude coordinates
+- [ ] Check if Hinjewadi search location has coordinates
+- [ ] Verify actual distance between Hinjewadi and Baner (should be ~10-12km)
+- [ ] Test Haversine distance calculation manually
+- [ ] Check if radius search is being applied correctly in backend
+- [ ] Fix missing coordinates or calculation logic
+- [ ] Test Hinjewadi within 20km search shows Baner property
+- [ ] Save checkpoint with fix
+
+## Radius Search Bug Fix
+
+- [x] Debug LocationSearch component geocoding issue
+- [x] Fix LocationSearch to use tRPC query instead of raw fetch
+- [x] Update Baner property coordinates in database (18.5593° N, 73.7785° E)
+- [x] Test radius search with Hinjawadi location
+- [x] Verify Baner property appears within 10km/20km radius
+- [x] Confirm Haversine formula distance calculation working correctly
