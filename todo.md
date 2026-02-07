@@ -1868,3 +1868,12 @@
 - [x] Test radius search with Hinjawadi location
 - [x] Verify Baner property appears within 10km/20km radius
 - [x] Confirm Haversine formula distance calculation working correctly
+
+## Property Search Enhancements
+
+- [x] Geocode all remaining properties in database (all properties already have coordinates)
+- [x] Implement "Near Me" functionality with browser geolocation
+- [x] Add loading indicators to LocationSearch component
+- [x] Add visual feedback during geocoding process (spinner + success checkmark)
+- [x] Test all three enhancements end-to-end
+- [x] Save checkpoint with all enhancements

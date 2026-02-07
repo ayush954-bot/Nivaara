@@ -29,6 +29,8 @@ export function LocationSearch({
   const [radiusKm, setRadiusKm] = useState<number>(10);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string>("");
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [geocodeSuccess, setGeocodeSuccess] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
@@ -39,16 +41,26 @@ export function LocationSearch({
   const [locationToGeocode, setLocationToGeocode] = useState<string | null>(null);
   
   // Geocode query (only runs when locationToGeocode is set)
-  const { data: geocodeData } = trpc.properties.geocode.useQuery(
+  const { data: geocodeData, isLoading: isGeocodeLoading } = trpc.properties.geocode.useQuery(
     { location: locationToGeocode! },
     { enabled: !!locationToGeocode }
   );
+  
+  // Update geocoding state based on query status
+  useEffect(() => {
+    setIsGeocoding(isGeocodeLoading);
+  }, [isGeocodeLoading]);
   
   // Effect to handle geocode results
   useEffect(() => {
     if (geocodeData && geocodeData.lat && geocodeData.lng && locationToGeocode) {
       onCoordinatesChange(geocodeData.lat, geocodeData.lng, radiusKm);
       setLocationToGeocode(null); // Reset after processing
+      setGeocodeSuccess(true);
+      
+      // Clear success message after 2 seconds
+      const timer = setTimeout(() => setGeocodeSuccess(false), 2000);
+      return () => clearTimeout(timer);
     }
   }, [geocodeData, locationToGeocode, radiusKm, onCoordinatesChange]);
 
@@ -84,6 +96,7 @@ export function LocationSearch({
     setSearchTerm(suggestion);
     setShowSuggestions(false);
     onLocationChange(suggestion);
+    setGeocodeSuccess(false);
     
     // Trigger geocoding for the selected location
     setLocationToGeocode(suggestion);
@@ -138,8 +151,27 @@ export function LocationSearch({
               value={searchTerm}
               onChange={(e) => handleInputChange(e.target.value)}
               onFocus={() => setShowSuggestions(true)}
-              className="pl-10"
+              className="pl-10 pr-10"
+              disabled={isGeocoding}
             />
+            {isGeocoding && (
+              <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-primary" />
+            )}
+            {geocodeSuccess && !isGeocoding && (
+              <svg
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            )}
           </div>
 
           {/* Autocomplete Suggestions */}
