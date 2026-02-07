@@ -31,6 +31,7 @@ export function LocationSearch({
   const [locationError, setLocationError] = useState<string>("");
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodeSuccess, setGeocodeSuccess] = useState(false);
+  const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +55,7 @@ export function LocationSearch({
   // Effect to handle geocode results
   useEffect(() => {
     if (geocodeData && geocodeData.lat && geocodeData.lng && locationToGeocode) {
+      setLastCoordinates({ lat: geocodeData.lat, lon: geocodeData.lng });
       onCoordinatesChange(geocodeData.lat, geocodeData.lng, radiusKm);
       setLocationToGeocode(null); // Reset after processing
       setGeocodeSuccess(true);
@@ -63,6 +65,14 @@ export function LocationSearch({
       return () => clearTimeout(timer);
     }
   }, [geocodeData, locationToGeocode, radiusKm, onCoordinatesChange]);
+  
+  // Effect to update search when radius changes (if we have coordinates)
+  useEffect(() => {
+    if (lastCoordinates) {
+      onCoordinatesChange(lastCoordinates.lat, lastCoordinates.lon, radiusKm);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [radiusKm]);
 
   // Filter suggestions based on search term
   const filteredSuggestions = suggestions.filter((suggestion) =>

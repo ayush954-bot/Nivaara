@@ -1885,3 +1885,23 @@
 - [x] Test homepage thoroughly for visual and functional issues
 - [x] Run regression tests on all other pages (properties page working correctly)
 - [x] Save checkpoint with fixes
+
+## Radius Search Accuracy Bug Fix
+
+- [ ] Query database to check Hinjewadi and Baner coordinates
+- [ ] Calculate actual distance between Hinjewadi and Baner
+- [ ] Verify Haversine formula implementation in backend
+- [ ] Fix incorrect coordinates if needed
+- [ ] Test radius search with 5km, 10km, 20km from Hinjewadi
+- [ ] Verify Baner only appears when actually within selected radius
+- [ ] Save checkpoint with accurate radius search
+
+## Radius Search Accuracy Bug Fix
+
+- [x] Verify property coordinates and calculate actual distances (Baner is 5.4km from Hinjewadi)
+- [x] Fix radius selector to trigger new search when radius changes (added useEffect hook)
+- [x] Test with Hinjewadi 5km (Baner correctly does NOT appear - only 1 property)
+- [x] Test with Hinjewadi 10km (Baner correctly appears - 2 properties)
+- [x] Test with Hinjewadi 20km (3 properties including Viman Nagar)
+- [x] Test with Kharadi at different radii (5km: 4 properties, 20km: 5 properties)
+- [x] Save checkpoint with accurate radius search
