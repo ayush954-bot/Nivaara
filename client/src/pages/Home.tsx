@@ -33,7 +33,7 @@ export default function Home() {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: "url(/images/hero-building.jpg)",
+            backgroundImage: "url(https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/jTkCDCbsQAjfpSvs.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             filter: "brightness(0.4)",
