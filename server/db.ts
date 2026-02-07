@@ -177,19 +177,29 @@ export async function searchProperties(filters: {
     results = await db.select().from(properties).where(and(...conditions)).orderBy(desc(properties.createdAt));
   }
 
-  // If radius search is requested, filter by distance
+  // If radius search is requested, filter by distance and add distance to results
   if (filters.latitude && filters.longitude && filters.radiusKm) {
     const { calculateDistance } = await import('./locationUtils');
-    results = results.filter((property) => {
-      if (!property.latitude || !property.longitude) return false;
-      const distance = calculateDistance(
-        filters.latitude!,
-        filters.longitude!,
-        Number(property.latitude),
-        Number(property.longitude)
-      );
-      return distance <= filters.radiusKm!;
-    });
+    const resultsWithDistance = results
+      .map((property) => {
+        if (!property.latitude || !property.longitude) return null;
+        const distance = calculateDistance(
+          filters.latitude!,
+          filters.longitude!,
+          Number(property.latitude),
+          Number(property.longitude)
+        );
+        return {
+          ...property,
+          distance: distance <= filters.radiusKm! ? distance : null,
+        };
+      })
+      .filter((property): property is NonNullable<typeof property> => 
+        property !== null && property.distance !== null
+      )
+      .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0)); // Sort by distance, closest first
+    
+    return resultsWithDistance as any;
   }
 
   return results;

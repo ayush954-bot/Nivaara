@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Ruler, IndianRupee, Loader2 } from "lucide-react";
+import { Building2, MapPin, Ruler, IndianRupee, Loader2, Navigation, Map as MapIcon, List } from "lucide-react";
 import { Link } from "wouter";
 import { getPropertyBadges } from "@/lib/badgeUtils";
+import { PropertiesMapView } from "@/components/PropertiesMapView";
 
 export default function Properties() {
   const [location] = useLocation();
@@ -26,6 +27,7 @@ export default function Properties() {
   // State for zone filter
   const [zoneFilter, setZoneFilter] = useState<string | undefined>(undefined);
   const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
 
   // Read zone or location parameter from URL
   useEffect(() => {
@@ -208,11 +210,40 @@ export default function Properties() {
             </div>
           ) : (
             <>
-              <div className="mb-6 text-muted-foreground">
-                Showing {properties.length} {properties.length === 1 ? "property" : "properties"}
+              {/* View Toggle */}
+              <div className="flex justify-between items-center mb-6">
+                <div className="text-muted-foreground">
+                  Showing {properties.length} {properties.length === 1 ? "property" : "properties"}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List className="h-4 w-4 mr-2" />
+                    List View
+                  </Button>
+                  <Button
+                    variant={viewMode === 'map' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('map')}
+                  >
+                    <MapIcon className="h-4 w-4 mr-2" />
+                    Map View
+                  </Button>
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {properties.map((property) => (
+
+              {viewMode === 'map' ? (
+                <PropertiesMapView
+                  properties={properties}
+                  searchCenter={coordinates}
+                  radiusKm={coordinates?.radius}
+                />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {properties.map((property: any) => (
                   <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div
                       className="h-48 bg-cover bg-center relative"
@@ -251,6 +282,12 @@ export default function Properties() {
                           <MapPin className="h-4 w-4 mr-2" />
                           {property.area ? `${property.area}, ${property.location}` : property.location}
                         </div>
+                        {(property as any).distance !== undefined && (
+                          <div className="flex items-center text-sm font-medium text-primary">
+                            <Navigation className="h-4 w-4 mr-2" />
+                            {(property as any).distance.toFixed(1)} km away
+                          </div>
+                        )}
                         {property.area_sqft && (
                           <div className="flex items-center text-sm text-muted-foreground">
                             <Ruler className="h-4 w-4 mr-2" />
@@ -280,8 +317,9 @@ export default function Properties() {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>

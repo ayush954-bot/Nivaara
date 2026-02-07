@@ -1905,3 +1905,31 @@
 - [x] Test with Hinjewadi 20km (3 properties including Viman Nagar)
 - [x] Test with Kharadi at different radii (5km: 4 properties, 20km: 5 properties)
 - [x] Save checkpoint with accurate radius search
+
+## Distance Display and Map View Features
+
+- [ ] Add distance calculation to property search results
+- [ ] Display distance (in km) on each property card when location search is active
+- [ ] Create MapView component with Google Maps integration
+- [ ] Add map/list view toggle button
+- [ ] Display properties as markers on the map
+- [ ] Draw radius circle on map showing search area
+- [ ] Add info windows on map markers showing property details
+- [ ] Ensure map updates when radius or location changes
+- [ ] Test distance display accuracy
+- [ ] Test map view functionality
+- [ ] Save checkpoint with both features
+
+## Distance Display and Map View Features
+
+- [x] Modify searchProperties to calculate and return distance for each property
+- [x] Add distance display on property cards in list view (shows "X.X km away" with Navigation icon)
+- [x] Create PropertiesMapView component with Google Maps integration
+- [x] Add property markers on map with custom SVG icons (black with gold center)
+- [x] Add radius circle visualization on map (golden circle around search center)
+- [x] Add map/list view toggle buttons (working perfectly)
+- [x] Implement info window popup on marker click (shows property details with distance)
+- [x] Add property card overlay on map for selected property (bottom-left card with full details)
+- [x] Test distance display with different locations (Hinjawadi: 0.4km, Baner: 5.5km)
+- [x] Test map view with radius search (10km radius circle visible, properties sorted by distance)
+- [x] Save checkpoint with both features

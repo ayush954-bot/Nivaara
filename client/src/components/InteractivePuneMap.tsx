@@ -65,7 +65,7 @@ export default function InteractivePuneMap() {
     };
 
     // Count properties by zone using the zone field from database
-    allProperties.forEach((property) => {
+    allProperties.forEach((property: any) => {
       if (property.zone === 'east_pune') {
         zoneCounts['east-pune']++;
       } else if (property.zone === 'west_pune') {
