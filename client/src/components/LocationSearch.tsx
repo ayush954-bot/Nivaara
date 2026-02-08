@@ -80,6 +80,14 @@ export function LocationSearch({
       setSearchTerm(initialLocation);
     }
   }, [initialLocation]);
+
+  // Update lastCoordinates and radiusKm when initialCoordinates prop changes
+  useEffect(() => {
+    if (initialCoordinates) {
+      setLastCoordinates({ lat: initialCoordinates.lat, lon: initialCoordinates.lon });
+      setRadiusKm(initialCoordinates.radius);
+    }
+  }, [initialCoordinates]);
   const [isUsingCoordinates, setIsUsingCoordinates] = useState(false);
   const [justSelected, setJustSelected] = useState(false);
   const selectedLocationRef = useRef<string>(initialLocation);

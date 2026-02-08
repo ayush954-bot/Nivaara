@@ -2103,3 +2103,8 @@
 
 - [x] Fix homepage search broken - selecting locations like Hinjewadi doesn't show any results (regression from location persistence fix)
 - [x] Fix location still not being retained when navigating from homepage to Properties/Projects pages
+
+## Fix Radius Dropdown When Location is Retained
+
+- [x] Fix radius dropdown not working when location is retained from homepage navigation
+- [x] Changing radius (5km/10km/20km/50km) should update search results on Properties/Projects pages
