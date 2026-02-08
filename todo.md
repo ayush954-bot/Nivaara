@@ -2017,3 +2017,12 @@
 - [x] Test that Dubai property appears in search results (showing 1 property correctly)
 - [x] Test Kharadi search with 5km radius (showing 3 properties with accurate distances)
 - [x] Save checkpoint with search retention fix
+
+## Fix Location Input Display Issue
+
+- [x] Diagnose why location input appears empty after selection (onLocationChange was clearing the input)
+- [x] Fix LocationSearch component to show selected location text (removed onLocationChange call when using coordinates)
+- [x] Test location display on Home page (Dubai Marina displays correctly)
+- [x] Test location display on Properties page (Kharadi displays correctly)
+- [x] Test location display on Projects page (Wagholi displays correctly)
+- [x] Save checkpoint with location input display fix

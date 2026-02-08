@@ -107,10 +107,10 @@ export function LocationSearch({
   const handleSuggestionClick = (suggestion: { area: string; latitude: number; longitude: number }) => {
     setSearchTerm(suggestion.area);
     setShowSuggestions(false);
-    onLocationChange(suggestion.area);
     setGeocodeSuccess(false);
     
     // Use the coordinates from the suggestion instead of geocoding
+    // Don't call onLocationChange here - we're using coordinates, not text search
     setLastCoordinates({ lat: suggestion.latitude, lon: suggestion.longitude });
     onCoordinatesChange(suggestion.latitude, suggestion.longitude, radiusKm);
     setGeocodeSuccess(true);
