@@ -190,17 +190,17 @@ export function LocationSearch({
           {showSuggestions && filteredSuggestions.length > 0 && (
             <div
               ref={suggestionsRef}
-              className="absolute z-50 w-full mt-1 bg-background border rounded-md shadow-lg max-h-60 overflow-auto"
+              className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
             >
               {filteredSuggestions.map((suggestion, index) => (
                 <button
                   key={index}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="w-full px-4 py-2 text-left hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="w-full px-4 py-2 text-left text-gray-900 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{suggestion}</span>
+                    <MapPin className="h-4 w-4 text-gray-600" />
+                    <span className="text-black">{suggestion}</span>
                   </div>
                 </button>
               ))}

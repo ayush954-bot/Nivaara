@@ -1998,3 +1998,11 @@
 - [x] Replace redundant Explore Properties button with relevant CTA (changed to "Schedule Consultation")
 - [x] Test all fixes on homepage (Near Me button visible, dropdown contrast good)
 - [x] Save checkpoint with all UI fixes
+
+## Fix Dropdown Text Color for Visibility
+
+- [x] Update LocationSearch component dropdown styling to use black text
+- [x] Ensure autocomplete suggestions have black text on white background (text-black class added)
+- [x] Test dropdown visibility on mobile devices
+- [x] Test dropdown visibility on desktop (Kharadi and Upper Kharadi suggestions clearly visible)
+- [x] Save checkpoint with dropdown text color fix
