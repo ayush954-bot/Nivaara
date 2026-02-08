@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Partners from "@/components/Partners";
-import { LocationSearch } from "@/components/LocationSearch";
+import { PropertySearchSection } from "@/components/PropertySearchSection";
+import { ProjectSearchSection } from "@/components/ProjectSearchSection";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import FeaturedProjects from "@/components/FeaturedProjects";
 
@@ -47,21 +48,7 @@ export default function Home() {
             Your trusted real estate partner across India and international markets. Every property. Every solution. One name — Nivaara.
           </p>
           
-          {/* Property Search Component */}
-          <div className="max-w-5xl mx-auto mb-8">
-            <LocationSearch
-              onLocationChange={(loc) => {
-                if (loc) {
-                  window.location.href = `/properties?location=${encodeURIComponent(loc)}`;
-                }
-              }}
-              onCoordinatesChange={(lat, lon, radius) => {
-                window.location.href = `/properties?lat=${lat}&lon=${lon}&radius=${radius}`;
-              }}
-              placeholder="Search properties by location..."
-              className=""
-            />
-          </div>
+
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 md:mb-0">
             <Button size="lg" asChild className="text-lg">
@@ -91,8 +78,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Property Search Section */}
+      <section className="py-16 bg-secondary/30">
+        <div className="container">
+          <div className="max-w-4xl mx-auto">
+            <PropertySearchSection />
+          </div>
+        </div>
+      </section>
+
       {/* Featured Properties Section */}
       <FeaturedProperties />
+
+      {/* Project Search Section */}
+      <section className="py-16 bg-background">
+        <div className="container">
+          <div className="max-w-4xl mx-auto">
+            <ProjectSearchSection />
+          </div>
+        </div>
+      </section>
 
       {/* Featured Projects Section */}
       <FeaturedProjects />

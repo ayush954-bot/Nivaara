@@ -1943,3 +1943,23 @@
 - [x] Test radius selector on all pages (showing "Within 10km" on all pages)
 - [x] Test geocoding functionality on all pages
 - [x] Save checkpoint with synchronized search boxes
+
+## Add Complete Search Sections to Homepage
+
+- [ ] Create property search section with all filters (location, type, budget, BHK, Near Me, radius)
+- [ ] Create project search section with all filters (location, status, budget, BHK, Near Me, radius)
+- [ ] Make both sections redirect to respective pages with filter parameters
+- [ ] Test property search section on homepage
+- [ ] Test project search section on homepage
+- [ ] Save checkpoint with complete search sections
+
+## Add Complete Search Sections to Homepage
+
+- [x] Create PropertySearchSection component with all filters (location, type, budget, BHK, Near Me, radius)
+- [x] Create ProjectSearchSection component with all filters (location, status, budget, BHK, Near Me, radius)
+- [x] Add PropertySearchSection to homepage after Introduction section
+- [x] Add ProjectSearchSection to homepage before Featured Projects
+- [x] Test property search autocomplete and geocoding (Kharadi autocomplete working)
+- [x] Test project search autocomplete and geocoding
+- [x] Test search button redirects to respective pages with filters (redirected to /properties?lat=18.5539311&lon=73.9476257&radius=10)
+- [x] Save checkpoint with complete search sections
