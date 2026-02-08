@@ -27,6 +27,7 @@ export default function Properties() {
   // State for zone filter
   const [zoneFilter, setZoneFilter] = useState<string | undefined>(undefined);
   const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
+  const [displayLocationName, setDisplayLocationName] = useState("");
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
 
   // Read zone or location parameter from URL
@@ -57,7 +58,8 @@ export default function Properties() {
         lon: parseFloat(lon),
         radius: parseFloat(radius)
       });
-      setLocationFilter(locationName || "all"); // Use locationName if available
+      setDisplayLocationName(locationName || ""); // Store for display only
+      setLocationFilter("all"); // Keep as "all" for filtering logic
       setZoneFilter(undefined); // Clear zone filter when using coordinates
     }
   }, [location]);
@@ -132,7 +134,7 @@ export default function Properties() {
             }}
             placeholder="Search properties by location..."
             initialCoordinates={coordinates || undefined}
-            initialLocation={locationFilter !== "all" ? locationFilter : ""}
+            initialLocation={displayLocationName || (locationFilter !== "all" ? locationFilter : "")}
             className="max-w-4xl mx-auto mb-4"
           />
 

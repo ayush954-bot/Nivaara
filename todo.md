@@ -2098,3 +2098,8 @@
 - [x] Fix Services page images showing blank (images not loading)
 - [x] Fix Near Me button not working when changing radius (5km/10km)
 - [x] Fix location not persisting when navigating from homepage search to Properties/Projects pages
+
+## Fix Regression Issues from Previous Fix
+
+- [x] Fix homepage search broken - selecting locations like Hinjewadi doesn't show any results (regression from location persistence fix)
+- [x] Fix location still not being retained when navigating from homepage to Properties/Projects pages

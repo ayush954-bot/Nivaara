@@ -33,6 +33,7 @@ export default function Projects() {
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [bhkFilter, setBhkFilter] = useState("all");
   const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
+  const [displayLocationName, setDisplayLocationName] = useState("");
 
   // Read location and coordinate parameters from URL
   useEffect(() => {
@@ -50,7 +51,8 @@ export default function Projects() {
         lon: parseFloat(lonParam),
         radius: parseFloat(radiusParam)
       });
-      setLocationFilter(locationName || "all"); // Use locationName if available
+      setDisplayLocationName(locationName || ""); // Store for display only
+      setLocationFilter("all"); // Keep as "all" for filtering logic
     } else if (locationParam && locationParam !== 'all') {
       // Otherwise use text-based location filter
       setLocationFilter(locationParam);
@@ -130,7 +132,7 @@ export default function Projects() {
             }}
             placeholder="Search projects by location..."
             initialCoordinates={coordinates || undefined}
-            initialLocation={locationFilter !== "all" ? locationFilter : ""}
+            initialLocation={displayLocationName || (locationFilter !== "all" ? locationFilter : "")}
             className="max-w-5xl mx-auto mb-4"
           />
 

@@ -73,6 +73,13 @@ export function LocationSearch({
   const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(
     initialCoordinates ? { lat: initialCoordinates.lat, lon: initialCoordinates.lon } : null
   );
+
+  // Update searchTerm when initialLocation prop changes
+  useEffect(() => {
+    if (initialLocation) {
+      setSearchTerm(initialLocation);
+    }
+  }, [initialLocation]);
   const [isUsingCoordinates, setIsUsingCoordinates] = useState(false);
   const [justSelected, setJustSelected] = useState(false);
   const selectedLocationRef = useRef<string>(initialLocation);
