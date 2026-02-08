@@ -144,12 +144,8 @@ export default function Partners() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-16 h-16 bg-white rounded-lg border border-gray-200 flex items-center justify-center p-2">
-                  <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/YaSGRcsfVpTWHcgn.png" 
-                    alt="Lodha Group"
-                    className="w-full h-full object-contain"
-                  />
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-900">Lodha Group</h4>
@@ -163,12 +159,8 @@ export default function Partners() {
 
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-16 h-16 bg-white rounded-lg border border-gray-200 flex items-center justify-center p-2">
-                  <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/mPgbkcdAQwtnMqgY.png" 
-                    alt="State Bank of India"
-                    className="w-full h-full object-contain"
-                  />
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <Landmark className="w-6 h-6 text-green-600" />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-900">State Bank of India</h4>
@@ -182,12 +174,8 @@ export default function Partners() {
 
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-16 h-16 bg-white rounded-lg border border-gray-200 flex items-center justify-center p-2">
-                  <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/UDxbjCmchkrwVLhv.png" 
-                    alt="Godrej Properties"
-                    className="w-full h-full object-contain"
-                  />
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="ml-4">
                   <h4 className="font-bold text-gray-900">Godrej Properties</h4>

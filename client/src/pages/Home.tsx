@@ -105,59 +105,54 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/NKaLkvvRuqtXHXOS.jpg",
+                icon: HomeIcon,
                 title: "Buy & Sell Properties",
                 description: "Residential and commercial property transactions with trusted builders",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/YLHFkgRcQmMQXdWA.jpg",
+                icon: Building2,
                 title: "Under-Construction Projects",
                 description: "Expert guidance on pre-launch and under-construction developments",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/KbEMaRIjYwCrLnhi.jpg",
+                icon: Key,
                 title: "Rentals",
                 description: "Residential and commercial rental solutions across Pune",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/DacjyBYTMUPcttuM.jpg",
+                icon: TrendingUp,
                 title: "Investment Advisory",
                 description: "Strategic investment planning in Pune's real estate market",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/PEfJyQnARRyIgtBC.jpg",
+                icon: MapPin,
                 title: "Land Deals",
                 description: "Land acquisition and sale with complete legal support",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/xxqlpvhIuOtFXJwc.jpg",
+                icon: Shield,
                 title: "Documentation Support",
                 description: "End-to-end property documentation and legal assistance",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/lWRFnEnDTfnzZRYN.jpg",
+                icon: Building2,
                 title: "Commercial Spaces",
                 description: "Offices, showrooms, and shops in prime locations",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/JOHvqZynlpIyZtYT.jpg",
+                icon: CheckCircle2,
                 title: "Distress Sales",
                 description: "Bank mortgage and distress property solutions",
               },
             ].map((service, index) => (
               <Card 
                 key={index} 
-                className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group overflow-hidden"
+                className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
               >
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={service.image} 
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
-                <CardContent className="pt-4 pb-6">
+                <CardContent className="pt-6">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
+                    <service.icon className="h-7 w-7 text-primary" />
+                  </div>
                   <h3 className="text-lg font-semibold mb-2">{service.title}</h3>
                   <p className="text-sm text-muted-foreground">{service.description}</p>
                 </CardContent>
