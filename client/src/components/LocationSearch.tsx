@@ -35,6 +35,8 @@ export function LocationSearch({
   const [geocodeSuccess, setGeocodeSuccess] = useState(false);
   const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(null);
   const [isUsingCoordinates, setIsUsingCoordinates] = useState(false); // Track if we're using coordinate-based search
+  const [justSelected, setJustSelected] = useState(false); // Track if we just selected a suggestion
+  const selectedLocationRef = useRef<string>(""); // Persist selected location across re-renders
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
@@ -100,6 +102,7 @@ export function LocationSearch({
   }, []);
 
   const handleInputChange = (value: string) => {
+    selectedLocationRef.current = ""; // Clear ref when typing
     setSearchTerm(value);
     setShowSuggestions(true);
     setIsUsingCoordinates(false); // User is typing manually, not using coordinates
@@ -107,10 +110,12 @@ export function LocationSearch({
   };
 
   const handleSuggestionClick = (suggestion: { area: string; latitude: number; longitude: number }) => {
+    selectedLocationRef.current = suggestion.area; // Persist in ref
     setSearchTerm(suggestion.area);
     setShowSuggestions(false);
     setGeocodeSuccess(false);
     setIsUsingCoordinates(true); // Mark that we're using coordinate-based search
+    setJustSelected(true); // Mark that we just selected
     
     // Use the coordinates from the suggestion instead of geocoding
     // Don't call onLocationChange - we're using coordinates, not text search
@@ -118,8 +123,16 @@ export function LocationSearch({
     onCoordinatesChange(suggestion.latitude, suggestion.longitude, radiusKm);
     setGeocodeSuccess(true);
     
-    // Clear success message after 2 seconds
-    setTimeout(() => setGeocodeSuccess(false), 2000);
+    // Blur the input to prevent refocus on mobile
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
+    
+    // Clear success message and justSelected flag after 2 seconds
+    setTimeout(() => {
+      setGeocodeSuccess(false);
+      setJustSelected(false);
+    }, 2000);
   };
 
   const handleNearMe = () => {
@@ -169,9 +182,14 @@ export function LocationSearch({
               ref={inputRef}
               type="text"
               placeholder={placeholder}
-              value={searchTerm}
+              value={selectedLocationRef.current || searchTerm}
               onChange={(e) => handleInputChange(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
+              onFocus={() => {
+                // Don't show suggestions if we just selected one
+                if (!justSelected) {
+                  setShowSuggestions(true);
+                }
+              }}
               className="pl-10 pr-10"
               disabled={isGeocoding}
             />

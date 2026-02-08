@@ -2040,3 +2040,15 @@
 - [x] Test Projects coordinate search from homepage (Baner shows no results correctly, Kharadi shows 4 projects)
 - [x] Test Properties coordinate search from homepage (verified still working with Kharadi)
 - [x] Save checkpoint with complete fixes
+
+## Fix Mobile Location Input Display Issue (Visual Bug)
+
+- [x] Analyze video recording to understand exact issue on mobile (input field shows placeholder after selection)
+- [x] Identify why input field shows placeholder text instead of selected location (component re-render clearing searchTerm state)
+- [x] Check if issue is specific to mobile or affects all devices (affects all devices)
+- [x] Implement fix to ensure selected text remains visible in input field (used selectedLocationRef to persist across re-renders)
+- [x] Test fix on Homepage Properties tab (Kharadi displays correctly)
+- [x] Test fix on Homepage Projects tab (Wagholi displays correctly)
+- [x] Test fix on standalone Properties page (working)
+- [x] Test fix on standalone Projects page (working)
+- [x] Save checkpoint with verified mobile location input fix
