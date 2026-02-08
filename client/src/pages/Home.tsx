@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -48,7 +49,21 @@ export default function Home() {
             Your trusted real estate partner across India and international markets. Every property. Every solution. One name — Nivaara.
           </p>
           
-
+          {/* Search Boxes Overlay */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <Tabs defaultValue="properties" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6 bg-white/20 backdrop-blur-md">
+                <TabsTrigger value="properties" className="text-white data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Find Properties</TabsTrigger>
+                <TabsTrigger value="projects" className="text-white data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Find Projects</TabsTrigger>
+              </TabsList>
+              <TabsContent value="properties" className="bg-white/95 backdrop-blur-md rounded-lg p-6 shadow-2xl">
+                <PropertySearchSection />
+              </TabsContent>
+              <TabsContent value="projects" className="bg-white/95 backdrop-blur-md rounded-lg p-6 shadow-2xl">
+                <ProjectSearchSection />
+              </TabsContent>
+            </Tabs>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 md:mb-0">
             <Button size="lg" asChild className="text-lg">
@@ -78,26 +93,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Property Search Section */}
-      <section className="py-16 bg-secondary/30">
-        <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <PropertySearchSection />
-          </div>
-        </div>
-      </section>
-
       {/* Featured Properties Section */}
       <FeaturedProperties />
-
-      {/* Project Search Section */}
-      <section className="py-16 bg-background">
-        <div className="container">
-          <div className="max-w-4xl mx-auto">
-            <ProjectSearchSection />
-          </div>
-        </div>
-      </section>
 
       {/* Featured Projects Section */}
       <FeaturedProjects />

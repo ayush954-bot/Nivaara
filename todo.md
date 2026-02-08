@@ -1963,3 +1963,20 @@
 - [x] Test project search autocomplete and geocoding
 - [x] Test search button redirects to respective pages with filters (redirected to /properties?lat=18.5539311&lon=73.9476257&radius=10)
 - [x] Save checkpoint with complete search sections
+
+## Distance Display Visibility Issue
+
+- [ ] Check how distance is currently displayed on property cards
+- [ ] Clarify user requirements for distance/nearby property display
+- [ ] Ensure distance shows only when location search is active
+- [ ] Test distance display on Properties page
+- [ ] Save checkpoint if changes are needed
+
+## Move Search Boxes to Hero Section Overlay
+
+- [x] Move PropertySearchSection to hero section as overlay
+- [x] Move ProjectSearchSection to hero section as overlay (using tabs)
+- [x] Add semi-transparent background to search boxes (bg-white/95 with backdrop-blur)
+- [x] Ensure text readability over hero image
+- [x] Test responsive design on mobile and desktop
+- [x] Save checkpoint with new hero layout
