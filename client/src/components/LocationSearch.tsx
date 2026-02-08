@@ -34,6 +34,7 @@ export function LocationSearch({
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodeSuccess, setGeocodeSuccess] = useState(false);
   const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(null);
+  const [isUsingCoordinates, setIsUsingCoordinates] = useState(false); // Track if we're using coordinate-based search
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
@@ -101,6 +102,7 @@ export function LocationSearch({
   const handleInputChange = (value: string) => {
     setSearchTerm(value);
     setShowSuggestions(true);
+    setIsUsingCoordinates(false); // User is typing manually, not using coordinates
     onLocationChange(value);
   };
 
@@ -108,9 +110,10 @@ export function LocationSearch({
     setSearchTerm(suggestion.area);
     setShowSuggestions(false);
     setGeocodeSuccess(false);
+    setIsUsingCoordinates(true); // Mark that we're using coordinate-based search
     
     // Use the coordinates from the suggestion instead of geocoding
-    // Don't call onLocationChange here - we're using coordinates, not text search
+    // Don't call onLocationChange - we're using coordinates, not text search
     setLastCoordinates({ lat: suggestion.latitude, lon: suggestion.longitude });
     onCoordinatesChange(suggestion.latitude, suggestion.longitude, radiusKm);
     setGeocodeSuccess(true);
@@ -131,6 +134,7 @@ export function LocationSearch({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+        setIsUsingCoordinates(true); // Mark that we're using coordinate-based search
         onCoordinatesChange(latitude, longitude, radiusKm);
         setSearchTerm("Near me");
         setIsLocating(false);

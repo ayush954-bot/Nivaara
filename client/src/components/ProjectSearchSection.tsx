@@ -50,7 +50,6 @@ export function ProjectSearchSection() {
         }}
         onCoordinatesChange={(lat, lon, radius) => {
           setCoordinates({ lat, lon, radius });
-          setLocationFilter(""); // Clear text filter when using coordinates
         }}
         placeholder="Search projects by location..."
         className="mb-4"

@@ -50,7 +50,6 @@ export function PropertySearchSection() {
         }}
         onCoordinatesChange={(lat, lon, radius) => {
           setCoordinates({ lat, lon, radius });
-          setLocationFilter(""); // Clear text filter when using coordinates
         }}
         placeholder="Search properties by location..."
         className="mb-4"

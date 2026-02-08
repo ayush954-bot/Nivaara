@@ -2026,3 +2026,17 @@
 - [x] Test location display on Properties page (Kharadi displays correctly)
 - [x] Test location display on Projects page (Wagholi displays correctly)
 - [x] Save checkpoint with location input display fix
+
+## Fix Location Input Display (Still Empty) and Projects Coordinate Filtering
+
+- [x] Investigate why location input still appears empty after selection (calling onLocationChange triggered parent re-render)
+- [x] Check how PropertySearchSection and ProjectSearchSection handle location state (both were clearing locationFilter)
+- [x] Fix location input display to retain selected location text (removed onLocationChange call from handleSuggestionClick)
+- [x] Implement coordinate-based filtering for Projects page (like Properties)
+- [x] Add lat/lon/radius URL parameter reading for Projects page
+- [x] Update Projects backend to support coordinate-based search (already supported, just needed URL param reading)
+- [x] Test location display on Home page (Properties tab - working)
+- [x] Test location display on Home page (Projects tab - Kharadi displays correctly)
+- [x] Test Projects coordinate search from homepage (Baner shows no results correctly, Kharadi shows 4 projects)
+- [x] Test Properties coordinate search from homepage (verified still working with Kharadi)
+- [x] Save checkpoint with complete fixes

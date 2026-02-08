@@ -34,11 +34,23 @@ export default function Projects() {
   const [bhkFilter, setBhkFilter] = useState("all");
   const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
 
-  // Read location parameter from URL
+  // Read location and coordinate parameters from URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const locationParam = params.get('location');
-    if (locationParam && locationParam !== 'all') {
+    const latParam = params.get('lat');
+    const lonParam = params.get('lon');
+    const radiusParam = params.get('radius');
+    
+    // If coordinates are provided, use them
+    if (latParam && lonParam && radiusParam) {
+      setCoordinates({
+        lat: parseFloat(latParam),
+        lon: parseFloat(lonParam),
+        radius: parseFloat(radiusParam)
+      });
+    } else if (locationParam && locationParam !== 'all') {
+      // Otherwise use text-based location filter
       setLocationFilter(locationParam);
     }
   }, [location]);
@@ -113,7 +125,6 @@ export default function Projects() {
             }}
             onCoordinatesChange={(lat, lon, radius) => {
               setCoordinates({ lat, lon, radius });
-              setLocationFilter("all"); // Clear text filter when using coordinates
             }}
             placeholder="Search projects by location..."
             className="max-w-5xl mx-auto mb-4"
