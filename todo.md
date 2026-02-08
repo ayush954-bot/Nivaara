@@ -1933,3 +1933,13 @@
 - [x] Test distance display with different locations (Hinjawadi: 0.4km, Baner: 5.5km)
 - [x] Test map view with radius search (10km radius circle visible, properties sorted by distance)
 - [x] Save checkpoint with both features
+
+## Synchronize Search Boxes Across Pages
+
+- [x] Replace homepage PropertySearch with enhanced LocationSearch component
+- [x] Add enhanced LocationSearch to Projects page (already had it)
+- [x] Ensure all three pages (Home, Properties, Projects) use the same search component
+- [x] Test Near Me button on all pages (visible on Home, Properties, Projects)
+- [x] Test radius selector on all pages (showing "Within 10km" on all pages)
+- [x] Test geocoding functionality on all pages
+- [x] Save checkpoint with synchronized search boxes

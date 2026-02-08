@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Partners from "@/components/Partners";
-import PropertySearch from "@/components/PropertySearch";
+import { LocationSearch } from "@/components/LocationSearch";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import FeaturedProjects from "@/components/FeaturedProjects";
 
@@ -49,7 +49,18 @@ export default function Home() {
           
           {/* Property Search Component */}
           <div className="max-w-5xl mx-auto mb-8">
-            <PropertySearch variant="hero" />
+            <LocationSearch
+              onLocationChange={(loc) => {
+                if (loc) {
+                  window.location.href = `/properties?location=${encodeURIComponent(loc)}`;
+                }
+              }}
+              onCoordinatesChange={(lat, lon, radius) => {
+                window.location.href = `/properties?lat=${lat}&lon=${lon}&radius=${radius}`;
+              }}
+              placeholder="Search properties by location..."
+              className=""
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 md:mb-0">
