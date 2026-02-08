@@ -1,17 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-// Service images from CDN
+// Service images from CDN (matching homepage)
 const SERVICE_IMAGES = {
-  home: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-buy-sell.jpg",
-  construction: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-construction.jpg",
-  luxury: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-investment.jpg",
-  rental: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-rental.jpg",
-  land: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-land.jpg",
-  commercial: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-commercial.jpg",
-  distress: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-distress.jpg",
-  documentation: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-documentation.jpg",
-  investment: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-investment.jpg",
+  home: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/NKaLkvvRuqtXHXOS.jpg",
+  construction: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/YLHFkgRcQmMQXdWA.jpg",
+  luxury: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/DacjyBYTMUPcttuM.jpg",
+  rental: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/KbEMaRIjYwCrLnhi.jpg",
+  land: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/PEfJyQnARRyIgtBC.jpg",
+  commercial: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/lWRFnEnDTfnzZRYN.jpg",
+  distress: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/JOHvqZynlpIyZtYT.jpg",
+  documentation: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/xxqlpvhIuOtFXJwc.jpg",
+  investment: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/DacjyBYTMUPcttuM.jpg",
 };
 
 export default function Services() {

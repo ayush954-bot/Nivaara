@@ -49,6 +49,7 @@ export default function Properties() {
     const lat = params.get('lat');
     const lon = params.get('lon');
     const radius = params.get('radius');
+    const locationName = params.get('locationName');
     
     if (lat && lon && radius) {
       setCoordinates({
@@ -56,7 +57,7 @@ export default function Properties() {
         lon: parseFloat(lon),
         radius: parseFloat(radius)
       });
-      setLocationFilter("all"); // Clear text filter when using coordinates
+      setLocationFilter(locationName || "all"); // Use locationName if available
       setZoneFilter(undefined); // Clear zone filter when using coordinates
     }
   }, [location]);
@@ -130,6 +131,8 @@ export default function Properties() {
               setZoneFilter(undefined); // Clear zone filter when using coordinates
             }}
             placeholder="Search properties by location..."
+            initialCoordinates={coordinates || undefined}
+            initialLocation={locationFilter !== "all" ? locationFilter : ""}
             className="max-w-4xl mx-auto mb-4"
           />
 

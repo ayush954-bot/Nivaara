@@ -16,6 +16,7 @@ export function ProjectSearchSection() {
   const [budgetFilter, setBudgetFilter] = useState("all");
   const [bhkFilter, setBhkFilter] = useState("all");
   const [coordinates, setCoordinates] = useState<{ lat: number; lon: number; radius: number } | null>(null);
+  const [locationName, setLocationName] = useState("");
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -24,6 +25,9 @@ export function ProjectSearchSection() {
       params.set("lat", coordinates.lat.toString());
       params.set("lon", coordinates.lon.toString());
       params.set("radius", coordinates.radius.toString());
+      if (locationName) {
+        params.set("locationName", locationName);
+      }
     } else if (locationFilter && locationFilter !== "all") {
       params.set("location", locationFilter);
     }
@@ -50,6 +54,9 @@ export function ProjectSearchSection() {
         }}
         onCoordinatesChange={(lat, lon, radius) => {
           setCoordinates({ lat, lon, radius });
+        }}
+        onLocationNameChange={(name) => {
+          setLocationName(name);
         }}
         placeholder="Search projects by location..."
         className="mb-4"

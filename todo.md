@@ -2092,3 +2092,9 @@
 - [x] Add hover zoom effect to service images
 - [x] Test all 9 service cards display images correctly
 - [x] Verify layout and styling matches homepage design
+
+## Fix Critical User-Reported Issues
+
+- [x] Fix Services page images showing blank (images not loading)
+- [x] Fix Near Me button not working when changing radius (5km/10km)
+- [x] Fix location not persisting when navigating from homepage search to Properties/Projects pages

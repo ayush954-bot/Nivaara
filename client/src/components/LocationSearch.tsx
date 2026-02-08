@@ -45,29 +45,37 @@ interface PlaceSuggestion {
 interface LocationSearchProps {
   onLocationChange: (location: string) => void;
   onCoordinatesChange: (lat: number, lon: number, radius: number) => void;
+  onLocationNameChange?: (name: string) => void;
   placeholder?: string;
   className?: string;
   nearMeButtonVariant?: "default" | "outline";
+  initialLocation?: string;
+  initialCoordinates?: { lat: number; lon: number; radius: number };
 }
 
 export function LocationSearch({
   onLocationChange,
   onCoordinatesChange,
+  onLocationNameChange,
   placeholder = "Search location...",
   className = "",
   nearMeButtonVariant = "outline",
+  initialLocation = "",
+  initialCoordinates,
 }: LocationSearchProps) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(initialLocation);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [radiusKm, setRadiusKm] = useState<number>(10);
+  const [radiusKm, setRadiusKm] = useState<number>(initialCoordinates?.radius || 10);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState<string>("");
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodeSuccess, setGeocodeSuccess] = useState(false);
-  const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(null);
+  const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(
+    initialCoordinates ? { lat: initialCoordinates.lat, lon: initialCoordinates.lon } : null
+  );
   const [isUsingCoordinates, setIsUsingCoordinates] = useState(false);
   const [justSelected, setJustSelected] = useState(false);
-  const selectedLocationRef = useRef<string>("");
+  const selectedLocationRef = useRef<string>(initialLocation);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const [placeSuggestions, setPlaceSuggestions] = useState<PlaceSuggestion[]>([]);
@@ -177,6 +185,11 @@ export function LocationSearch({
     setJustSelected(true);
     setPlaceSuggestions([]);
     
+    // Notify parent about location name
+    if (onLocationNameChange) {
+      onLocationNameChange(suggestion.description);
+    }
+    
     // Geocode the selected place to get coordinates
     geocodePlaceById(suggestion.placeId, suggestion.description);
     
@@ -202,9 +215,11 @@ export function LocationSearch({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
+        setLastCoordinates({ lat: latitude, lon: longitude }); // Save coordinates for radius changes
         setIsUsingCoordinates(true); // Mark that we're using coordinate-based search
         onCoordinatesChange(latitude, longitude, radiusKm);
         setSearchTerm("Near me");
+        selectedLocationRef.current = "Near me"; // Persist the text
         setIsLocating(false);
       },
       (error) => {

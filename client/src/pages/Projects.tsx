@@ -41,6 +41,7 @@ export default function Projects() {
     const latParam = params.get('lat');
     const lonParam = params.get('lon');
     const radiusParam = params.get('radius');
+    const locationName = params.get('locationName');
     
     // If coordinates are provided, use them
     if (latParam && lonParam && radiusParam) {
@@ -49,6 +50,7 @@ export default function Projects() {
         lon: parseFloat(lonParam),
         radius: parseFloat(radiusParam)
       });
+      setLocationFilter(locationName || "all"); // Use locationName if available
     } else if (locationParam && locationParam !== 'all') {
       // Otherwise use text-based location filter
       setLocationFilter(locationParam);
@@ -127,6 +129,8 @@ export default function Projects() {
               setCoordinates({ lat, lon, radius });
             }}
             placeholder="Search projects by location..."
+            initialCoordinates={coordinates || undefined}
+            initialLocation={locationFilter !== "all" ? locationFilter : ""}
             className="max-w-5xl mx-auto mb-4"
           />
 
