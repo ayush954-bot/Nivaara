@@ -1980,3 +1980,21 @@
 - [x] Ensure text readability over hero image
 - [x] Test responsive design on mobile and desktop
 - [x] Save checkpoint with new hero layout
+
+## Hero Search UI Fixes
+
+- [ ] Make Near Me button more visible in hero search
+- [ ] Fix location dropdown color contrast for better visibility
+- [ ] Ensure search parameters are retained when clicking Search buttons
+- [ ] Replace redundant "Explore Properties" button with relevant CTA
+- [ ] Test all fixes thoroughly
+- [ ] Save checkpoint with UI improvements
+
+## Hero Search UI Fixes
+
+- [x] Make Near Me button more visible with better contrast (now using default/primary variant)
+- [x] Fix location dropdown color contrast for better visibility (white background with dark text)
+- [x] Ensure search parameters are retained when clicking Search buttons (already working correctly)
+- [x] Replace redundant Explore Properties button with relevant CTA (changed to "Schedule Consultation")
+- [x] Test all fixes on homepage (Near Me button visible, dropdown contrast good)
+- [x] Save checkpoint with all UI fixes

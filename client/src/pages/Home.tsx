@@ -66,11 +66,8 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 md:mb-0">
-            <Button size="lg" asChild className="text-lg">
-              <Link href="/properties">Explore Properties</Link>
-            </Button>
             <Button size="lg" variant="outline" asChild className="text-lg bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white/20">
-              <Link href="/contact">Contact Us</Link>
+              <Link href="/contact">Schedule Consultation</Link>
             </Button>
           </div>
         </div>

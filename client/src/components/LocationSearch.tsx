@@ -16,6 +16,7 @@ interface LocationSearchProps {
   onCoordinatesChange: (lat: number, lon: number, radius: number) => void;
   placeholder?: string;
   className?: string;
+  nearMeButtonVariant?: "default" | "outline";
 }
 
 export function LocationSearch({
@@ -23,6 +24,7 @@ export function LocationSearch({
   onCoordinatesChange,
   placeholder = "Search location...",
   className = "",
+  nearMeButtonVariant = "outline",
 }: LocationSearchProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -224,10 +226,10 @@ export function LocationSearch({
 
         {/* Near Me Button */}
         <Button
-          variant="outline"
+          variant={nearMeButtonVariant}
           onClick={handleNearMe}
           disabled={isLocating}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 whitespace-nowrap"
         >
           {isLocating ? (
             <Loader2 className="h-4 w-4 animate-spin" />

@@ -54,6 +54,7 @@ export function PropertySearchSection() {
         }}
         placeholder="Search properties by location..."
         className="mb-4"
+        nearMeButtonVariant="default"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
