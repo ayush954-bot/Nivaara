@@ -9,7 +9,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { trpc } from "@/lib/trpc";
+
+// Google Maps API configuration
+const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
+const FORGE_BASE_URL = import.meta.env.VITE_FRONTEND_FORGE_API_URL || "https://forge.butterfly-effect.dev";
+const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+
+// Load Google Maps script
+function loadMapScript() {
+  return new Promise<void>((resolve) => {
+    if (window.google?.maps) {
+      resolve();
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places,geocoding`;
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.onload = () => {
+      resolve();
+      script.remove();
+    };
+    script.onerror = () => {
+      console.error("Failed to load Google Maps script");
+    };
+    document.head.appendChild(script);
+  });
+}
+
+interface PlaceSuggestion {
+  description: string;
+  placeId: string;
+}
 
 interface LocationSearchProps {
   onLocationChange: (location: string) => void;
@@ -34,42 +65,54 @@ export function LocationSearch({
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [geocodeSuccess, setGeocodeSuccess] = useState(false);
   const [lastCoordinates, setLastCoordinates] = useState<{ lat: number; lon: number } | null>(null);
-  const [isUsingCoordinates, setIsUsingCoordinates] = useState(false); // Track if we're using coordinate-based search
-  const [justSelected, setJustSelected] = useState(false); // Track if we just selected a suggestion
-  const selectedLocationRef = useRef<string>(""); // Persist selected location across re-renders
+  const [isUsingCoordinates, setIsUsingCoordinates] = useState(false);
+  const [justSelected, setJustSelected] = useState(false);
+  const selectedLocationRef = useRef<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const [placeSuggestions, setPlaceSuggestions] = useState<PlaceSuggestion[]>([]);
+  const [isLoadingPlaces, setIsLoadingPlaces] = useState(false);
+  const autocompleteServiceRef = useRef<google.maps.places.AutocompleteService | null>(null);
+  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
 
-  // Fetch location suggestions with coordinates
-  const { data: suggestions = [] } = trpc.properties.locationSuggestions.useQuery();
-  
-  // State for triggering geocode
-  const [locationToGeocode, setLocationToGeocode] = useState<string | null>(null);
-  
-  // Geocode query (only runs when locationToGeocode is set)
-  const { data: geocodeData, isLoading: isGeocodeLoading } = trpc.properties.geocode.useQuery(
-    { location: locationToGeocode! },
-    { enabled: !!locationToGeocode }
-  );
-  
-  // Update geocoding state based on query status
+  // Initialize Google Maps services
   useEffect(() => {
-    setIsGeocoding(isGeocodeLoading);
-  }, [isGeocodeLoading]);
+    loadMapScript().then(() => {
+      if (window.google?.maps) {
+        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService();
+        geocoderRef.current = new window.google.maps.Geocoder();
+      }
+    });
+  }, []);
   
-  // Effect to handle geocode results
+  // Fetch place suggestions from Google Maps
   useEffect(() => {
-    if (geocodeData && geocodeData.lat && geocodeData.lng && locationToGeocode) {
-      setLastCoordinates({ lat: geocodeData.lat, lon: geocodeData.lng });
-      onCoordinatesChange(geocodeData.lat, geocodeData.lng, radiusKm);
-      setLocationToGeocode(null); // Reset after processing
-      setGeocodeSuccess(true);
-      
-      // Clear success message after 2 seconds
-      const timer = setTimeout(() => setGeocodeSuccess(false), 2000);
-      return () => clearTimeout(timer);
+    if (!searchTerm || !autocompleteServiceRef.current) {
+      setPlaceSuggestions([]);
+      return;
     }
-  }, [geocodeData, locationToGeocode, radiusKm, onCoordinatesChange]);
+    
+    setIsLoadingPlaces(true);
+    autocompleteServiceRef.current.getPlacePredictions(
+      {
+        input: searchTerm,
+        types: ['(regions)'], // Focus on cities, neighborhoods, and areas
+      },
+      (predictions, status) => {
+        setIsLoadingPlaces(false);
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+          setPlaceSuggestions(
+            predictions.map(p => ({
+              description: p.description,
+              placeId: p.place_id,
+            }))
+          );
+        } else {
+          setPlaceSuggestions([]);
+        }
+      }
+    );
+  }, [searchTerm]);
   
   // Effect to update search when radius changes (if we have coordinates)
   useEffect(() => {
@@ -79,10 +122,27 @@ export function LocationSearch({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [radiusKm]);
 
-  // Filter suggestions based on search term
-  const filteredSuggestions = suggestions.filter((suggestion) =>
-    suggestion.area.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Geocode a place by place ID
+  const geocodePlaceById = async (placeId: string, description: string) => {
+    if (!geocoderRef.current) return;
+    
+    setIsGeocoding(true);
+    geocoderRef.current.geocode({ placeId }, (results, status) => {
+      setIsGeocoding(false);
+      if (status === 'OK' && results && results[0]) {
+        const location = results[0].geometry.location;
+        const lat = location.lat();
+        const lng = location.lng();
+        setLastCoordinates({ lat, lon: lng });
+        onCoordinatesChange(lat, lng, radiusKm);
+        setGeocodeSuccess(true);
+        
+        setTimeout(() => setGeocodeSuccess(false), 2000);
+      } else {
+        setLocationError('Failed to get coordinates for this location');
+      }
+    });
+  };
 
   // Handle click outside to close suggestions
   useEffect(() => {
@@ -109,28 +169,23 @@ export function LocationSearch({
     onLocationChange(value);
   };
 
-  const handleSuggestionClick = (suggestion: { area: string; latitude: number; longitude: number }) => {
-    selectedLocationRef.current = suggestion.area; // Persist in ref
-    setSearchTerm(suggestion.area);
+  const handleSuggestionClick = (suggestion: PlaceSuggestion) => {
+    selectedLocationRef.current = suggestion.description;
+    setSearchTerm(suggestion.description);
     setShowSuggestions(false);
-    setGeocodeSuccess(false);
-    setIsUsingCoordinates(true); // Mark that we're using coordinate-based search
-    setJustSelected(true); // Mark that we just selected
+    setIsUsingCoordinates(true);
+    setJustSelected(true);
+    setPlaceSuggestions([]);
     
-    // Use the coordinates from the suggestion instead of geocoding
-    // Don't call onLocationChange - we're using coordinates, not text search
-    setLastCoordinates({ lat: suggestion.latitude, lon: suggestion.longitude });
-    onCoordinatesChange(suggestion.latitude, suggestion.longitude, radiusKm);
-    setGeocodeSuccess(true);
+    // Geocode the selected place to get coordinates
+    geocodePlaceById(suggestion.placeId, suggestion.description);
     
     // Blur the input to prevent refocus on mobile
     if (inputRef.current) {
       inputRef.current.blur();
     }
     
-    // Clear success message and justSelected flag after 2 seconds
     setTimeout(() => {
-      setGeocodeSuccess(false);
       setJustSelected(false);
     }, 2000);
   };
@@ -214,20 +269,20 @@ export function LocationSearch({
           </div>
 
           {/* Autocomplete Suggestions */}
-          {showSuggestions && filteredSuggestions.length > 0 && (
+          {showSuggestions && placeSuggestions.length > 0 && (
             <div
               ref={suggestionsRef}
               className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
             >
-              {filteredSuggestions.map((suggestion, index) => (
+              {placeSuggestions.map((suggestion, index) => (
                 <button
-                  key={index}
+                  key={suggestion.placeId}
                   onClick={() => handleSuggestionClick(suggestion)}
                   className="w-full px-4 py-2 text-left text-gray-900 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-gray-600" />
-                    <span className="text-black">{suggestion.area}</span>
+                    <span className="text-black">{suggestion.description}</span>
                   </div>
                 </button>
               ))}

@@ -2062,3 +2062,15 @@
 - [x] Test on Homepage Projects tab (text now visible)
 - [x] Test on desktop browser (text now visible)
 - [x] Save checkpoint with text visibility fix
+
+## Replace Database Location Autocomplete with Google Maps Places Autocomplete
+
+- [x] Research Google Maps Places Autocomplete API integration (using Manus Maps proxy)
+- [x] Implement Google Maps Places Autocomplete in LocationSearch component (using AutocompleteService)
+- [x] Remove database-based getLocationSuggestions endpoint (replaced with Maps API)
+- [x] Update LocationSearch to use Maps API for suggestions instead of database (using getPlacePredictions)
+- [x] Test searching for any location (Koregaon Park shows correct suggestions, Mumbai Central shows multiple options)
+- [x] Verify radius filtering works for any searched location (Koregaon Park shows 3 properties within 10km)
+- [x] Verify distance calculations are accurate (5.3 km, 5.5 km, 6.0 km from Koregaon Park)
+- [x] Test with locations that have no properties nearby (Mumbai Central correctly shows "No properties found")
+- [x] Save checkpoint with Maps-based location autocomplete
