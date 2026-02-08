@@ -2006,3 +2006,14 @@
 - [x] Test dropdown visibility on mobile devices
 - [x] Test dropdown visibility on desktop (Kharadi and Upper Kharadi suggestions clearly visible)
 - [x] Save checkpoint with dropdown text color fix
+
+## Fix Search Retention Issue - Dubai Property Not Showing
+
+- [x] Test Dubai search from homepage to diagnose the issue
+- [x] Check if search parameters are properly passed in URL (lat/lon/radius passed correctly)
+- [x] Verify Dubai property exists in database (confirmed: Dubai Marina property)
+- [x] Fix getLocationSuggestions to return area names WITH coordinates from database
+- [x] Fix Properties page to read lat/lon/radius from URL parameters
+- [x] Test that Dubai property appears in search results (showing 1 property correctly)
+- [x] Test Kharadi search with 5km radius (showing 3 properties with accurate distances)
+- [x] Save checkpoint with search retention fix

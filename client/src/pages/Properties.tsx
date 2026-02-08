@@ -44,6 +44,21 @@ export default function Properties() {
     if (locationParam && locationParam !== 'all') {
       setLocationFilter(locationParam);
     }
+    
+    // Check for coordinate-based search parameters (lat, lon, radius)
+    const lat = params.get('lat');
+    const lon = params.get('lon');
+    const radius = params.get('radius');
+    
+    if (lat && lon && radius) {
+      setCoordinates({
+        lat: parseFloat(lat),
+        lon: parseFloat(lon),
+        radius: parseFloat(radius)
+      });
+      setLocationFilter("all"); // Clear text filter when using coordinates
+      setZoneFilter(undefined); // Clear zone filter when using coordinates
+    }
   }, [location]);
 
   // Reset BHK filter when switching to non-residential property types

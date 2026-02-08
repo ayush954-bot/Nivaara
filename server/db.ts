@@ -1014,28 +1014,59 @@ export async function deleteAllProjectVideos(projectId: number) {
 
 
 /**
- * Get unique location suggestions for autocomplete
+ * Get unique location suggestions for autocomplete with coordinates
  */
 export async function getLocationSuggestions() {
   const db = await getDb();
   if (!db) return [];
 
-  // Get all unique locations from properties and projects
+  // Get all properties and projects with their coordinates
   const [propertiesData, projectsData] = await Promise.all([
-    db.select({ location: properties.location }).from(properties),
-    db.select({ location: projects.location }).from(projects),
+    db.select({ 
+      location: properties.location, 
+      area: properties.area,
+      latitude: properties.latitude,
+      longitude: properties.longitude
+    }).from(properties),
+    db.select({ 
+      location: projects.location,
+      latitude: projects.latitude,
+      longitude: projects.longitude
+    }).from(projects),
   ]);
 
-  const allLocations = [
-    ...propertiesData.map((p) => p.location),
-    ...projectsData.map((p) => p.location),
-  ];
+  // Combine all data
+  const allData = [...propertiesData, ...projectsData];
 
-  // Extract areas from addresses
-  const { getUniqueAreas } = await import('./locationUtils');
-  const uniqueAreas = getUniqueAreas(allLocations);
+  // Group by area and calculate average coordinates
+  const areaMap = new Map<string, { lat: number[], lon: number[] }>();
+  
+  for (const item of allData) {
+    const area: string | undefined = ('area' in item && item.area) ? String(item.area) : item.location?.split(',')[0]?.trim();
+    if (!area) continue;
+    
+    if (!areaMap.has(area)) {
+      areaMap.set(area, { lat: [], lon: [] });
+    }
+    
+    const coords = areaMap.get(area)!;
+    if (item.latitude && item.longitude) {
+      coords.lat.push(parseFloat(item.latitude));
+      coords.lon.push(parseFloat(item.longitude));
+    }
+  }
 
-  return uniqueAreas;
+  // Calculate average coordinates for each area
+  const suggestions = Array.from(areaMap.entries())
+    .filter(([_, coords]) => coords.lat.length > 0) // Only include areas with coordinates
+    .map(([area, coords]) => ({
+      area,
+      latitude: coords.lat.reduce((a, b) => a + b, 0) / coords.lat.length,
+      longitude: coords.lon.reduce((a, b) => a + b, 0) / coords.lon.length,
+    }))
+    .sort((a, b) => a.area.localeCompare(b.area));
+
+  return suggestions;
 }
 
 

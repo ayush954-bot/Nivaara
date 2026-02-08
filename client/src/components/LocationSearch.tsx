@@ -37,7 +37,7 @@ export function LocationSearch({
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch location suggestions
+  // Fetch location suggestions with coordinates
   const { data: suggestions = [] } = trpc.properties.locationSuggestions.useQuery();
   
   // State for triggering geocode
@@ -78,7 +78,7 @@ export function LocationSearch({
 
   // Filter suggestions based on search term
   const filteredSuggestions = suggestions.filter((suggestion) =>
-    suggestion.toLowerCase().includes(searchTerm.toLowerCase())
+    suggestion.area.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle click outside to close suggestions
@@ -104,14 +104,19 @@ export function LocationSearch({
     onLocationChange(value);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setSearchTerm(suggestion);
+  const handleSuggestionClick = (suggestion: { area: string; latitude: number; longitude: number }) => {
+    setSearchTerm(suggestion.area);
     setShowSuggestions(false);
-    onLocationChange(suggestion);
+    onLocationChange(suggestion.area);
     setGeocodeSuccess(false);
     
-    // Trigger geocoding for the selected location
-    setLocationToGeocode(suggestion);
+    // Use the coordinates from the suggestion instead of geocoding
+    setLastCoordinates({ lat: suggestion.latitude, lon: suggestion.longitude });
+    onCoordinatesChange(suggestion.latitude, suggestion.longitude, radiusKm);
+    setGeocodeSuccess(true);
+    
+    // Clear success message after 2 seconds
+    setTimeout(() => setGeocodeSuccess(false), 2000);
   };
 
   const handleNearMe = () => {
@@ -200,7 +205,7 @@ export function LocationSearch({
                 >
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-gray-600" />
-                    <span className="text-black">{suggestion}</span>
+                    <span className="text-black">{suggestion.area}</span>
                   </div>
                 </button>
               ))}
