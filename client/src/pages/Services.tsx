@@ -1,22 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import {
-  Building2,
-  FileText,
-  Home,
-  Key,
-  Landmark,
-  MapPin,
-  ShieldCheck,
-  Store,
-  TrendingUp,
-} from "lucide-react";
+// Service images from CDN
+const SERVICE_IMAGES = {
+  home: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-buy-sell.jpg",
+  construction: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-construction.jpg",
+  luxury: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-investment.jpg",
+  rental: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-rental.jpg",
+  land: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-land.jpg",
+  commercial: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-commercial.jpg",
+  distress: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-distress.jpg",
+  documentation: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-documentation.jpg",
+  investment: "https://cdn.manus.space/manus-public/user-upload/a5b2c3d4-e5f6-7890-abcd-ef1234567890/service-investment.jpg",
+};
 
 export default function Services() {
   const services = [
     {
-      icon: Home,
+      image: SERVICE_IMAGES.home,
       title: "Residential Buy & Sell",
       description: "Complete assistance in buying and selling residential properties across Pune. We work with top builders and have access to premium residential projects, ensuring you get the best options that match your requirements and budget.",
       features: [
@@ -27,7 +28,7 @@ export default function Services() {
       ],
     },
     {
-      icon: Building2,
+      image: SERVICE_IMAGES.construction,
       title: "Under-Construction Project Expertise",
       description: "Specialized guidance for under-construction and pre-launch projects. We help you navigate the complexities of buying properties that are still being built, ensuring you make informed decisions with complete transparency.",
       features: [
@@ -38,7 +39,7 @@ export default function Services() {
       ],
     },
     {
-      icon: ShieldCheck,
+      image: SERVICE_IMAGES.luxury,
       title: "Luxury & Premium Projects",
       description: "Exclusive access to luxury residential developments and premium properties in Pune's most sought-after locations. Our network includes the city's finest builders and developers.",
       features: [
@@ -49,7 +50,7 @@ export default function Services() {
       ],
     },
     {
-      icon: Key,
+      image: SERVICE_IMAGES.rental,
       title: "Residential & Commercial Rentals",
       description: "Comprehensive rental solutions for both residential and commercial properties. Whether you're looking to rent or lease out a property, we match the right tenants with the right spaces.",
       features: [
@@ -60,7 +61,7 @@ export default function Services() {
       ],
     },
     {
-      icon: MapPin,
+      image: SERVICE_IMAGES.land,
       title: "Land Deals",
       description: "Expert guidance on land acquisition and sale across Pune. We help you identify land parcels with high potential, conduct due diligence, and complete transactions with complete legal compliance.",
       features: [
@@ -71,7 +72,7 @@ export default function Services() {
       ],
     },
     {
-      icon: Store,
+      image: SERVICE_IMAGES.commercial,
       title: "Commercial Property Sales",
       description: "Specialized services for commercial real estate including offices, showrooms, and retail spaces. We understand the unique requirements of commercial buyers and provide tailored solutions.",
       features: [
@@ -82,7 +83,7 @@ export default function Services() {
       ],
     },
     {
-      icon: Landmark,
+      image: SERVICE_IMAGES.distress,
       title: "Bank Mortgage & Distress Sales",
       description: "Assistance with bank-mortgaged properties and distress sales. We help buyers find value opportunities and support sellers in navigating complex situations with sensitivity and professionalism.",
       features: [
@@ -93,7 +94,7 @@ export default function Services() {
       ],
     },
     {
-      icon: FileText,
+      image: SERVICE_IMAGES.documentation,
       title: "Property Documentation Support",
       description: "End-to-end documentation assistance for all property transactions. Our team ensures all paperwork is accurate, complete, and legally compliant, giving you peace of mind.",
       features: [
@@ -104,7 +105,7 @@ export default function Services() {
       ],
     },
     {
-      icon: TrendingUp,
+      image: SERVICE_IMAGES.investment,
       title: "Investment Strategy & Consultation",
       description: "Strategic investment advisory for Pune's real estate market. We help you identify high-potential investment opportunities based on market trends, location analysis, and growth projections.",
       features: [
@@ -135,9 +136,15 @@ export default function Services() {
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="hover:shadow-lg transition-shadow overflow-hidden">
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
                 <CardHeader>
-                  <service.icon className="h-12 w-12 text-primary mb-4" />
                   <CardTitle className="text-xl">{service.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
