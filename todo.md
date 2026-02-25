@@ -2108,3 +2108,19 @@
 
 - [x] Fix radius dropdown not working when location is retained from homepage navigation
 - [x] Changing radius (5km/10km/20km/50km) should update search results on Properties/Projects pages
+
+## Replace Icon Placeholders with Professional Images
+
+- [ ] Replace Real Estate Expertise icon (About Us page) with professional image
+- [ ] Replace Technology Innovation icon (About Us page) with professional image
+- [ ] Replace Client-First Mindset icon (About Us page) with professional image
+- [ ] Replace Our Mission icon (About Us page) with professional image
+- [ ] Replace Our Vision icon (About Us page) with professional image
+- [ ] Replace Trust & Transparency icon (About Us page) with professional image
+- [ ] Replace Expert Network icon (About Us page) with professional image
+- [ ] Replace End-to-End Support icon (About Us page) with professional image
+- [ ] Replace Builder Partners icon (About Us page) with professional image
+- [ ] Replace Bank Tie-ups icon (About Us page) with professional image
+- [ ] Replace International Markets icon (Locations page) with professional image
+- [ ] Replace EMI Calculator icon (Tools/Features page) with professional image
+- [ ] Test all updated pages to ensure visual consistency and no broken functionality

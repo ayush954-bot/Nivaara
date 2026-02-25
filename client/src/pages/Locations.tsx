@@ -74,7 +74,13 @@ export default function Locations() {
       <section className="py-16 bg-background">
         <div className="container">
           <div className="text-center mb-12">
-            <Globe className="h-16 w-16 text-primary mx-auto mb-4" />
+            <div className="relative w-32 h-32 mx-auto mb-4 rounded-xl overflow-hidden">
+              <img 
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/eQAFLEBMPjJVoQxw.jpg" 
+                alt="International Markets" 
+                className="w-full h-full object-cover"
+              />
+            </div>
             <h2 className="text-4xl font-bold mb-4 text-foreground">International Markets</h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Expanding our expertise beyond India to serve clients in premium international real estate markets

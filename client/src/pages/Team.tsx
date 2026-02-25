@@ -108,8 +108,12 @@ export default function Team() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-                  <Award className="h-8 w-8 text-primary" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/kBfpYGUWyKeIsNdP.jpg" 
+                    alt="Real Estate Expertise" 
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Real Estate Expertise</h3>
                 <p className="text-muted-foreground">
@@ -117,8 +121,12 @@ export default function Team() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-                  <Code className="h-8 w-8 text-primary" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/dBqEzBqyJzdLJItB.webp" 
+                    alt="Technology Innovation" 
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Technology Innovation</h3>
                 <p className="text-muted-foreground">
@@ -126,8 +134,12 @@ export default function Team() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-                  <Heart className="h-8 w-8 text-primary" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/uNSCGMDSPRAHnMSW.jpg" 
+                    alt="Client-First Mindset" 
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Client-First Mindset</h3>
                 <p className="text-muted-foreground">

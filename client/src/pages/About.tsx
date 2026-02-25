@@ -42,7 +42,13 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <Card>
               <CardContent className="pt-6">
-                <Target className="h-12 w-12 text-primary mb-4" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/leKcGoumIsCmLZSg.jpg" 
+                    alt="Our Mission" 
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
                 <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
                 <p className="text-muted-foreground">
                   To provide comprehensive, transparent, and client-focused real estate solutions that empower individuals and businesses to make confident property decisions in Pune's dynamic market.
@@ -52,7 +58,13 @@ export default function About() {
 
             <Card>
               <CardContent className="pt-6">
-                <Award className="h-12 w-12 text-primary mb-4" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/leKcGoumIsCmLZSg.jpg" 
+                    alt="Our Vision" 
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
                 <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
                 <p className="text-muted-foreground">
                   To be recognized as Pune's most trusted real estate consultancy, known for our integrity, market expertise, and unwavering commitment to client success.

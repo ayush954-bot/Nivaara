@@ -181,29 +181,33 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: Shield,
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/pxRDrkDJHXdPOHOy.png",
                 title: "Trust & Transparency",
                 description: "Complete transparency in every transaction with verified properties and honest guidance",
               },
               {
-                icon: Users,
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/kBfpYGUWyKeIsNdP.jpg",
                 title: "Expert Network",
                 description: "Strong relationships with top builders and comprehensive market knowledge",
               },
               {
-                icon: CheckCircle2,
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/uNSCGMDSPRAHnMSW.jpg",
                 title: "End-to-End Support",
                 description: "From search to paperwork, we manage everything for a seamless experience",
               },
               {
-                icon: TrendingUp,
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/kBfpYGUWyKeIsNdP.jpg",
                 title: "Market Expertise",
                 description: "Deep understanding of Pune's real estate market and investment opportunities",
               },
             ].map((feature, index) => (
               <div key={index} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 group-hover:bg-primary/20 transition-all group-hover:scale-110">
-                  <feature.icon className="h-8 w-8 text-primary" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>
