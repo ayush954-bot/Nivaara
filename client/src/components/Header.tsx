@@ -78,6 +78,9 @@ export default function Header() {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-2 shrink-0">
+            <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+              <Link href="/my-listings">My Listings</Link>
+            </Button>
             <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
               <Link href="/list-property">List Property</Link>
             </Button>
@@ -147,6 +150,11 @@ export default function Header() {
                   </Link>
                 </Button>
               </div>
+              <Button asChild variant="ghost" size="sm" className="w-full text-muted-foreground mt-1">
+                <Link href="/my-listings" onClick={() => setMobileMenuOpen(false)}>
+                  My Listings
+                </Link>
+              </Button>
             </div>
           </nav>
         )}

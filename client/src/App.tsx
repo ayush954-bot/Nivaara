@@ -27,6 +27,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import ListProperty from "./pages/ListProperty";
 import ListPropertySubmit from "./pages/ListPropertySubmit";
 import AdminReviewQueue from "./pages/AdminReviewQueue";
+import MyListings from "./pages/MyListings";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -56,6 +57,7 @@ function Router() {
           <Route path={"/admin/review-queue"} component={AdminReviewQueue} />
           <Route path={"/list-property"} component={ListProperty} />
           <Route path={"/list-property/submit"} component={ListPropertySubmit} />
+          <Route path={"/my-listings"} component={MyListings} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>

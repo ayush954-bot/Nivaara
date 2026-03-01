@@ -257,11 +257,11 @@ export default function ListPropertySubmit() {
             <span>You'll be notified via the phone number you verified.</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/properties">
-              <Button variant="default">Browse Properties</Button>
+            <Link href="/my-listings">
+              <Button variant="default">View My Listings</Button>
             </Link>
-            <Link href="/list-property">
-              <Button variant="outline">List Another Property</Button>
+            <Link href="/list-property/submit">
+              <Button variant="outline">Submit Another Listing</Button>
             </Link>
           </div>
         </div>

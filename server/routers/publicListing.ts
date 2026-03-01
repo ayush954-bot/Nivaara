@@ -251,4 +251,54 @@ export const publicListingRouter = router({
         .where(eq(projects.id, input.id));
       return { success: true };
     }),
+
+  // Public: get my listings by phone number (verified via Firebase token)
+  getMyListings: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+
+      const db = await getDb();
+      if (!db) return { properties: [], projects: [] };
+
+      const [myProperties, myProjects] = await Promise.all([
+        db
+          .select({
+            id: properties.id,
+            title: properties.title,
+            propertyType: properties.propertyType,
+            status: properties.status,
+            location: properties.location,
+            price: properties.price,
+            imageUrl: properties.imageUrl,
+            listingStatus: properties.listingStatus,
+            rejectionReason: properties.rejectionReason,
+            createdAt: properties.createdAt,
+          })
+          .from(properties)
+          .where(eq(properties.submitterPhone, phone)),
+        db
+          .select({
+            id: projects.id,
+            name: projects.name,
+            builderName: projects.builderName,
+            location: projects.location,
+            city: projects.city,
+            status: projects.status,
+            priceRange: projects.priceRange,
+            coverImage: projects.coverImage,
+            listingStatus: projects.listingStatus,
+            rejectionReason: projects.rejectionReason,
+            createdAt: projects.createdAt,
+          })
+          .from(projects)
+          .where(eq(projects.submitterPhone, phone)),
+      ]);
+
+      return { properties: myProperties, projects: myProjects };
+    }),
 });
