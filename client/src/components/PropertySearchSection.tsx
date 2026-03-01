@@ -40,8 +40,8 @@ export function PropertySearchSection() {
   };
 
   return (
-    <div className="bg-card rounded-lg shadow-lg p-6 border border-border">
-      <h2 className="text-2xl font-bold mb-6 text-card-foreground flex items-center gap-2">
+    <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
         <Search className="h-6 w-6" />
         Find Your Perfect Property
       </h2>
@@ -66,7 +66,7 @@ export function PropertySearchSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         {/* Property Type Filter */}
         <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger>
+          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
             <SelectValue placeholder="Property Type" />
           </SelectTrigger>
           <SelectContent>
@@ -82,7 +82,7 @@ export function PropertySearchSection() {
 
         {/* Budget Filter */}
         <Select value={budgetFilter} onValueChange={setBudgetFilter}>
-          <SelectTrigger>
+          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
             <SelectValue placeholder="Budget" />
           </SelectTrigger>
           <SelectContent>
@@ -100,7 +100,7 @@ export function PropertySearchSection() {
         {/* BHK Filter - Only show for Flat and Rental */}
         {(typeFilter === "all" || typeFilter === "Flat" || typeFilter === "Rental") && (
           <Select value={bhkFilter} onValueChange={setBhkFilter}>
-            <SelectTrigger>
+            <SelectTrigger className="text-gray-900 bg-white border-gray-300">
               <SelectValue placeholder="BHK" />
             </SelectTrigger>
             <SelectContent>

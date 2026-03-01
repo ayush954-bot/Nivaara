@@ -284,8 +284,8 @@ export function LocationSearch({
                 // Delay hiding so onMouseDown/onTouchEnd on suggestion can fire first
                 setTimeout(() => setShowSuggestions(false), 200);
               }}
-              className="pl-10 pr-10 text-foreground bg-background"
-              style={{ color: 'inherit', WebkitTextFillColor: 'inherit' }}
+              className="pl-10 pr-10 text-gray-900 bg-white placeholder:text-gray-500"
+              style={{ color: '#111827', WebkitTextFillColor: '#111827' }}
               disabled={isGeocoding}
               autoComplete="off"
               autoCorrect="off"
@@ -349,7 +349,7 @@ export function LocationSearch({
           value={radiusKm.toString()}
           onValueChange={(value) => setRadiusKm(Number(value))}
         >
-          <SelectTrigger className="w-32">
+          <SelectTrigger className="w-32 text-gray-900 bg-white border-gray-300">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

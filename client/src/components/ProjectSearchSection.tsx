@@ -40,8 +40,8 @@ export function ProjectSearchSection() {
   };
 
   return (
-    <div className="bg-card rounded-lg shadow-lg p-6 border border-border">
-      <h2 className="text-2xl font-bold mb-6 text-card-foreground flex items-center gap-2">
+    <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
         <Building2 className="h-6 w-6" />
         Explore Builder Projects
       </h2>
@@ -66,7 +66,7 @@ export function ProjectSearchSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         {/* Status Filter */}
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger>
+          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -79,7 +79,7 @@ export function ProjectSearchSection() {
 
         {/* Budget Filter */}
         <Select value={budgetFilter} onValueChange={setBudgetFilter}>
-          <SelectTrigger>
+          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
             <SelectValue placeholder="Budget" />
           </SelectTrigger>
           <SelectContent>
@@ -94,7 +94,7 @@ export function ProjectSearchSection() {
 
         {/* BHK Filter */}
         <Select value={bhkFilter} onValueChange={setBhkFilter}>
-          <SelectTrigger>
+          <SelectTrigger className="text-gray-900 bg-white border-gray-300">
             <SelectValue placeholder="BHK" />
           </SelectTrigger>
           <SelectContent>

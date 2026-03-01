@@ -2216,3 +2216,8 @@
 - [x] ProjectDetail: show submitter contact card (Call Owner + WhatsApp) for public listings, same as PropertyDetail
 - [x] Admin nav/header: show pending review count badge on Review Queue link on all admin pages
 - [x] Pending count badge updates in real-time (refetches when navigating between admin pages)
+
+## Bug Fixes (Mar 2026)
+- [x] AdminPendingBanner: show for staff users (canManageProperties) not just admin — verified useAuth returns canManageProperties=true for staff, banner already works
+- [x] Home page search: location input typed text not visible — fixed by using explicit text-gray-900 bg-white on input, radius select, and all filter selects in both PropertySearchSection and ProjectSearchSection
+- [x] Confirmed "New" badge (30-day rule) in badgeUtils.ts applies to all properties by createdAt — no listingSource filter, works for public listings automatically
