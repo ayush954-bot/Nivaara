@@ -21,6 +21,9 @@ import {
   Shield,
   TrendingUp,
   Users,
+  ArrowRight,
+  IndianRupee,
+  Zap,
 } from "lucide-react";
 
 export default function Home() {
@@ -170,6 +173,52 @@ export default function Home() {
             </Button>
           </div>
         </div>
+      </section>
+
+      {/* List Property Promo Banner */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#1A1A1A] via-[#2d2d2d] to-[#1A1A1A] py-12">
+        {/* Decorative gold top line */}
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />
+        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="container relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            {/* Left: headline */}
+            <div className="text-center md:text-left">
+              <p className="text-primary text-sm font-semibold tracking-widest uppercase mb-2">For Property Owners & Builders</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                Own a property? List it <span className="text-primary">free</span> in 5 minutes
+              </h2>
+              <p className="text-gray-400 mt-2 text-sm md:text-base max-w-lg">
+                No signup, no fees, no middlemen — just verify your mobile number and reach thousands of serious buyers across India.
+              </p>
+            </div>
+            {/* Right: trust pills + CTA */}
+            <div className="flex flex-col items-center md:items-end gap-4 shrink-0">
+              <div className="flex flex-wrap gap-3 justify-center md:justify-end">
+                <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5 text-xs text-gray-300">
+                  <IndianRupee className="h-3.5 w-3.5 text-primary" />
+                  <span>Zero listing fee</span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5 text-xs text-gray-300">
+                  <Zap className="h-3.5 w-3.5 text-primary" />
+                  <span>Live in 30 minutes</span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5 text-xs text-gray-300">
+                  <Shield className="h-3.5 w-3.5 text-primary" />
+                  <span>OTP verified only</span>
+                </div>
+              </div>
+              <Link href="/list-property">
+                <button className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 rounded-lg transition-colors text-sm md:text-base">
+                  List Your Property Now
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
       </section>
 
       {/* Why Choose Nivaara */}
