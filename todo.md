@@ -2144,3 +2144,18 @@
 - [x] Remove "Simplifying Realty" tagline from navbar
 - [x] Stack brand text: "Nivaara" on top (bold, larger), "REALTY SOLUTIONS" below (small, tracked uppercase)
 - [x] Clean two-line logo layout without extra tagline clutter
+
+## Public Property Listing Feature (UGL - User Generated Listings)
+
+- [ ] Set up Firebase project and Phone Auth, add VITE_FIREBASE_API_KEY and related secrets
+- [ ] Update DB schema: add submitter_phone, submitter_name, listing_source, status fields to properties and projects
+- [ ] Run pnpm db:push to migrate schema
+- [ ] Build /list-property marketing landing page with value propositions
+- [ ] Build OTP verification flow (phone input → Firebase reCAPTCHA → OTP → JWT session)
+- [ ] Build public property submission form (mirrors staff form, 10MB limit, pending status)
+- [ ] Build public project submission form (mirrors staff form, 10MB limit, pending status)
+- [ ] Build admin review queue tab in dashboard (pending listings, approve/reject with reason)
+- [ ] Wire tRPC procedures: submitPublicProperty, submitPublicProject, approveListingAdmin, rejectListingAdmin, getMyPublicListings
+- [ ] Add "List Your Property" CTA in navbar and homepage
+- [ ] Send owner notification on new public submission
+- [ ] Verify end-to-end flow and save checkpoint

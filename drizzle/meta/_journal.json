@@ -141,6 +141,13 @@
       "when": 1769358935362,
       "tag": "0019_special_karen_page",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1772390480827,
+      "tag": "0020_curvy_bill_hollister",
+      "breakpoints": true
     }
   ]
 }

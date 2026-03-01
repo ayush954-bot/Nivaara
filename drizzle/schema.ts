@@ -52,6 +52,12 @@ export const properties = mysqlTable("properties", {
   customBadgeText: varchar("customBadgeText", { length: 25 }), // Free-text custom badge (max 25 chars)
   featured: boolean("featured").default(false).notNull(), // Featured properties
   brochureUrl: text("brochureUrl"), // Brochure PDF URL
+  // Public listing fields
+  listingSource: mysqlEnum("listingSource", ["staff", "public"]).default("staff").notNull(),
+  listingStatus: mysqlEnum("listingStatus", ["published", "pending_review", "rejected"]).default("published").notNull(),
+  submitterPhone: varchar("submitterPhone", { length: 20 }), // Phone number of public submitter
+  submitterName: varchar("submitterName", { length: 255 }), // Name of public submitter
+  rejectionReason: text("rejectionReason"), // Admin rejection reason
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -182,6 +188,12 @@ export const projects = mysqlTable("projects", {
   featured: boolean("featured").default(false).notNull(), // Featured projects
   badge: varchar("badge", { length: 50 }), // Predefined badge like "New", "Hot Deal"
   customBadgeText: varchar("customBadgeText", { length: 50 }), // Custom badge text
+  // Public listing fields
+  listingSource: mysqlEnum("listingSource", ["staff", "public"]).default("staff").notNull(),
+  listingStatus: mysqlEnum("listingStatus", ["published", "pending_review", "rejected"]).default("published").notNull(),
+  submitterPhone: varchar("submitterPhone", { length: 20 }), // Phone number of public submitter
+  submitterName: varchar("submitterName", { length: 255 }), // Name of public submitter
+  rejectionReason: text("rejectionReason"), // Admin rejection reason
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

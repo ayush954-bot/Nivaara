@@ -24,6 +24,9 @@ import StaffManagement from "./pages/admin/StaffManagement";
 import PropertyDetail from "./pages/PropertyDetail";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
+import ListProperty from "./pages/ListProperty";
+import ListPropertySubmit from "./pages/ListPropertySubmit";
+import AdminReviewQueue from "./pages/AdminReviewQueue";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -50,6 +53,9 @@ function Router() {
           <Route path={"/admin/properties/bulk-import"} component={BulkImport} />
           <Route path={"/admin/projects/new"} component={ProjectForm} />
           <Route path={"/admin/projects/edit/:id"} component={ProjectForm} />
+          <Route path={"/admin/review-queue"} component={AdminReviewQueue} />
+          <Route path={"/list-property"} component={ListProperty} />
+          <Route path={"/list-property/submit"} component={ListPropertySubmit} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>

@@ -76,9 +76,12 @@ export default function Header() {
             </a>
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block shrink-0">
-            <Button asChild>
+          {/* CTA Buttons */}
+          <div className="hidden lg:flex items-center gap-2 shrink-0">
+            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+              <Link href="/list-property">List Property</Link>
+            </Button>
+            <Button asChild size="sm">
               <Link href="/contact">Get Started</Link>
             </Button>
           </div>
@@ -132,11 +135,18 @@ export default function Header() {
                   <span>WhatsApp</span>
                 </a>
               </div>
-              <Button asChild className="mt-2">
-                <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
-                  Get Started
-                </Link>
-              </Button>
+              <div className="flex gap-2 mt-2">
+                <Button asChild variant="outline" className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                  <Link href="/list-property" onClick={() => setMobileMenuOpen(false)}>
+                    List Property
+                  </Link>
+                </Button>
+                <Button asChild className="flex-1">
+                  <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
             </div>
           </nav>
         )}

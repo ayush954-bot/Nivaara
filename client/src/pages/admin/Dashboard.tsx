@@ -17,6 +17,7 @@ import {
   LogOut,
   Users,
   Layers,
+  ClipboardList,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -147,12 +148,20 @@ export default function AdminDashboard() {
         </div>
         <div className="flex gap-2">
           {user.type === 'admin' && (
-            <Button asChild variant="outline">
-              <Link href="/admin/staff">
-                <Users className="h-4 w-4 mr-2" />
-                Manage Staff
-              </Link>
-            </Button>
+            <>
+              <Button asChild variant="outline">
+                <Link href="/admin/review-queue">
+                  <ClipboardList className="h-4 w-4 mr-2" />
+                  Review Queue
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/admin/staff">
+                  <Users className="h-4 w-4 mr-2" />
+                  Manage Staff
+                </Link>
+              </Button>
+            </>
           )}
           <Button variant="outline" onClick={handleLogout}>
             <LogOut className="h-4 w-4 mr-2" />
