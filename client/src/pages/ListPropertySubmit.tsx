@@ -250,7 +250,7 @@ export default function ListPropertySubmit() {
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-4">Listing Submitted!</h1>
           <p className="text-muted-foreground mb-6 leading-relaxed">
-            Thank you for listing with Nivaara. Our team will review your submission within <strong>24 hours</strong>. Once approved, your listing will go live on the website.
+            Thank you for listing with Nivaara. Our team will review your submission within <strong>30 minutes</strong>. Once approved, your listing will go live on the website.
           </p>
           <div className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/40 rounded-lg p-3 mb-8">
             <Clock className="h-4 w-4 shrink-0 text-primary" />
@@ -310,7 +310,7 @@ export default function ListPropertySubmit() {
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">List Your Property</h1>
           <p className="text-muted-foreground">
-            Fill in the details below. Your listing will be reviewed within 24 hours.
+            Fill in the details below. Your listing will be reviewed within 30 minutes.
           </p>
         </div>
 

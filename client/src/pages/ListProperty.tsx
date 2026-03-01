@@ -88,7 +88,7 @@ const steps = [
     step: "04",
     icon: CheckCircle2,
     title: "Submit for Review",
-    description: "Our team reviews your listing within 24 hours. Once approved, it goes live instantly.",
+    description: "Our team reviews your listing within 30 minutes. Once approved, it goes live instantly.",
   },
 ];
 
@@ -130,7 +130,7 @@ const faqs = [
   },
   {
     q: "How long does the review take?",
-    a: "Our team reviews all submissions within 24 hours on business days. You will be notified once your listing is live.",
+    a: "Our team reviews all submissions within 30 minutes. You will be notified once your listing is live.",
   },
   {
     q: "Can I edit my listing after submission?",
@@ -172,7 +172,7 @@ export default function ListProperty() {
               <span className="text-primary">Free</span> on Nivaara
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed">
-              Reach thousands of serious buyers and investors across India. No registration, no fees — just verify your mobile number and your listing goes live within 24 hours.
+              Reach thousands of serious buyers and investors across India. No registration, no fees — just verify your mobile number and your listing goes live within 30 minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/list-property/submit">
@@ -192,7 +192,7 @@ export default function ListProperty() {
             <div className="mt-12 grid grid-cols-3 gap-6 max-w-lg mx-auto">
               {[
                 { value: "₹0", label: "Listing Fee" },
-                { value: "24h", label: "Review Time" },
+                { value: "30m", label: "Review Time" },
                 { value: "OTP", label: "Verification" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
