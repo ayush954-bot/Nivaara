@@ -28,11 +28,13 @@ import ListProperty from "./pages/ListProperty";
 import ListPropertySubmit from "./pages/ListPropertySubmit";
 import AdminReviewQueue from "./pages/AdminReviewQueue";
 import MyListings from "./pages/MyListings";
+import AdminPendingBanner from "./components/AdminPendingBanner";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+      <AdminPendingBanner />
       <main className="flex-1">
         <Switch>
           <Route path={"/"} component={Home} />

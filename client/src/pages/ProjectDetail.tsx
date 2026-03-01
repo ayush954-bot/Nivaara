@@ -386,25 +386,58 @@ export default function ProjectDetail() {
                     )}
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* Action Buttons — show owner contact for public listings, Nivaara contact otherwise */}
                   <div className="space-y-3">
-                    <a href="tel:+919764515697" className="block">
-                      <Button className="w-full" size="lg">
-                        <Phone className="h-4 w-4 mr-2" />
-                        Call Now
-                      </Button>
-                    </a>
-                    <a 
-                      href={`https://wa.me/919764515697?text=Hi, I'm interested in ${project.name} project in ${project.location}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <Button className="w-full bg-green-600 hover:bg-green-700" size="lg">
-                        <MessageCircle className="h-4 w-4 mr-2" />
-                        WhatsApp
-                      </Button>
-                    </a>
+                    {project.listingSource === 'public' && project.submitterPhone ? (
+                      <>
+                        <div className="flex items-center gap-2 p-3 bg-muted rounded-lg mb-1">
+                          <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                            <Phone className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs text-muted-foreground">Listed by</p>
+                            <p className="font-semibold text-sm truncate">{project.submitterName || 'Owner'}</p>
+                          </div>
+                        </div>
+                        <a href={`tel:${project.submitterPhone}`} className="block">
+                          <Button className="w-full" size="lg">
+                            <Phone className="h-4 w-4 mr-2" />
+                            Call Owner
+                          </Button>
+                        </a>
+                        <a
+                          href={`https://wa.me/${project.submitterPhone.replace(/[^0-9]/g, '')}?text=Hi, I'm interested in ${encodeURIComponent(project.name)} project in ${encodeURIComponent(project.location)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <Button className="w-full bg-green-600 hover:bg-green-700" size="lg">
+                            <MessageCircle className="h-4 w-4 mr-2" />
+                            WhatsApp Owner
+                          </Button>
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <a href="tel:+919764515697" className="block">
+                          <Button className="w-full" size="lg">
+                            <Phone className="h-4 w-4 mr-2" />
+                            Call Now
+                          </Button>
+                        </a>
+                        <a
+                          href={`https://wa.me/919764515697?text=Hi, I'm interested in ${project.name} project in ${project.location}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <Button className="w-full bg-green-600 hover:bg-green-700" size="lg">
+                            <MessageCircle className="h-4 w-4 mr-2" />
+                            WhatsApp
+                          </Button>
+                        </a>
+                      </>
+                    )}
                     <div className="flex gap-2">
                       <Button 
                         variant="outline" 
@@ -1016,25 +1049,50 @@ export default function ProjectDetail() {
         <div className="container text-center">
           <h2 className="text-3xl font-bold mb-4">Interested in {project.name}?</h2>
           <p className="text-lg mb-6 opacity-90">
-            Contact us today for exclusive offers and site visits
+            {project.listingSource === 'public' && project.submitterPhone
+              ? `Contact ${project.submitterName || 'the owner'} directly`
+              : 'Contact us today for exclusive offers and site visits'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="tel:+919764515697">
-              <Button size="lg" variant="secondary">
-                <Phone className="h-4 w-4 mr-2" />
-                Call: +91 9764515697
-              </Button>
-            </a>
-            <a 
-              href={`https://wa.me/919764515697?text=Hi, I want to schedule a site visit for ${project.name}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <Calendar className="h-4 w-4 mr-2" />
-                Schedule Site Visit
-              </Button>
-            </a>
+            {project.listingSource === 'public' && project.submitterPhone ? (
+              <>
+                <a href={`tel:${project.submitterPhone}`}>
+                  <Button size="lg" variant="secondary">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Call Owner: {project.submitterPhone}
+                  </Button>
+                </a>
+                <a
+                  href={`https://wa.me/${project.submitterPhone.replace(/[^0-9]/g, '')}?text=Hi, I'm interested in ${encodeURIComponent(project.name)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    WhatsApp Owner
+                  </Button>
+                </a>
+              </>
+            ) : (
+              <>
+                <a href="tel:+919764515697">
+                  <Button size="lg" variant="secondary">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Call: +91 9764515697
+                  </Button>
+                </a>
+                <a
+                  href={`https://wa.me/919764515697?text=Hi, I want to schedule a site visit for ${project.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Schedule Site Visit
+                  </Button>
+                </a>
+              </>
+            )}
           </div>
         </div>
       </section>

@@ -2211,3 +2211,8 @@
 - [x] Send email to info@nivaararealty.com when a public property is submitted (with title, location, price, submitter name/phone)
 - [x] Send email to info@nivaararealty.com when a public project is submitted (with project name, builder, city, submitter name/phone)
 - [x] Email subject: "New Listing Pending Review – [Title/Name]"
+
+## Consistency & Admin UX Improvements
+- [x] ProjectDetail: show submitter contact card (Call Owner + WhatsApp) for public listings, same as PropertyDetail
+- [x] Admin nav/header: show pending review count badge on Review Queue link on all admin pages
+- [x] Pending count badge updates in real-time (refetches when navigating between admin pages)
