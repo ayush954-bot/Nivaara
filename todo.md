@@ -2138,3 +2138,9 @@
 - [ ] Replace Our Mission, Our Vision icons (About page)
 - [ ] Replace Trust & Transparency, Expert Network, End-to-End Support, Market Expertise icons (Home page)
 - [ ] Replace International Markets icon (Locations page)
+
+## Navbar Logo Redesign
+
+- [x] Remove "Simplifying Realty" tagline from navbar
+- [x] Stack brand text: "Nivaara" on top (bold, larger), "REALTY SOLUTIONS" below (small, tracked uppercase)
+- [x] Clean two-line logo layout without extra tagline clutter

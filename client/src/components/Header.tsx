@@ -28,12 +28,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 shrink-0">
             <img src="/images/nivaara-logo.png" alt="Nivaara" className="h-10 sm:h-12 w-auto" />
-            <div className="flex flex-col justify-center">
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-lg sm:text-xl font-bold text-foreground tracking-tight">Nivaara</span>
-                <span className="hidden sm:inline text-xs font-medium text-muted-foreground">Realty Solutions</span>
-              </div>
-              <span className="hidden sm:block text-[10px] text-muted-foreground/80 italic tracking-wide">Simplifying Realty</span>
+            <div className="flex flex-col justify-center leading-none">
+              <span className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Nivaara</span>
+              <span className="text-[10px] sm:text-xs font-medium text-muted-foreground tracking-widest uppercase">Realty Solutions</span>
             </div>
           </Link>
 
