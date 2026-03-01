@@ -433,6 +433,7 @@ export const publicListingRouter = router({
         db
           .select({
             id: properties.id,
+            slug: properties.slug,
             title: properties.title,
             propertyType: properties.propertyType,
             status: properties.status,
@@ -448,6 +449,7 @@ export const publicListingRouter = router({
         db
           .select({
             id: projects.id,
+            slug: projects.slug,
             name: projects.name,
             builderName: projects.builderName,
             location: projects.location,

@@ -3,7 +3,6 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import { MessageCircle } from "lucide-react";
-import { APP_LOGO, APP_TITLE } from "@/const";
 
 export default function Header() {
   const [location] = useLocation();
@@ -24,9 +23,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container">
-        <div className="flex h-16 items-center justify-between gap-2">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 shrink-0">
+        <div className="flex h-16 items-center justify-between gap-4">
+          {/* Logo — extra right margin so "Home" nav link has breathing room */}
+          <Link href="/" className="flex items-center gap-3 shrink-0 mr-4">
             <img src="/images/nivaara-logo.png" alt="Nivaara" className="h-10 sm:h-12 w-auto" />
             <div className="flex flex-col justify-center leading-none">
               <span className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Nivaara</span>
@@ -35,7 +34,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-end mr-4">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 flex-1 justify-center">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -47,22 +46,24 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            
+          </nav>
+
+          {/* Right side: Call + WhatsApp + Get Started */}
+          <div className="hidden lg:flex items-center gap-3 shrink-0">
             {/* Call Button */}
             <a
               href="tel:+919764515697"
-              className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-all border-l border-border pl-6 relative group"
+              className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-all relative group"
             >
               <div className="relative">
                 <Phone className="h-4 w-4 animate-pulse" />
-                {/* Pulsing ring effect */}
                 <span className="absolute inset-0 rounded-full bg-primary/30 animate-ping"></span>
               </div>
-              <span className="hidden xl:inline bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent animate-pulse">+91 9764515697</span>
-              {/* Subtle glow effect */}
-              <span className="absolute inset-0 bg-primary/10 rounded-md blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10"></span>
+              <span className="hidden xl:inline bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent animate-pulse">
+                +91 9764515697
+              </span>
             </a>
-            
+
             {/* WhatsApp Button */}
             <a
               href="https://wa.me/919764515697?text=Hi%2C%20I%27m%20interested%20in%20your%20properties"
@@ -74,16 +75,7 @@ export default function Header() {
               <MessageCircle className="h-4 w-4" />
               <span className="hidden xl:inline">WhatsApp</span>
             </a>
-          </nav>
 
-          {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-2 shrink-0">
-            <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              <Link href="/my-listings">My Listings</Link>
-            </Button>
-            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-              <Link href="/list-property">List Property</Link>
-            </Button>
             <Button asChild size="sm">
               <Link href="/contact">Get Started</Link>
             </Button>
@@ -119,6 +111,7 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
+
               {/* Call and WhatsApp in Mobile */}
               <div className="flex gap-3 mt-4 pt-4 border-t border-border">
                 <a
@@ -138,21 +131,24 @@ export default function Header() {
                   <span>WhatsApp</span>
                 </a>
               </div>
+
+              {/* Mobile listing CTAs */}
               <div className="flex gap-2 mt-2">
                 <Button asChild variant="outline" className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                  <Link href="/list-property" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/list-property/submit" onClick={() => setMobileMenuOpen(false)}>
                     List Property
                   </Link>
                 </Button>
-                <Button asChild className="flex-1">
-                  <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
-                    Get Started
+                <Button asChild variant="ghost" className="flex-1 text-muted-foreground">
+                  <Link href="/my-listings" onClick={() => setMobileMenuOpen(false)}>
+                    My Listings
                   </Link>
                 </Button>
               </div>
-              <Button asChild variant="ghost" size="sm" className="w-full text-muted-foreground mt-1">
-                <Link href="/my-listings" onClick={() => setMobileMenuOpen(false)}>
-                  My Listings
+
+              <Button asChild className="w-full mt-1">
+                <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                  Get Started
                 </Link>
               </Button>
             </div>

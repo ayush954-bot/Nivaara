@@ -168,11 +168,21 @@ function MyListingsContent({ verified }: { verified: VerifiedSession }) {
                         </div>
                       )}
                       {prop.listingStatus === "published" && (
-                        <div className="mt-3 flex items-center gap-2 p-3 rounded-md bg-green-50 border border-green-100">
-                          <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                          <p className="text-xs text-green-700">
-                            Your property is live and visible to buyers on Nivaara.
-                          </p>
+                        <div className="mt-3 flex items-center justify-between gap-2 p-3 rounded-md bg-green-50 border border-green-100">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                            <p className="text-xs text-green-700">
+                              Your property is live and visible to buyers.
+                            </p>
+                          </div>
+                          {prop.slug && (
+                            <Link
+                              href={`/properties/${prop.slug}`}
+                              className="text-xs font-medium text-green-700 hover:text-green-800 underline underline-offset-2 shrink-0"
+                            >
+                              View Listing →
+                            </Link>
+                          )}
                         </div>
                       )}
                       {prop.createdAt && (
@@ -241,11 +251,21 @@ function MyListingsContent({ verified }: { verified: VerifiedSession }) {
                         </div>
                       )}
                       {proj.listingStatus === "published" && (
-                        <div className="mt-3 flex items-center gap-2 p-3 rounded-md bg-green-50 border border-green-100">
-                          <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                          <p className="text-xs text-green-700">
-                            Your project is live and visible to buyers on Nivaara.
-                          </p>
+                        <div className="mt-3 flex items-center justify-between gap-2 p-3 rounded-md bg-green-50 border border-green-100">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                            <p className="text-xs text-green-700">
+                              Your project is live and visible to buyers.
+                            </p>
+                          </div>
+                          {proj.slug && (
+                            <Link
+                              href={`/projects/${proj.slug}`}
+                              className="text-xs font-medium text-green-700 hover:text-green-800 underline underline-offset-2 shrink-0"
+                            >
+                              View Listing →
+                            </Link>
+                          )}
                         </div>
                       )}
                       {proj.createdAt && (

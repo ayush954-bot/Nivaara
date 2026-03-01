@@ -37,6 +37,10 @@ export default function AdminDashboard() {
   const { data: inquiries = [] } = trpc.admin.inquiries.list.useQuery(undefined, {
     enabled: canManageProperties,
   });
+  const { data: pendingData } = trpc.publicListing.adminListPending.useQuery(undefined, {
+    enabled: !!user && canManageProperties,
+  });
+  const pendingCount = (pendingData?.properties?.length ?? 0) + (pendingData?.projects?.length ?? 0);
 
   const deleteProperty = trpc.admin.properties.delete.useMutation({
     onSuccess: () => {
@@ -149,10 +153,15 @@ export default function AdminDashboard() {
         <div className="flex gap-2">
           {user.type === 'admin' && (
             <>
-              <Button asChild variant="outline">
+              <Button asChild variant={pendingCount > 0 ? "default" : "outline"} className={pendingCount > 0 ? "bg-amber-500 hover:bg-amber-600 text-white" : ""}>
                 <Link href="/admin/review-queue">
                   <ClipboardList className="h-4 w-4 mr-2" />
                   Review Queue
+                  {pendingCount > 0 && (
+                    <span className="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-white text-amber-600 text-xs font-bold">
+                      {pendingCount}
+                    </span>
+                  )}
                 </Link>
               </Button>
               <Button asChild variant="outline">
@@ -219,6 +228,23 @@ export default function AdminDashboard() {
               </div>
               <Mail className="h-10 w-10 text-green-500 opacity-20" />
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className={pendingCount > 0 ? "border-amber-300 bg-amber-50" : ""}>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Pending Review</p>
+                <p className={`text-2xl sm:text-3xl font-bold ${pendingCount > 0 ? "text-amber-600" : ""}`}>{pendingCount}</p>
+              </div>
+              <ClipboardList className={`h-10 w-10 opacity-20 ${pendingCount > 0 ? "text-amber-500" : "text-muted-foreground"}`} />
+            </div>
+            {pendingCount > 0 && (
+              <Link href="/admin/review-queue" className="text-xs text-amber-600 hover:underline mt-1 block">
+                Review now →
+              </Link>
+            )}
           </CardContent>
         </Card>
       </div>

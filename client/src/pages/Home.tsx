@@ -68,10 +68,20 @@ export default function Home() {
             </Tabs>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 md:mb-0">
+          {/* Hero action row: consultation + list/my listings */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8 md:mb-0">
             <Button size="lg" variant="outline" asChild className="text-lg bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white/20">
               <Link href="/contact">Schedule Consultation</Link>
             </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-white/50 hidden sm:inline text-sm">|</span>
+              <Button size="sm" variant="ghost" asChild className="text-white/80 hover:text-white hover:bg-white/10 border border-white/30">
+                <Link href="/list-property/submit">+ List Your Property</Link>
+              </Button>
+              <Button size="sm" variant="ghost" asChild className="text-white/60 hover:text-white/90 hover:bg-white/10">
+                <Link href="/my-listings">My Listings</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

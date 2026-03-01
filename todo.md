@@ -2177,3 +2177,22 @@
 - [x] Master plan image upload for projects
 - [x] Backend router expanded to accept all new fields and insert into all related tables
 - [x] 61 unit tests passing (all test files green)
+
+## Navigation & UX Improvements
+- [x] Remove "List Your Property" and "My Listings" from top nav
+- [x] Add "List Your Property" and "My Listings" as CTAs in hero search widget
+- [x] Fix logo/nav spacing so "Nivaara Realty Solutions" and "Home" are not too close
+- [x] Keep top nav clean: Home, About, Services, Properties, Projects, Locations, Team, Contact, FAQ
+
+## Admin Review Dashboard
+- [x] Admin-only page at /admin/review-queue showing all pending_review submissions
+- [x] Show property and project submissions in tabs with submitter details
+- [x] One-click Approve button (changes listingStatus to published)
+- [x] Reject button with reason input modal
+- [x] Show submission date, submitter name, phone, location, price
+
+## My Listings Status Page
+- [x] Show listing status badge (Pending Review / Published / Rejected) for each submission
+- [x] Show rejection reason when status is rejected
+- [x] Show submission date
+- [x] Link to live listing when published
