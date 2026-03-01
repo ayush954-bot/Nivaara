@@ -2196,3 +2196,18 @@
 - [x] Show rejection reason when status is rejected
 - [x] Show submission date
 - [x] Link to live listing when published
+
+## Search & Property Detail Fixes
+- [x] Search (properties/projects) includes published public submissions (listingSource=public, listingStatus=published)
+- [x] Property/Project detail page shows submitter contact (name + phone) instead of generic "Contact Us" when listing is from a public submission
+- [x] Contact card on detail page dynamically switches between Nivaara contact and submitter contact based on listingSource
+
+## Staff Review Permissions
+- [x] Staff can access /admin/review-queue (backend already allowed, frontend Review Queue button now shown to staff)
+- [x] approveProperty, rejectProperty, approveProject, rejectProject procedures accessible to staff (canManageProperties role)
+- [x] adminListPending procedure accessible to staff
+
+## Email Notification on New Submission
+- [x] Send email to info@nivaararealty.com when a public property is submitted (with title, location, price, submitter name/phone)
+- [x] Send email to info@nivaararealty.com when a public project is submitted (with project name, builder, city, submitter name/phone)
+- [x] Email subject: "New Listing Pending Review – [Title/Name]"

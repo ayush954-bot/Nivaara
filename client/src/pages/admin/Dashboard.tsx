@@ -151,26 +151,28 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
+          {/* Review Queue: visible to both admin and staff with property management access */}
+          {canManageProperties && (
+            <Button asChild variant={pendingCount > 0 ? "default" : "outline"} className={pendingCount > 0 ? "bg-amber-500 hover:bg-amber-600 text-white" : ""}>
+              <Link href="/admin/review-queue">
+                <ClipboardList className="h-4 w-4 mr-2" />
+                Review Queue
+                {pendingCount > 0 && (
+                  <span className="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-white text-amber-600 text-xs font-bold">
+                    {pendingCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
+          )}
+          {/* Manage Staff: admin-only */}
           {user.type === 'admin' && (
-            <>
-              <Button asChild variant={pendingCount > 0 ? "default" : "outline"} className={pendingCount > 0 ? "bg-amber-500 hover:bg-amber-600 text-white" : ""}>
-                <Link href="/admin/review-queue">
-                  <ClipboardList className="h-4 w-4 mr-2" />
-                  Review Queue
-                  {pendingCount > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-white text-amber-600 text-xs font-bold">
-                      {pendingCount}
-                    </span>
-                  )}
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/admin/staff">
-                  <Users className="h-4 w-4 mr-2" />
-                  Manage Staff
-                </Link>
-              </Button>
-            </>
+            <Button asChild variant="outline">
+              <Link href="/admin/staff">
+                <Users className="h-4 w-4 mr-2" />
+                Manage Staff
+              </Link>
+            </Button>
           )}
           <Button variant="outline" onClick={handleLogout}>
             <LogOut className="h-4 w-4 mr-2" />

@@ -13,6 +13,7 @@ import {
 import { eq } from "drizzle-orm";
 import { storagePut } from "../storage";
 import { notifyOwner } from "../_core/notification";
+import { sendNewPropertySubmissionNotification, sendNewProjectSubmissionNotification } from "../email";
 import { nanoid } from "nanoid";
 
 // Helper: verify Firebase ID token server-side via Firebase REST API
@@ -158,12 +159,23 @@ export const publicListingRouter = router({
         );
       }
 
-      try {
-        await notifyOwner({
+      // Fire-and-forget: Manus owner notification + email to info@nivaararealty.com
+      Promise.allSettled([
+        notifyOwner({
           title: "New Public Property Listing",
           content: `${rest.submitterName} (${rest.submitterPhone}) submitted:\n"${rest.title}" in ${rest.location}\nPrice: ₹${rest.price}`,
-        });
-      } catch {}
+        }),
+        sendNewPropertySubmissionNotification({
+          title: rest.title,
+          location: rest.location,
+          price: rest.price ?? null,
+          priceLabel: rest.priceLabel ?? null,
+          propertyType: rest.propertyType,
+          bedrooms: rest.bedrooms ?? null,
+          submitterName: rest.submitterName,
+          submitterPhone: rest.submitterPhone,
+        }),
+      ]).catch(() => {});
 
       return { success: true, propertyId };
     }),
@@ -343,12 +355,23 @@ export const publicListingRouter = router({
         );
       }
 
-      try {
-        await notifyOwner({
+      // Fire-and-forget: Manus owner notification + email to info@nivaararealty.com
+      Promise.allSettled([
+        notifyOwner({
           title: "New Public Project Listing",
           content: `${rest.submitterName} (${rest.submitterPhone}) submitted:\n"${rest.name}" by ${rest.builderName} in ${rest.location}, ${rest.city}`,
-        });
-      } catch {}
+        }),
+        sendNewProjectSubmissionNotification({
+          name: rest.name,
+          builderName: rest.builderName,
+          city: rest.city,
+          location: rest.location,
+          minPrice: rest.minPrice ?? null,
+          maxPrice: rest.maxPrice ?? null,
+          submitterName: rest.submitterName,
+          submitterPhone: rest.submitterPhone,
+        }),
+      ]).catch(() => {});
 
       return { success: true, projectId };
     }),

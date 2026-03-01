@@ -93,7 +93,9 @@ export async function getUserByOpenId(openId: string) {
 export async function getAllProperties() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(properties).orderBy(desc(properties.createdAt));
+  return db.select().from(properties)
+    .where(eq(properties.listingStatus, 'published'))
+    .orderBy(desc(properties.createdAt));
 }
 
 export async function getPropertyById(id: number) {
@@ -113,15 +115,19 @@ export async function getPropertyBySlug(slug: string) {
 export async function getFeaturedProperties() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(properties).where(eq(properties.featured, true)).orderBy(desc(properties.createdAt));
+  return db.select().from(properties)
+    .where(and(eq(properties.featured, true), eq(properties.listingStatus, 'published')))
+    .orderBy(desc(properties.createdAt));
 }
 
 export async function getUniqueLocations() {
   const db = await getDb();
   if (!db) return [];
   
-  // Get all distinct locations from properties
-  const result = await db.selectDistinct({ location: properties.location }).from(properties);
+  // Get all distinct locations from published properties only
+  const result = await db.selectDistinct({ location: properties.location })
+    .from(properties)
+    .where(eq(properties.listingStatus, 'published'));
   
   // Extract and sort locations
   const locations = result
@@ -170,12 +176,11 @@ export async function searchProperties(filters: {
     conditions.push(eq(properties.bedrooms, filters.bedrooms));
   }
 
+  // Always filter to only published listings (includes admin-added and approved public submissions)
+  conditions.push(eq(properties.listingStatus, 'published'));
+
   let results;
-  if (conditions.length === 0) {
-    results = await db.select().from(properties).orderBy(desc(properties.createdAt));
-  } else {
-    results = await db.select().from(properties).where(and(...conditions)).orderBy(desc(properties.createdAt));
-  }
+  results = await db.select().from(properties).where(and(...conditions)).orderBy(desc(properties.createdAt));
 
   // If radius search is requested, filter by distance and add distance to results
   if (filters.latitude && filters.longitude && filters.radiusKm) {
@@ -453,7 +458,9 @@ export async function getAllProjects() {
   const db = await getDb();
   if (!db) return [];
   
-  const projectsList = await db.select().from(projects).orderBy(desc(projects.createdAt));
+  const projectsList = await db.select().from(projects)
+    .where(eq(projects.listingStatus, 'published'))
+    .orderBy(desc(projects.createdAt));
   
   // Fetch related data for each project
   const projectsWithData = await Promise.all(
@@ -545,7 +552,7 @@ export async function getFeaturedProjects() {
   const projectsList = await db
     .select()
     .from(projects)
-    .where(eq(projects.featured, true))
+    .where(and(eq(projects.featured, true), eq(projects.listingStatus, 'published')))
     .orderBy(desc(projects.createdAt))
     .limit(6);
   
@@ -612,9 +619,9 @@ export async function searchProjects(filters: {
     conditions.push(sql`${projects.maxPrice} <= ${filters.maxPrice}`);
   }
   
-  if (conditions.length > 0) {
-    query = query.where(and(...conditions)) as any;
-  }
+  // Always filter to only published listings
+  conditions.push(eq(projects.listingStatus, 'published'));
+  query = query.where(and(...conditions)) as any;
   
   let projectsList = await query.orderBy(desc(projects.createdAt));
   
