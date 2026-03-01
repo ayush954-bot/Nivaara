@@ -1,7 +1,15 @@
 import { publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
 import { getDb } from "../db";
-import { properties, projects, propertyImages, projectImages } from "../../drizzle/schema";
+import {
+  properties,
+  projects,
+  propertyImages,
+  projectImages,
+  projectAmenities,
+  projectFloorPlans,
+  projectVideos,
+} from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { storagePut } from "../storage";
 import { notifyOwner } from "../_core/notification";
@@ -61,21 +69,40 @@ export const publicListingRouter = router({
       return { url };
     }),
 
-  // Submit a public property listing
+  // Submit a public property listing (mirrors admin PropertyForm exactly)
   submitProperty: publicProcedure
     .input(
       z.object({
+        // Basic
         title: z.string().min(1),
         description: z.string().min(1),
         propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]),
         status: z.enum(["Under-Construction", "Ready"]),
+        // Location
         location: z.string().min(1),
+        latitude: z.number().optional(),
+        longitude: z.number().optional(),
+        area: z.string().optional(),
+        // Pricing
         price: z.number().positive(),
+        priceLabel: z.string().optional(),
+        // Details
         bedrooms: z.number().optional(),
         bathrooms: z.number().optional(),
         area_sqft: z.number().optional(),
         builder: z.string().optional(),
-        imageUrls: z.array(z.string()).max(10),
+        // Media
+        imageUrls: z.array(z.string()).max(20),
+        videoUrls: z.array(z.object({
+          videoUrl: z.string(),
+          videoType: z.enum(["youtube", "vimeo", "virtual_tour", "other"]),
+          displayOrder: z.number(),
+        })).optional(),
+        brochureUrl: z.string().optional(),
+        // Badge
+        badge: z.string().optional(),
+        customBadgeText: z.string().optional(),
+        // Submitter
         submitterPhone: z.string().min(1),
         submitterName: z.string().min(1),
         firebaseToken: z.string(),
@@ -87,14 +114,31 @@ export const publicListingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      const { imageUrls, firebaseToken, ...rest } = input;
+      const { imageUrls, videoUrls, firebaseToken, ...rest } = input;
 
       const [result] = await db
         .insert(properties)
         .values({
-          ...rest,
+          title: rest.title,
+          description: rest.description,
+          propertyType: rest.propertyType,
+          status: rest.status,
+          location: rest.location,
+          latitude: rest.latitude?.toString() ?? null,
+          longitude: rest.longitude?.toString() ?? null,
+          area: rest.area ?? null,
           price: rest.price.toString(),
+          priceLabel: rest.priceLabel ?? null,
+          bedrooms: rest.bedrooms ?? null,
+          bathrooms: rest.bathrooms ?? null,
+          area_sqft: rest.area_sqft ?? null,
+          builder: rest.builder ?? null,
           imageUrl: imageUrls[0] || null,
+          brochureUrl: rest.brochureUrl ?? null,
+          badge: rest.badge ?? null,
+          customBadgeText: rest.customBadgeText ?? null,
+          submitterPhone: rest.submitterPhone,
+          submitterName: rest.submitterName,
           listingSource: "public",
           listingStatus: "pending_review",
           featured: false,
@@ -102,12 +146,14 @@ export const publicListingRouter = router({
 
       const propertyId = (result as { insertId: number }).insertId;
 
-      if (imageUrls.length > 1) {
+      // Insert all images into property_images table
+      if (imageUrls.length > 0) {
         await db.insert(propertyImages).values(
-          imageUrls.slice(1).map((url, i) => ({
+          imageUrls.map((url, i) => ({
             propertyId,
             imageUrl: url,
-            displayOrder: i + 1,
+            isCover: i === 0,
+            displayOrder: i,
           }))
         );
       }
@@ -122,21 +168,68 @@ export const publicListingRouter = router({
       return { success: true, propertyId };
     }),
 
-  // Submit a public project listing
+  // Submit a public project listing (mirrors admin ProjectForm exactly)
   submitProject: publicProcedure
     .input(
       z.object({
+        // Basic
         name: z.string().min(1),
         builderName: z.string().min(1),
         description: z.string().min(1),
+        // Location
         location: z.string().min(1),
         city: z.string().min(1),
+        latitude: z.number().optional(),
+        longitude: z.number().optional(),
+        // Status & Pricing
         status: z.enum(["Upcoming", "Under Construction", "Ready to Move"]),
         priceRange: z.string().min(1),
+        minPrice: z.number().optional(),
+        maxPrice: z.number().optional(),
+        // Details
         configurations: z.string().optional(),
         reraNumber: z.string().optional(),
+        possessionDate: z.string().optional(),
         totalUnits: z.number().optional(),
-        imageUrls: z.array(z.string()).max(10),
+        towers: z.number().optional(),
+        floors: z.number().optional(),
+        // Media
+        imageUrls: z.array(z.string()).max(20),
+        videoUrl: z.string().optional(),
+        brochureUrl: z.string().optional(),
+        masterPlanUrl: z.string().optional(),
+        videos: z.array(z.object({
+          videoUrl: z.string(),
+          videoType: z.enum(["youtube", "vimeo", "virtual_tour", "other"]),
+          title: z.string(),
+          displayOrder: z.number(),
+        })).optional(),
+        // Builder info
+        builderDescription: z.string().optional(),
+        builderLogo: z.string().optional(),
+        builderEstablished: z.number().optional(),
+        builderProjects: z.number().optional(),
+        // Badge
+        badge: z.string().optional(),
+        customBadgeText: z.string().optional(),
+        // Amenities
+        amenities: z.array(z.object({
+          name: z.string(),
+          icon: z.string(),
+          imageUrl: z.string().optional(),
+          displayOrder: z.number(),
+        })).optional(),
+        // Floor plans
+        floorPlans: z.array(z.object({
+          name: z.string(),
+          bedrooms: z.number(),
+          bathrooms: z.number(),
+          area: z.number(),
+          price: z.number(),
+          imageUrl: z.string().optional(),
+          displayOrder: z.number(),
+        })).optional(),
+        // Submitter
         submitterPhone: z.string().min(1),
         submitterName: z.string().min(1),
         firebaseToken: z.string(),
@@ -148,7 +241,7 @@ export const publicListingRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database unavailable");
 
-      const { imageUrls, firebaseToken, ...rest } = input;
+      const { imageUrls, videos, amenities, floorPlans, firebaseToken, ...rest } = input;
 
       // Generate a URL-friendly slug from project name
       const slug = rest.name
@@ -159,9 +252,36 @@ export const publicListingRouter = router({
       const [result] = await db
         .insert(projects)
         .values({
-          ...rest,
-          slug,
+          name: rest.name,
+          builderName: rest.builderName,
+          description: rest.description,
+          location: rest.location,
+          city: rest.city,
+          latitude: rest.latitude?.toString() ?? null,
+          longitude: rest.longitude?.toString() ?? null,
+          status: rest.status,
+          priceRange: rest.priceRange,
+          minPrice: rest.minPrice?.toString() ?? null,
+          maxPrice: rest.maxPrice?.toString() ?? null,
+          configurations: rest.configurations ?? null,
+          reraNumber: rest.reraNumber ?? null,
+          possessionDate: rest.possessionDate ? new Date(rest.possessionDate) : null,
+          totalUnits: rest.totalUnits ?? null,
+          towers: rest.towers ?? null,
+          floors: rest.floors ?? null,
           coverImage: imageUrls[0] || null,
+          videoUrl: rest.videoUrl ?? null,
+          brochureUrl: rest.brochureUrl ?? null,
+          masterPlanUrl: rest.masterPlanUrl ?? null,
+          builderDescription: rest.builderDescription ?? null,
+          builderLogo: rest.builderLogo ?? null,
+          builderEstablished: rest.builderEstablished ?? null,
+          builderProjects: rest.builderProjects ?? null,
+          badge: rest.badge ?? null,
+          customBadgeText: rest.customBadgeText ?? null,
+          submitterPhone: rest.submitterPhone,
+          submitterName: rest.submitterName,
+          slug,
           listingSource: "public",
           listingStatus: "pending_review",
           featured: false,
@@ -169,12 +289,56 @@ export const publicListingRouter = router({
 
       const projectId = (result as { insertId: number }).insertId;
 
-      if (imageUrls.length > 1) {
+      // Insert gallery images
+      if (imageUrls.length > 0) {
         await db.insert(projectImages).values(
-          imageUrls.slice(1).map((url, i) => ({
+          imageUrls.map((url, i) => ({
             projectId,
             imageUrl: url,
-            displayOrder: i + 1,
+            caption: "",
+            displayOrder: i,
+          }))
+        );
+      }
+
+      // Insert videos
+      if (videos && videos.length > 0) {
+        await db.insert(projectVideos).values(
+          videos.map((v) => ({
+            projectId,
+            videoUrl: v.videoUrl,
+            videoType: v.videoType,
+            title: v.title,
+            displayOrder: v.displayOrder,
+          }))
+        );
+      }
+
+      // Insert amenities
+      if (amenities && amenities.length > 0) {
+        await db.insert(projectAmenities).values(
+          amenities.map((a) => ({
+            projectId,
+            name: a.name,
+            icon: a.icon,
+            imageUrl: a.imageUrl ?? null,
+            displayOrder: a.displayOrder,
+          }))
+        );
+      }
+
+      // Insert floor plans
+      if (floorPlans && floorPlans.length > 0) {
+        await db.insert(projectFloorPlans).values(
+          floorPlans.map((fp) => ({
+            projectId,
+            name: fp.name,
+            bedrooms: fp.bedrooms,
+            bathrooms: fp.bathrooms,
+            area: fp.area,
+            price: fp.price.toString(),
+            imageUrl: fp.imageUrl ?? null,
+            displayOrder: fp.displayOrder,
           }))
         );
       }

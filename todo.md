@@ -2159,3 +2159,21 @@
 - [ ] Add "List Your Property" CTA in navbar and homepage
 - [ ] Send owner notification on new public submission
 - [ ] Verify end-to-end flow and save checkpoint
+
+## Public Property/Project Submission Form
+- [x] OTP phone verification gate before form access
+- [x] Property form: all fields matching admin PropertyForm (title, description, type, status, location, area, price, priceLabel, bedrooms, bathrooms, area_sqft, builder, badge, customBadgeText, brochureUrl)
+- [x] Project form: all fields matching admin ProjectForm (name, builderName, description, location, city, status, priceRange, minPrice, maxPrice, configurations, reraNumber, possessionDate, totalUnits, towers, floors, builderDescription, builderLogo, builderEstablished, builderProjects, badge, customBadgeText, brochureUrl, masterPlanUrl, videoUrl)
+- [x] LocationAutocomplete with Google Places API for both property and project forms
+- [x] Latitude/longitude coordinates captured from location picker
+- [x] Property image gallery upload (public-safe, Firebase token-gated, 10 MB limit per file, max 20 images)
+- [x] Project image gallery upload (same as property)
+- [x] Property video links (multiple YouTube/Vimeo/virtual tour URLs)
+- [x] Project additional videos tab with title and type fields
+- [x] Project amenities tab (name + icon selection matching admin form)
+- [x] Project floor plans tab (name, bedrooms, bathrooms, area, price)
+- [x] Builder info tab (description, logo, established year, total projects)
+- [x] Brochure PDF upload for both property and project
+- [x] Master plan image upload for projects
+- [x] Backend router expanded to accept all new fields and insert into all related tables
+- [x] 61 unit tests passing (all test files green)
