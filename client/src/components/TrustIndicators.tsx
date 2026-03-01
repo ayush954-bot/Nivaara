@@ -60,7 +60,7 @@ export default function TrustIndicators() {
           <div className="text-center p-6 bg-card rounded-xl shadow-lg hover:shadow-xl transition-shadow">
             <div className="relative w-full h-40 mb-4 rounded-xl overflow-hidden">
               <img
-                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/HwHVkxDSRHIINOxc.webp"
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/SoXHbLjfEJafLaBL.jpg"
                 alt="Builder Partners"
                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
               />
