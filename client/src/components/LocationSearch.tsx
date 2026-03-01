@@ -167,9 +167,9 @@ export function LocationSearch({
     });
   };
 
-  // Handle click outside to close suggestions
+  // Handle click/touch outside to close suggestions
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (
         suggestionsRef.current &&
         !suggestionsRef.current.contains(event.target as Node) &&
@@ -181,7 +181,11 @@ export function LocationSearch({
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   const handleInputChange = (value: string) => {
@@ -199,6 +203,7 @@ export function LocationSearch({
     setIsUsingCoordinates(true);
     setJustSelected(true);
     setPlaceSuggestions([]);
+    onLocationChange(suggestion.description);
     
     // Notify parent about location name
     if (onLocationNameChange) {
@@ -258,9 +263,9 @@ export function LocationSearch({
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {/* Location Input with Autocomplete */}
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-[200px]">
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -275,8 +280,17 @@ export function LocationSearch({
                   setShowSuggestions(true);
                 }
               }}
-              className="pl-10 pr-10"
+              onBlur={() => {
+                // Delay hiding so onMouseDown/onTouchEnd on suggestion can fire first
+                setTimeout(() => setShowSuggestions(false), 200);
+              }}
+              className="pl-10 pr-10 text-foreground bg-background"
+              style={{ color: 'inherit', WebkitTextFillColor: 'inherit' }}
               disabled={isGeocoding}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
             />
             {isGeocoding && (
               <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-primary" />
@@ -302,17 +316,27 @@ export function LocationSearch({
           {showSuggestions && placeSuggestions.length > 0 && (
             <div
               ref={suggestionsRef}
-              className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+              className="absolute z-[9999] w-full mt-1 bg-white border border-gray-300 rounded-md shadow-xl max-h-60 overflow-auto"
+              style={{ top: '100%', left: 0, right: 0 }}
             >
-              {placeSuggestions.map((suggestion, index) => (
+              {placeSuggestions.map((suggestion) => (
                 <button
                   key={suggestion.placeId}
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className="w-full px-4 py-2 text-left text-gray-900 hover:bg-gray-100 transition-colors"
+                  onMouseDown={(e) => {
+                    // Use onMouseDown instead of onClick to fire before onBlur
+                    e.preventDefault();
+                    handleSuggestionClick(suggestion);
+                  }}
+                  onTouchEnd={(e) => {
+                    // Handle touch events for mobile
+                    e.preventDefault();
+                    handleSuggestionClick(suggestion);
+                  }}
+                  className="w-full px-4 py-3 text-left text-gray-900 hover:bg-gray-100 active:bg-gray-200 transition-colors"
                 >
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-600" />
-                    <span className="text-black">{suggestion.description}</span>
+                    <MapPin className="h-4 w-4 text-gray-600 shrink-0" />
+                    <span className="text-black text-sm">{suggestion.description}</span>
                   </div>
                 </button>
               ))}

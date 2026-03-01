@@ -45,15 +45,15 @@ export default function Locations() {
   ];
 
   const majorIndianCities = [
-    { name: "Mumbai", state: "Maharashtra" },
-    { name: "Delhi NCR", state: "Delhi" },
-    { name: "Bangalore", state: "Karnataka" },
-    { name: "Hyderabad", state: "Telangana" },
-    { name: "Chennai", state: "Tamil Nadu" },
-    { name: "Kolkata", state: "West Bengal" },
-    { name: "Ahmedabad", state: "Gujarat" },
-    { name: "Surat", state: "Gujarat" },
-    { name: "Jabalpur", state: "Madhya Pradesh" },
+    { name: "Mumbai", state: "Maharashtra", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/YsPBthDepKEQgznZ.jpg" },
+    { name: "Delhi NCR", state: "Delhi", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/InzMNsEuQEizcOyU.jpg" },
+    { name: "Bangalore", state: "Karnataka", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/ScgLzDwAmfsEBtYD.jpg" },
+    { name: "Hyderabad", state: "Telangana", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/xoeECEtEFZuDLitA.jpg" },
+    { name: "Chennai", state: "Tamil Nadu", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/ogMzmmBbCfuiorGc.jpg" },
+    { name: "Kolkata", state: "West Bengal", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/mlApRrPNJIekNENr.jpg" },
+    { name: "Ahmedabad", state: "Gujarat", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/BuOgLwchAelrpapI.jpg" },
+    { name: "Surat", state: "Gujarat", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/VSdhyuwhrveUweao.jpg" },
+    { name: "Jabalpur", state: "Madhya Pradesh", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/VSdhyuwhrveUweao.jpg" },
   ];
 
   return (
@@ -111,14 +111,21 @@ export default function Locations() {
               We provide comprehensive real estate solutions in major cities across India
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {majorIndianCities.map((city, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <MapPin className="h-8 w-8 text-primary mx-auto mb-3" />
-                  <h3 className="font-semibold text-lg">{city.name}</h3>
-                  <p className="text-sm text-muted-foreground">{city.state}</p>
-                </CardContent>
+              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer">
+                <div className="relative h-32 overflow-hidden">
+                  <img
+                    src={city.image}
+                    alt={city.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white">
+                    <h3 className="font-bold text-sm leading-tight">{city.name}</h3>
+                    <p className="text-xs text-white/80">{city.state}</p>
+                  </div>
+                </div>
               </Card>
             ))}
           </div>

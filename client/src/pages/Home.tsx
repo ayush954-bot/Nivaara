@@ -186,7 +186,7 @@ export default function Home() {
                 description: "Complete transparency in every transaction with verified properties and honest guidance",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/HwHVkxDSRHIINOxc.webp",
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/NIxqEwiihscOwOmh.jpg",
                 title: "Expert Network",
                 description: "Strong relationships with top builders and comprehensive market knowledge",
               },
