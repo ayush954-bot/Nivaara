@@ -4,7 +4,7 @@ import { firebaseAuth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Phone, Shield, ArrowRight, RefreshCw } from "lucide-react";
+import { Phone, Shield, ArrowRight, RefreshCw, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 interface PhoneOtpVerificationProps {
@@ -19,9 +19,46 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const confirmationRef = useRef<ConfirmationResult | null>(null);
-  const recaptchaContainerRef = useRef<HTMLDivElement>(null);
   const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
+  const recaptchaContainerRef = useRef<HTMLDivElement>(null);
+
+  // Initialize reCAPTCHA once on mount
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      if (!recaptchaContainerRef.current) return;
+      try {
+        recaptchaVerifierRef.current = new RecaptchaVerifier(
+          firebaseAuth,
+          recaptchaContainerRef.current,
+          {
+            size: "invisible",
+            callback: () => {},
+            "expired-callback": () => {
+              // Reset verifier on expiry
+              recaptchaVerifierRef.current = null;
+            },
+          }
+        );
+        // Pre-render the reCAPTCHA so it's ready when user clicks Send
+        recaptchaVerifierRef.current.render().catch(() => {});
+      } catch (e) {
+        console.error("reCAPTCHA init error:", e);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      if (recaptchaVerifierRef.current) {
+        try {
+          recaptchaVerifierRef.current.clear();
+        } catch (_) {}
+        recaptchaVerifierRef.current = null;
+      }
+    };
+  }, []);
 
   // Countdown timer for resend
   useEffect(() => {
@@ -30,33 +67,34 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  const initRecaptcha = () => {
-    // Clear any previous verifier
+  const formatPhone = (raw: string): string => {
+    const digits = raw.replace(/\D/g, "");
+    if (digits.startsWith("0")) return "+91" + digits.slice(1);
+    if (digits.length === 10) return "+91" + digits;
+    if (digits.startsWith("91") && digits.length === 12) return "+" + digits;
+    return "+" + digits;
+  };
+
+  const resetRecaptcha = () => {
     if (recaptchaVerifierRef.current) {
-      recaptchaVerifierRef.current.clear();
+      try {
+        recaptchaVerifierRef.current.clear();
+      } catch (_) {}
       recaptchaVerifierRef.current = null;
     }
     if (!recaptchaContainerRef.current) return;
-    recaptchaVerifierRef.current = new RecaptchaVerifier(
-      firebaseAuth,
-      recaptchaContainerRef.current,
-      {
-        size: "invisible",
-        callback: () => {},
-      }
-    );
-  };
-
-  const formatPhone = (raw: string): string => {
-    const digits = raw.replace(/\D/g, "");
-    // If starts with 0, replace with +91
-    if (digits.startsWith("0")) return "+91" + digits.slice(1);
-    // If 10 digits (Indian), prepend +91
-    if (digits.length === 10) return "+91" + digits;
-    // If already has country code
-    if (digits.startsWith("91") && digits.length === 12) return "+" + digits;
-    // Otherwise assume international with +
-    return "+" + digits;
+    try {
+      recaptchaVerifierRef.current = new RecaptchaVerifier(
+        firebaseAuth,
+        recaptchaContainerRef.current,
+        {
+          size: "invisible",
+          callback: () => {},
+        }
+      );
+    } catch (e) {
+      console.error("reCAPTCHA reset error:", e);
+    }
   };
 
   const sendOtp = async () => {
@@ -66,8 +104,14 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
       return;
     }
     setLoading(true);
+    setErrorDetail(null);
+
+    // If verifier was cleared (expired or errored), re-create it
+    if (!recaptchaVerifierRef.current) {
+      resetRecaptcha();
+    }
+
     try {
-      initRecaptcha();
       const confirmation = await signInWithPhoneNumber(
         firebaseAuth,
         formatted,
@@ -78,14 +122,31 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
       setCountdown(60);
       toast.success(`OTP sent to ${formatted}`);
     } catch (err: any) {
-      console.error("OTP send error:", err);
-      if (err.code === "auth/too-many-requests") {
-        toast.error("Too many attempts. Please try again after some time.");
-      } else if (err.code === "auth/invalid-phone-number") {
-        toast.error("Invalid phone number. Please check and try again.");
-      } else {
-        toast.error("Failed to send OTP. Please try again.");
+      console.error("OTP send error:", err?.code, err?.message);
+      // Reset reCAPTCHA after failure so user can retry
+      resetRecaptcha();
+
+      const code = err?.code || "";
+      let msg = "Failed to send OTP. Please try again.";
+
+      if (code === "auth/too-many-requests") {
+        msg = "Too many attempts. Please wait a few minutes and try again.";
+      } else if (code === "auth/invalid-phone-number") {
+        msg = "Invalid phone number. Please check and try again.";
+      } else if (code === "auth/quota-exceeded") {
+        msg = "Daily OTP limit reached. Please try again tomorrow or contact support.";
+      } else if (code === "auth/captcha-check-failed") {
+        msg = "reCAPTCHA check failed. Please refresh the page and try again.";
+      } else if (code === "auth/network-request-failed") {
+        msg = "Network error. Please check your internet connection.";
+      } else if (code === "auth/app-not-authorized") {
+        msg = "This app is not authorized for Phone Auth. Please contact support.";
+      } else if (code) {
+        msg = `OTP failed (${code}). Please try again.`;
       }
+
+      setErrorDetail(`Error: ${code || "unknown"}`);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -109,14 +170,15 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
       onVerified(formatted, token);
       toast.success("Phone number verified!");
     } catch (err: any) {
-      console.error("OTP verify error:", err);
-      if (err.code === "auth/invalid-verification-code") {
+      console.error("OTP verify error:", err?.code, err?.message);
+      const code = err?.code || "";
+      if (code === "auth/invalid-verification-code") {
         toast.error("Incorrect OTP. Please check and try again.");
-      } else if (err.code === "auth/code-expired") {
+      } else if (code === "auth/code-expired") {
         toast.error("OTP expired. Please request a new one.");
         setStep("phone");
       } else {
-        toast.error("Verification failed. Please try again.");
+        toast.error(`Verification failed (${code || "unknown"}). Please try again.`);
       }
     } finally {
       setLoading(false);
@@ -126,12 +188,14 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
   const resendOtp = async () => {
     if (countdown > 0) return;
     setOtp("");
-    await sendOtp();
+    setStep("phone");
+    // Small delay to let state update before sending
+    setTimeout(() => sendOtp(), 100);
   };
 
   return (
     <div className="bg-card border border-border rounded-2xl p-8 max-w-md mx-auto shadow-lg">
-      {/* Invisible reCAPTCHA container */}
+      {/* Invisible reCAPTCHA container — must stay in DOM */}
       <div ref={recaptchaContainerRef} id="recaptcha-container" />
 
       <div className="text-center mb-8">
@@ -175,6 +239,14 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
               Indian numbers: enter 10 digits (e.g. 9876543210). International: include country code.
             </p>
           </div>
+
+          {errorDetail && (
+            <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 rounded-lg p-3">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>{errorDetail}</span>
+            </div>
+          )}
+
           <Button
             onClick={sendOtp}
             disabled={loading || phone.length < 10}
@@ -246,7 +318,7 @@ export default function PhoneOtpVerification({ onVerified }: PhoneOtpVerificatio
           </div>
 
           <button
-            onClick={() => { setStep("phone"); setOtp(""); }}
+            onClick={() => { setStep("phone"); setOtp(""); setErrorDetail(null); }}
             className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             ← Change phone number
