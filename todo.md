@@ -2130,3 +2130,11 @@
 - [x] Reduce keywords from 11 to 6 focused keywords
 - [x] Increase title from 24 characters to 56 characters
 - [x] Reduce description from 264 characters to 152 characters
+
+## Fix Navbar Overlap and Resume Icon Replacements
+
+- [ ] Fix navbar overlap issue on smaller screens/laptops (logo and nav links overlapping)
+- [ ] Replace Real Estate Expertise, Technology Innovation, Client-First Mindset icons (Team page)
+- [ ] Replace Our Mission, Our Vision icons (About page)
+- [ ] Replace Trust & Transparency, Expert Network, End-to-End Support, Market Expertise icons (Home page)
+- [ ] Replace International Markets icon (Locations page)

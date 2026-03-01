@@ -74,11 +74,11 @@ export default function Locations() {
       <section className="py-16 bg-background">
         <div className="container">
           <div className="text-center mb-12">
-            <div className="relative w-32 h-32 mx-auto mb-4 rounded-xl overflow-hidden">
+            <div className="relative w-full max-w-2xl h-56 mx-auto mb-6 rounded-xl overflow-hidden">
               <img 
-                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/eQAFLEBMPjJVoQxw.jpg" 
-                alt="International Markets" 
-                className="w-full h-full object-cover"
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/yTjeXVftFwiApUtJ.png" 
+                alt="International Markets - Dubai Skyline" 
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
             </div>
             <h2 className="text-4xl font-bold mb-4 text-foreground">International Markets</h2>

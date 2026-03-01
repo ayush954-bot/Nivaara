@@ -58,8 +58,12 @@ export default function TrustIndicators() {
         {/* Trust Counters - Only Accurate Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto mb-12">
           <div className="text-center p-6 bg-card rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-              <Building2 className="h-8 w-8 text-primary" />
+            <div className="relative w-full h-40 mb-4 rounded-xl overflow-hidden">
+              <img
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/HwHVkxDSRHIINOxc.webp"
+                alt="Builder Partners"
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+              />
             </div>
             <AnimatedCounter end={20} suffix="+" />
             <div className="text-lg font-semibold text-foreground mt-2">
@@ -71,8 +75,12 @@ export default function TrustIndicators() {
           </div>
 
           <div className="text-center p-6 bg-card rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-              <Landmark className="h-8 w-8 text-primary" />
+            <div className="relative w-full h-40 mb-4 rounded-xl overflow-hidden">
+              <img
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/tgEJlapDdTfhMdzL.jpg"
+                alt="Bank Tie-ups"
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+              />
             </div>
             <AnimatedCounter end={18} suffix="+" />
             <div className="text-lg font-semibold text-foreground mt-2">

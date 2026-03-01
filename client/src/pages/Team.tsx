@@ -110,7 +110,7 @@ export default function Team() {
               <div className="text-center">
                 <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                   <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/kBfpYGUWyKeIsNdP.jpg" 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/GBIJAGQzHQMrGsPN.jpg" 
                     alt="Real Estate Expertise" 
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
@@ -123,7 +123,7 @@ export default function Team() {
               <div className="text-center">
                 <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                   <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/dBqEzBqyJzdLJItB.webp" 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/vOxWMfSNcCVchFZC.jpeg" 
                     alt="Technology Innovation" 
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
@@ -136,7 +136,7 @@ export default function Team() {
               <div className="text-center">
                 <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                   <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/uNSCGMDSPRAHnMSW.jpg" 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/OEqCPJrtaLChcvtP.jpeg" 
                     alt="Client-First Mindset" 
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />

@@ -24,26 +24,26 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-2">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <img src="/images/nivaara-logo.png" alt="Nivaara" className="h-20 sm:h-24 w-auto" />
+          <Link href="/" className="flex items-center space-x-2 shrink-0">
+            <img src="/images/nivaara-logo.png" alt="Nivaara" className="h-10 sm:h-12 w-auto" />
             <div className="flex flex-col justify-center">
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">Nivaara</span>
-                <span className="text-xs sm:text-sm font-medium text-muted-foreground">Realty Solutions</span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-lg sm:text-xl font-bold text-foreground tracking-tight">Nivaara</span>
+                <span className="hidden sm:inline text-xs font-medium text-muted-foreground">Realty Solutions</span>
               </div>
-              <span className="text-[10px] sm:text-xs text-muted-foreground/80 italic mt-0.5 tracking-wide">Simplifying Realty</span>
+              <span className="hidden sm:block text-[10px] text-muted-foreground/80 italic tracking-wide">Simplifying Realty</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-end mr-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                   location === link.href ? "text-primary" : "text-foreground"
                 }`}
               >
@@ -80,7 +80,7 @@ export default function Header() {
           </nav>
 
           {/* CTA Button */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block shrink-0">
             <Button asChild>
               <Link href="/contact">Get Started</Link>
             </Button>
@@ -88,7 +88,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden"
+            className="lg:hidden shrink-0"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -102,7 +102,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-border">
+          <nav className="lg:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link

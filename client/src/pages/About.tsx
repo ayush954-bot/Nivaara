@@ -44,7 +44,7 @@ export default function About() {
               <CardContent className="pt-6">
                 <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                   <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/leKcGoumIsCmLZSg.jpg" 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/qTxkeXlZXkOfoGHJ.jpg" 
                     alt="Our Mission" 
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
@@ -60,7 +60,7 @@ export default function About() {
               <CardContent className="pt-6">
                 <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
                   <img 
-                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/leKcGoumIsCmLZSg.jpg" 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/vCKvHTnvttfdhKoV.jpg" 
                     alt="Our Vision" 
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
@@ -74,7 +74,13 @@ export default function About() {
 
             <Card>
               <CardContent className="pt-6">
-                <Heart className="h-12 w-12 text-primary mb-4" />
+                <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/OzjGKRIDbeVkdkVE.jpg" 
+                    alt="Our Values" 
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
                 <h3 className="text-2xl font-bold mb-4">Our Values</h3>
                 <ul className="text-muted-foreground space-y-2">
                   <li className="flex items-start">

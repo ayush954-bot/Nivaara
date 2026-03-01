@@ -48,8 +48,15 @@ export default function EMICalculator() {
     <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/10">
       <div className="container max-w-5xl">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <Calculator className="h-8 w-8 text-primary" />
+          <div className="relative w-full max-w-md h-48 mx-auto mb-6 rounded-xl overflow-hidden">
+            <img
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/qTxkeXlZXkOfoGHJ.jpg"
+              alt="EMI Calculator"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center pb-4">
+              <span className="text-white text-2xl font-bold">Home Loan Calculator</span>
+            </div>
           </div>
           <h2 className="text-4xl font-bold text-foreground mb-4">
             EMI Calculator

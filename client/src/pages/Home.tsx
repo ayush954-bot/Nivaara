@@ -181,22 +181,22 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/pxRDrkDJHXdPOHOy.png",
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/tgEJlapDdTfhMdzL.jpg",
                 title: "Trust & Transparency",
                 description: "Complete transparency in every transaction with verified properties and honest guidance",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/kBfpYGUWyKeIsNdP.jpg",
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/HwHVkxDSRHIINOxc.webp",
                 title: "Expert Network",
                 description: "Strong relationships with top builders and comprehensive market knowledge",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/uNSCGMDSPRAHnMSW.jpg",
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/OzjGKRIDbeVkdkVE.jpg",
                 title: "End-to-End Support",
                 description: "From search to paperwork, we manage everything for a seamless experience",
               },
               {
-                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/kBfpYGUWyKeIsNdP.jpg",
+                image: "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/GBIJAGQzHQMrGsPN.jpg",
                 title: "Market Expertise",
                 description: "Deep understanding of Pune's real estate market and investment opportunities",
               },
