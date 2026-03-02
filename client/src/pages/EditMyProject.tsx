@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Trash2, Upload, Loader2, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Upload, Loader2, X, AlertTriangle, Info } from "lucide-react";
 import { Link } from "wouter";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 
@@ -80,7 +80,7 @@ export default function EditMyProject() {
   const uploadMutation = trpc.publicListing.uploadFile.useMutation();
   const updateMutation = trpc.publicListing.updateMyProject.useMutation({
     onSuccess: () => {
-      toast.success("Project updated successfully.");
+      toast.success("Changes saved. Your listing is now pending re-review by our team.");
       navigate("/my-listings");
     },
     onError: (e) => toast.error(e.message),
@@ -257,6 +257,35 @@ export default function EditMyProject() {
         </Button>
         <h1 className="text-2xl font-bold">Edit Project</h1>
       </div>
+
+      {/* Re-review notice banners */}
+      {proj.listingStatus === "published" && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 mb-6">
+          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-amber-800 text-sm">Saving changes will take your listing offline for re-review</p>
+            <p className="text-amber-700 text-sm mt-1">Your project is currently <strong>live</strong>. Once you save edits, it will be moved to <strong>Pending Review</strong> and temporarily hidden from buyers until a staff member re-approves it (usually within 30 minutes).</p>
+          </div>
+        </div>
+      )}
+      {proj.listingStatus === "pending_review" && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200 mb-6">
+          <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-blue-800 text-sm">Your listing is already pending review</p>
+            <p className="text-blue-700 text-sm mt-1">You can update the details below. After saving, it will remain in the review queue for staff approval.</p>
+          </div>
+        </div>
+      )}
+      {proj.listingStatus === "rejected" && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-green-50 border border-green-200 mb-6">
+          <Info className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-green-800 text-sm">Fix and resubmit for review</p>
+            <p className="text-green-700 text-sm mt-1">Your project was previously rejected. Update the details below and save — it will be sent back to staff for re-review.</p>
+          </div>
+        </div>
+      )}
 
       <Tabs defaultValue="basic">
         <TabsList className="mb-6 flex-wrap h-auto">

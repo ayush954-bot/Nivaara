@@ -2241,3 +2241,11 @@
 - [ ] My Listings: replace limited edit dialog with full-featured edit form (all fields same as admin PropertyForm/ProjectForm)
 - [ ] My Listings: expand updateMyProperty/updateMyProject backend mutations to accept all fields
 - [ ] LocationSearch: fix autocomplete to bias toward India/Pune so localities like Purandar appear in results
+
+## Re-Review Flow for Public Listing Edits
+
+- [x] Reset listing to pending_review when public user edits (backend updateMyProperty/updateMyProject)
+- [x] Send re-review email to info@nivaararealty.com when a public user edits their listing
+- [x] Show re-review notice banner in EditMyProperty form
+- [x] Show re-review notice banner in EditMyProject form
+- [x] Show "already pending" notice when editing a pending_review listing

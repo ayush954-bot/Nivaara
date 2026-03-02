@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Trash2, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Upload, Loader2, AlertTriangle, Info } from "lucide-react";
 import { Link } from "wouter";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 
@@ -59,7 +59,7 @@ export default function EditMyProperty() {
   const uploadMutation = trpc.publicListing.uploadFile.useMutation();
   const updateMutation = trpc.publicListing.updateMyProperty.useMutation({
     onSuccess: () => {
-      toast.success("Property updated successfully.");
+      toast.success("Changes saved. Your listing is now pending re-review by our team.");
       navigate("/my-listings");
     },
     onError: (e) => toast.error(e.message),
@@ -228,6 +228,35 @@ export default function EditMyProperty() {
         </Button>
         <h1 className="text-2xl font-bold">Edit Property</h1>
       </div>
+
+      {/* Re-review notice banners */}
+      {prop.listingStatus === "published" && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 mb-6">
+          <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-amber-800 text-sm">Saving changes will take your listing offline for re-review</p>
+            <p className="text-amber-700 text-sm mt-1">Your property is currently <strong>live</strong>. Once you save edits, it will be moved to <strong>Pending Review</strong> and temporarily hidden from buyers until a staff member re-approves it (usually within 30 minutes).</p>
+          </div>
+        </div>
+      )}
+      {prop.listingStatus === "pending_review" && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200 mb-6">
+          <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-blue-800 text-sm">Your listing is already pending review</p>
+            <p className="text-blue-700 text-sm mt-1">You can update the details below. After saving, it will remain in the review queue for staff approval.</p>
+          </div>
+        </div>
+      )}
+      {prop.listingStatus === "rejected" && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-green-50 border border-green-200 mb-6">
+          <Info className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-green-800 text-sm">Fix and resubmit for review</p>
+            <p className="text-green-700 text-sm mt-1">Your listing was previously rejected. Update the details below and save — it will be sent back to staff for re-review.</p>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* Basic Info */}

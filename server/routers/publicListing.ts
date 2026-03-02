@@ -13,7 +13,7 @@ import {
 import { eq } from "drizzle-orm";
 import { storagePut } from "../storage";
 import { notifyOwner } from "../_core/notification";
-import { sendNewPropertySubmissionNotification, sendNewProjectSubmissionNotification } from "../email";
+import { sendNewPropertySubmissionNotification, sendNewProjectSubmissionNotification, sendPropertyReEditNotification, sendProjectReEditNotification } from "../email";
 import { nanoid } from "nanoid";
 
 // Helper: verify Firebase ID token server-side via Firebase REST API
@@ -490,6 +490,8 @@ export const publicListingRouter = router({
       const { id, videoUrls, imageUrls } = input;
       // Only update columns that actually exist in the properties table
       const validUpdates: Record<string, unknown> = {};
+      // Always reset listing status to pending_review when a public user edits their listing
+      validUpdates.listingStatus = "pending_review";
       if (input.title !== undefined) validUpdates.title = input.title;
       if (input.description !== undefined) validUpdates.description = input.description;
       if (input.price !== undefined) validUpdates.price = input.price;
@@ -525,6 +527,26 @@ export const publicListingRouter = router({
         await db.update(properties)
           .set({ videoUrl: videoUrls.length > 0 ? JSON.stringify(videoUrls) : null })
           .where(eq(properties.id, id));
+      }
+
+      // Fetch updated property to get current values for email notification
+      const [updatedProp] = await db
+        .select()
+        .from(properties)
+        .where(eq(properties.id, id));
+
+      // Send re-review notification email to admin
+      if (updatedProp) {
+        sendPropertyReEditNotification({
+          title: updatedProp.title,
+          location: updatedProp.location,
+          price: updatedProp.price,
+          priceLabel: updatedProp.priceLabel,
+          propertyType: updatedProp.propertyType,
+          bedrooms: updatedProp.bedrooms,
+          submitterName: updatedProp.submitterName ?? "Unknown",
+          submitterPhone: updatedProp.submitterPhone ?? phone,
+        }).catch(console.error);
       }
 
       return { success: true };
@@ -641,6 +663,8 @@ export const publicListingRouter = router({
       const { firebaseToken, id, videoUrls, imageUrls, amenities, floorPlans, ...updates } = input;
       // Only keep fields that exist in the projects table
       const validProjectUpdates: Record<string, unknown> = {};
+      // Always reset listing status to pending_review when a public user edits their listing
+      validProjectUpdates.listingStatus = "pending_review";
       if (updates.name !== undefined) validProjectUpdates.name = updates.name;
       if (updates.description !== undefined) validProjectUpdates.description = updates.description;
       if (updates.minPrice !== undefined) validProjectUpdates.minPrice = updates.minPrice;
@@ -715,6 +739,26 @@ export const publicListingRouter = router({
             }))
           );
         }
+      }
+
+      // Fetch updated project to get current values for email notification
+      const [updatedProj] = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.id, id));
+
+      // Send re-review notification email to admin
+      if (updatedProj) {
+        sendProjectReEditNotification({
+          name: updatedProj.name,
+          builderName: updatedProj.builderName,
+          city: updatedProj.city,
+          location: updatedProj.location,
+          minPrice: updatedProj.minPrice ? Number(updatedProj.minPrice) : null,
+          maxPrice: updatedProj.maxPrice ? Number(updatedProj.maxPrice) : null,
+          submitterName: updatedProj.submitterName ?? "Unknown",
+          submitterPhone: updatedProj.submitterPhone ?? phone,
+        }).catch(console.error);
       }
 
       return { success: true };
