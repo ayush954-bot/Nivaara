@@ -66,7 +66,7 @@ export default function PropertyForm() {
     title: "",
     description: "",
     propertyType: "Flat" as "Flat" | "Shop" | "Office" | "Land" | "Rental" | "Bank Auction",
-    status: "Ready" as "Under-Construction" | "Ready",
+    status: "Ready" as "Under-Construction" | "Ready" | "Sold",
     location: "",
     latitude: null as number | null,
     longitude: null as number | null,
@@ -347,6 +347,7 @@ export default function PropertyForm() {
                       <SelectItem value="Under-Construction">
                         Under Construction
                       </SelectItem>
+                      <SelectItem value="Sold">Sold</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

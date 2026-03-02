@@ -132,7 +132,7 @@ export default function ProjectForm() {
     city: "Pune",
     latitude: null as number | null,
     longitude: null as number | null,
-    status: "Under Construction" as "Upcoming" | "Under Construction" | "Ready to Move",
+    status: "Under Construction" as "Upcoming" | "Under Construction" | "Ready to Move" | "Sold Out",
     priceRange: "",
     minPrice: "",
     maxPrice: "",
@@ -447,6 +447,7 @@ export default function ProjectForm() {
                         <SelectItem value="Upcoming">Upcoming</SelectItem>
                         <SelectItem value="Under Construction">Under Construction</SelectItem>
                         <SelectItem value="Ready to Move">Ready to Move</SelectItem>
+                        <SelectItem value="Sold Out">Sold Out</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -4,7 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Link } from "wouter";
+import { toast } from "sonner";
 import {
   Home,
   Building2,
@@ -16,6 +35,10 @@ import {
   AlertCircle,
   Plus,
   Phone,
+  Eye,
+  Pencil,
+  Trash2,
+  Tag,
 } from "lucide-react";
 import PhoneOtpVerification from "@/components/PhoneOtpVerification";
 
@@ -46,11 +69,507 @@ function StatusBadge({ status }: { status: string | null }) {
   );
 }
 
+// ─── Edit Property Dialog ─────────────────────────────────────────────────────
+function EditPropertyDialog({
+  prop,
+  token,
+  open,
+  onClose,
+  onSuccess,
+}: {
+  prop: any;
+  token: string;
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [form, setForm] = useState({
+    title: prop.title ?? "",
+    price: String(prop.price ?? ""),
+    status: prop.status ?? "Ready",
+    description: prop.description ?? "",
+  });
+
+  const updateMutation = trpc.publicListing.updateMyProperty.useMutation({
+    onSuccess: () => {
+      toast.success("Listing updated successfully.");
+      onSuccess();
+      onClose();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Edit Property Listing</DialogTitle>
+          <DialogDescription>Update the details of your property.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-1">
+            <Label>Title</Label>
+            <Input
+              value={form.title}
+              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-1">
+            <Label>Price (₹)</Label>
+            <Input
+              type="number"
+              value={form.price}
+              onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-1">
+            <Label>Status</Label>
+            <Select
+              value={form.status}
+              onValueChange={(v) => setForm((f) => ({ ...f, status: v }))}
+            >
+              <SelectTrigger className="text-gray-900 bg-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Ready">Ready to Move</SelectItem>
+                <SelectItem value="Under-Construction">Under Construction</SelectItem>
+                <SelectItem value="Sold">Sold</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label>Description</Label>
+            <Textarea
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              rows={3}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button
+            onClick={() =>
+              updateMutation.mutate({
+                firebaseToken: token,
+                id: prop.id,
+                title: form.title || undefined,
+                price: form.price || undefined,
+                status: (form.status as any) || undefined,
+                description: form.description || undefined,
+              })
+            }
+            disabled={updateMutation.isPending}
+          >
+            {updateMutation.isPending ? "Saving…" : "Save Changes"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ─── Edit Project Dialog ──────────────────────────────────────────────────────
+function EditProjectDialog({
+  proj,
+  token,
+  open,
+  onClose,
+  onSuccess,
+}: {
+  proj: any;
+  token: string;
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [form, setForm] = useState({
+    name: proj.name ?? "",
+    builderName: proj.builderName ?? "",
+    status: proj.status ?? "Under Construction",
+    description: proj.description ?? "",
+  });
+
+  const updateMutation = trpc.publicListing.updateMyProject.useMutation({
+    onSuccess: () => {
+      toast.success("Project listing updated successfully.");
+      onSuccess();
+      onClose();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Edit Project Listing</DialogTitle>
+          <DialogDescription>Update the details of your project.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-1">
+            <Label>Project Name</Label>
+            <Input
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-1">
+            <Label>Builder Name</Label>
+            <Input
+              value={form.builderName}
+              onChange={(e) => setForm((f) => ({ ...f, builderName: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-1">
+            <Label>Status</Label>
+            <Select
+              value={form.status}
+              onValueChange={(v) => setForm((f) => ({ ...f, status: v }))}
+            >
+              <SelectTrigger className="text-gray-900 bg-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Upcoming">Upcoming</SelectItem>
+                <SelectItem value="Under Construction">Under Construction</SelectItem>
+                <SelectItem value="Ready to Move">Ready to Move</SelectItem>
+                <SelectItem value="Sold Out">Sold Out</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label>Description</Label>
+            <Textarea
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              rows={3}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button
+            onClick={() =>
+              updateMutation.mutate({
+                firebaseToken: token,
+                id: proj.id,
+                name: form.name || undefined,
+                builderName: form.builderName || undefined,
+                status: (form.status as any) || undefined,
+                description: form.description || undefined,
+              })
+            }
+            disabled={updateMutation.isPending}
+          >
+            {updateMutation.isPending ? "Saving…" : "Save Changes"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ─── Delete Confirmation Dialog ───────────────────────────────────────────────
+function DeleteConfirmDialog({
+  title,
+  open,
+  onClose,
+  onConfirm,
+  isPending,
+}: {
+  title: string;
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  isPending: boolean;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle>Delete Listing</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to permanently delete <strong>{title}</strong>? This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button variant="destructive" onClick={onConfirm} disabled={isPending}>
+            {isPending ? "Deleting…" : "Delete"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ─── Property Card ────────────────────────────────────────────────────────────
+function PropertyCard({ prop, token, onRefresh }: { prop: any; token: string; onRefresh: () => void }) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const markSoldMutation = trpc.publicListing.markPropertyAsSold.useMutation({
+    onSuccess: () => { toast.success("Property marked as Sold."); onRefresh(); },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const deleteMutation = trpc.publicListing.deleteMyProperty.useMutation({
+    onSuccess: () => { toast.success("Listing deleted."); setDeleteOpen(false); onRefresh(); },
+    onError: (e) => toast.error(e.message),
+  });
+
+  return (
+    <>
+      <Card className="overflow-hidden">
+        <div className="flex flex-col sm:flex-row">
+          {prop.imageUrl && (
+            <div className="sm:w-40 h-36 sm:h-auto shrink-0">
+              <img src={prop.imageUrl} alt={prop.title} className="w-full h-full object-cover" />
+            </div>
+          )}
+          <CardContent className="flex-1 py-4 px-4 sm:px-5">
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <Home className="h-4 w-4 text-primary shrink-0" />
+                <h3 className="font-semibold text-foreground">{prop.title}</h3>
+              </div>
+              <StatusBadge status={prop.listingStatus} />
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" />
+                {prop.location}
+              </span>
+              <span className="flex items-center gap-1">
+                <IndianRupee className="h-3.5 w-3.5" />
+                ₹{Number(prop.price).toLocaleString("en-IN")}
+              </span>
+            </div>
+
+            <div className="flex gap-2 flex-wrap mb-3">
+              <Badge variant="secondary">{prop.propertyType}</Badge>
+              <Badge variant="outline">{prop.status}</Badge>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {prop.listingStatus === "published" && prop.slug && (
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/properties/${prop.slug}`}>
+                    <Eye className="h-3.5 w-3.5 mr-1.5" />
+                    View Details
+                  </Link>
+                </Button>
+              )}
+              <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
+                <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                Edit
+              </Button>
+              {prop.status !== "Sold" && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-amber-700 border-amber-300 hover:bg-amber-50"
+                  onClick={() => markSoldMutation.mutate({ firebaseToken: token, id: prop.id })}
+                  disabled={markSoldMutation.isPending}
+                >
+                  <Tag className="h-3.5 w-3.5 mr-1.5" />
+                  {markSoldMutation.isPending ? "Updating…" : "Mark as Sold"}
+                </Button>
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-red-600 border-red-200 hover:bg-red-50"
+                onClick={() => setDeleteOpen(true)}
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                Delete
+              </Button>
+            </div>
+
+            {prop.listingStatus === "rejected" && prop.rejectionReason && (
+              <div className="mt-3 flex items-start gap-2 p-3 rounded-md bg-red-50 border border-red-100">
+                <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-medium text-red-700">Rejection reason:</p>
+                  <p className="text-xs text-red-600 mt-0.5">{prop.rejectionReason}</p>
+                </div>
+              </div>
+            )}
+            {prop.listingStatus === "published" && (
+              <div className="mt-3 flex items-center gap-2 p-3 rounded-md bg-green-50 border border-green-100">
+                <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                <p className="text-xs text-green-700">Your property is live and visible to buyers.</p>
+              </div>
+            )}
+            {prop.createdAt && (
+              <p className="text-xs text-muted-foreground mt-2">
+                Submitted {new Date(prop.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+              </p>
+            )}
+          </CardContent>
+        </div>
+      </Card>
+
+      <EditPropertyDialog
+        prop={prop}
+        token={token}
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        onSuccess={onRefresh}
+      />
+      <DeleteConfirmDialog
+        title={prop.title}
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => deleteMutation.mutate({ firebaseToken: token, id: prop.id })}
+        isPending={deleteMutation.isPending}
+      />
+    </>
+  );
+}
+
+// ─── Project Card ─────────────────────────────────────────────────────────────
+function ProjectCard({ proj, token, onRefresh }: { proj: any; token: string; onRefresh: () => void }) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const markSoldMutation = trpc.publicListing.markProjectAsSold.useMutation({
+    onSuccess: () => { toast.success("Project marked as Sold Out."); onRefresh(); },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const deleteMutation = trpc.publicListing.deleteMyProject.useMutation({
+    onSuccess: () => { toast.success("Project listing deleted."); setDeleteOpen(false); onRefresh(); },
+    onError: (e) => toast.error(e.message),
+  });
+
+  return (
+    <>
+      <Card className="overflow-hidden">
+        <div className="flex flex-col sm:flex-row">
+          {proj.coverImage && (
+            <div className="sm:w-40 h-36 sm:h-auto shrink-0">
+              <img src={proj.coverImage} alt={proj.name} className="w-full h-full object-cover" />
+            </div>
+          )}
+          <CardContent className="flex-1 py-4 px-4 sm:px-5">
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-primary shrink-0" />
+                <h3 className="font-semibold text-foreground">{proj.name}</h3>
+              </div>
+              <StatusBadge status={proj.listingStatus} />
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" />
+                {proj.location}, {proj.city}
+              </span>
+              <span className="flex items-center gap-1">
+                <Building2 className="h-3.5 w-3.5" />
+                {proj.builderName}
+              </span>
+            </div>
+
+            <div className="flex gap-2 flex-wrap mb-3">
+              <Badge variant="secondary">{proj.status}</Badge>
+              <Badge variant="outline">{proj.priceRange}</Badge>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {proj.listingStatus === "published" && proj.slug && (
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/projects/${proj.slug}`}>
+                    <Eye className="h-3.5 w-3.5 mr-1.5" />
+                    View Details
+                  </Link>
+                </Button>
+              )}
+              <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
+                <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                Edit
+              </Button>
+              {proj.status !== "Sold Out" && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-amber-700 border-amber-300 hover:bg-amber-50"
+                  onClick={() => markSoldMutation.mutate({ firebaseToken: token, id: proj.id })}
+                  disabled={markSoldMutation.isPending}
+                >
+                  <Tag className="h-3.5 w-3.5 mr-1.5" />
+                  {markSoldMutation.isPending ? "Updating…" : "Mark as Sold Out"}
+                </Button>
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-red-600 border-red-200 hover:bg-red-50"
+                onClick={() => setDeleteOpen(true)}
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                Delete
+              </Button>
+            </div>
+
+            {proj.listingStatus === "rejected" && proj.rejectionReason && (
+              <div className="mt-3 flex items-start gap-2 p-3 rounded-md bg-red-50 border border-red-100">
+                <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-medium text-red-700">Rejection reason:</p>
+                  <p className="text-xs text-red-600 mt-0.5">{proj.rejectionReason}</p>
+                </div>
+              </div>
+            )}
+            {proj.listingStatus === "published" && (
+              <div className="mt-3 flex items-center gap-2 p-3 rounded-md bg-green-50 border border-green-100">
+                <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                <p className="text-xs text-green-700">Your project is live and visible to buyers.</p>
+              </div>
+            )}
+            {proj.createdAt && (
+              <p className="text-xs text-muted-foreground mt-2">
+                Submitted {new Date(proj.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+              </p>
+            )}
+          </CardContent>
+        </div>
+      </Card>
+
+      <EditProjectDialog
+        proj={proj}
+        token={token}
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        onSuccess={onRefresh}
+      />
+      <DeleteConfirmDialog
+        title={proj.name}
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => deleteMutation.mutate({ firebaseToken: token, id: proj.id })}
+        isPending={deleteMutation.isPending}
+      />
+    </>
+  );
+}
+
+// ─── Main Content ─────────────────────────────────────────────────────────────
 function MyListingsContent({ verified }: { verified: VerifiedSession }) {
+  const utils = trpc.useUtils();
   const { data, isLoading } = trpc.publicListing.getMyListings.useQuery(
     { firebaseToken: verified.token },
     { retry: false }
   );
+
+  const refresh = () => utils.publicListing.getMyListings.invalidate();
 
   const myProperties = data?.properties ?? [];
   const myProjects = data?.projects ?? [];
@@ -125,74 +644,7 @@ function MyListingsContent({ verified }: { verified: VerifiedSession }) {
           ) : (
             <div className="grid gap-4">
               {myProperties.map((prop: any) => (
-                <Card key={prop.id} className="overflow-hidden">
-                  <div className="flex flex-col sm:flex-row">
-                    {prop.imageUrl && (
-                      <div className="sm:w-40 h-36 sm:h-auto shrink-0">
-                        <img
-                          src={prop.imageUrl}
-                          alt={prop.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <CardContent className="flex-1 py-4 px-4 sm:px-5">
-                      <div className="flex items-start justify-between gap-3 mb-2">
-                        <div className="flex items-center gap-2">
-                          <Home className="h-4 w-4 text-primary shrink-0" />
-                          <h3 className="font-semibold text-foreground">{prop.title}</h3>
-                        </div>
-                        <StatusBadge status={prop.listingStatus} />
-                      </div>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
-                          {prop.location}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <IndianRupee className="h-3.5 w-3.5" />
-                          ₹{Number(prop.price).toLocaleString("en-IN")}
-                        </span>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        <Badge variant="secondary">{prop.propertyType}</Badge>
-                        <Badge variant="outline">{prop.status}</Badge>
-                      </div>
-                      {prop.listingStatus === "rejected" && prop.rejectionReason && (
-                        <div className="mt-3 flex items-start gap-2 p-3 rounded-md bg-red-50 border border-red-100">
-                          <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
-                          <div>
-                            <p className="text-xs font-medium text-red-700">Rejection reason:</p>
-                            <p className="text-xs text-red-600 mt-0.5">{prop.rejectionReason}</p>
-                          </div>
-                        </div>
-                      )}
-                      {prop.listingStatus === "published" && (
-                        <div className="mt-3 flex items-center justify-between gap-2 p-3 rounded-md bg-green-50 border border-green-100">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                            <p className="text-xs text-green-700">
-                              Your property is live and visible to buyers.
-                            </p>
-                          </div>
-                          {prop.slug && (
-                            <Link
-                              href={`/properties/${prop.slug}`}
-                              className="text-xs font-medium text-green-700 hover:text-green-800 underline underline-offset-2 shrink-0"
-                            >
-                              View Listing →
-                            </Link>
-                          )}
-                        </div>
-                      )}
-                      {prop.createdAt && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Submitted {new Date(prop.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                        </p>
-                      )}
-                    </CardContent>
-                  </div>
-                </Card>
+                <PropertyCard key={prop.id} prop={prop} token={verified.token} onRefresh={refresh} />
               ))}
             </div>
           )}
@@ -208,74 +660,7 @@ function MyListingsContent({ verified }: { verified: VerifiedSession }) {
           ) : (
             <div className="grid gap-4">
               {myProjects.map((proj: any) => (
-                <Card key={proj.id} className="overflow-hidden">
-                  <div className="flex flex-col sm:flex-row">
-                    {proj.coverImage && (
-                      <div className="sm:w-40 h-36 sm:h-auto shrink-0">
-                        <img
-                          src={proj.coverImage}
-                          alt={proj.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <CardContent className="flex-1 py-4 px-4 sm:px-5">
-                      <div className="flex items-start justify-between gap-3 mb-2">
-                        <div className="flex items-center gap-2">
-                          <Building2 className="h-4 w-4 text-primary shrink-0" />
-                          <h3 className="font-semibold text-foreground">{proj.name}</h3>
-                        </div>
-                        <StatusBadge status={proj.listingStatus} />
-                      </div>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mb-3">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
-                          {proj.location}, {proj.city}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Building2 className="h-3.5 w-3.5" />
-                          {proj.builderName}
-                        </span>
-                      </div>
-                      <div className="flex gap-2 flex-wrap">
-                        <Badge variant="secondary">{proj.status}</Badge>
-                        <Badge variant="outline">{proj.priceRange}</Badge>
-                      </div>
-                      {proj.listingStatus === "rejected" && proj.rejectionReason && (
-                        <div className="mt-3 flex items-start gap-2 p-3 rounded-md bg-red-50 border border-red-100">
-                          <AlertCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
-                          <div>
-                            <p className="text-xs font-medium text-red-700">Rejection reason:</p>
-                            <p className="text-xs text-red-600 mt-0.5">{proj.rejectionReason}</p>
-                          </div>
-                        </div>
-                      )}
-                      {proj.listingStatus === "published" && (
-                        <div className="mt-3 flex items-center justify-between gap-2 p-3 rounded-md bg-green-50 border border-green-100">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                            <p className="text-xs text-green-700">
-                              Your project is live and visible to buyers.
-                            </p>
-                          </div>
-                          {proj.slug && (
-                            <Link
-                              href={`/projects/${proj.slug}`}
-                              className="text-xs font-medium text-green-700 hover:text-green-800 underline underline-offset-2 shrink-0"
-                            >
-                              View Listing →
-                            </Link>
-                          )}
-                        </div>
-                      )}
-                      {proj.createdAt && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Submitted {new Date(proj.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                        </p>
-                      )}
-                    </CardContent>
-                  </div>
-                </Card>
+                <ProjectCard key={proj.id} proj={proj} token={verified.token} onRefresh={refresh} />
               ))}
             </div>
           )}
@@ -293,7 +678,7 @@ export default function MyListings() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">My Listings</h1>
         <p className="text-muted-foreground">
-          Track the status of your property and project submissions. Verify your mobile number to view your listings.
+          Track, edit, and manage your property and project submissions. Verify your mobile number to view your listings.
         </p>
       </div>
 

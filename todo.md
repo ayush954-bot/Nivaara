@@ -2221,3 +2221,14 @@
 - [x] AdminPendingBanner: show for staff users (canManageProperties) not just admin — verified useAuth returns canManageProperties=true for staff, banner already works
 - [x] Home page search: location input typed text not visible — fixed by using explicit text-gray-900 bg-white on input, radius select, and all filter selects in both PropertySearchSection and ProjectSearchSection
 - [x] Confirmed "New" badge (30-day rule) in badgeUtils.ts applies to all properties by createdAt — no listingSource filter, works for public listings automatically
+
+## My Listings Actions & Hero CTA (Mar 2026)
+- [x] My Listings: add "View Details" button linking to the live property/project page
+- [x] My Listings: add "Edit" button opening a pre-filled update form for title, price, description, status
+- [x] My Listings: add "Mark as Sold" button (changes status to Sold, keeps listing published)
+- [x] My Listings: add "Delete" button with confirmation dialog (removes listing entirely)
+- [x] Backend: publicListing.updateMyProperty + updateMyProject mutations
+- [x] Backend: publicListing.markPropertyAsSold + markProjectAsSold mutations
+- [x] Backend: publicListing.deleteMyProperty + deleteMyProject mutations
+- [x] Hero CTA: made "List Your Property" amber-filled button with shadow
+- [x] Hero CTA: made "My Listings" amber-outlined button

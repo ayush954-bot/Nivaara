@@ -1,0 +1,2 @@
+ALTER TABLE `projects` MODIFY COLUMN `status` enum('Upcoming','Under Construction','Ready to Move','Sold Out') NOT NULL;--> statement-breakpoint
+ALTER TABLE `properties` MODIFY COLUMN `status` enum('Under-Construction','Ready','Sold') NOT NULL;

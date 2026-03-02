@@ -34,7 +34,7 @@ export const properties = mysqlTable("properties", {
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
   propertyType: mysqlEnum("propertyType", ["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]).notNull(),
-  status: mysqlEnum("status", ["Under-Construction", "Ready"]).notNull(),
+  status: mysqlEnum("status", ["Under-Construction", "Ready", "Sold"]).notNull(),
   location: varchar("location", { length: 255 }).notNull(), // e.g., "Pune - East Zone", "Mumbai", "Dubai"
   latitude: decimal("latitude", { precision: 10, scale: 8 }), // Latitude coordinate
   longitude: decimal("longitude", { precision: 11, scale: 8 }), // Longitude coordinate
@@ -167,7 +167,7 @@ export const projects = mysqlTable("projects", {
   city: varchar("city", { length: 100 }).notNull(), // e.g., "Pune"
   latitude: decimal("latitude", { precision: 10, scale: 8 }), // Latitude coordinate
   longitude: decimal("longitude", { precision: 11, scale: 8 }), // Longitude coordinate
-  status: mysqlEnum("status", ["Upcoming", "Under Construction", "Ready to Move"]).notNull(),
+  status: mysqlEnum("status", ["Upcoming", "Under Construction", "Ready to Move", "Sold Out"]).notNull(),
   priceRange: varchar("priceRange", { length: 100 }).notNull(), // e.g., "₹85L - ₹1.45Cr"
   minPrice: decimal("minPrice", { precision: 15, scale: 2 }), // For filtering
   maxPrice: decimal("maxPrice", { precision: 15, scale: 2 }), // For filtering

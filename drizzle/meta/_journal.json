@@ -148,6 +148,13 @@
       "when": 1772390480827,
       "tag": "0020_curvy_bill_hollister",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1772417090519,
+      "tag": "0021_free_karnak",
+      "breakpoints": true
     }
   ]
 }

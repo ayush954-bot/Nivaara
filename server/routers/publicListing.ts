@@ -78,7 +78,7 @@ export const publicListingRouter = router({
         title: z.string().min(1),
         description: z.string().min(1),
         propertyType: z.enum(["Flat", "Shop", "Office", "Land", "Rental", "Bank Auction"]),
-        status: z.enum(["Under-Construction", "Ready"]),
+        status: z.enum(["Under-Construction", "Ready", "Sold"]),
         // Location
         location: z.string().min(1),
         latitude: z.number().optional(),
@@ -194,7 +194,7 @@ export const publicListingRouter = router({
         latitude: z.number().optional(),
         longitude: z.number().optional(),
         // Status & Pricing
-        status: z.enum(["Upcoming", "Under Construction", "Ready to Move"]),
+        status: z.enum(["Upcoming", "Under Construction", "Ready to Move", "Sold Out"]),
         priceRange: z.string().min(1),
         minPrice: z.number().optional(),
         maxPrice: z.number().optional(),
@@ -436,6 +436,189 @@ export const publicListingRouter = router({
         .update(projects)
         .set({ listingStatus: "rejected", rejectionReason: input.reason })
         .where(eq(projects.id, input.id));
+      return { success: true };
+    }),
+
+  // Public: update my listing (owner can update their own property/project)
+  updateMyProperty: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+        id: z.number(),
+        title: z.string().min(1).optional(),
+        description: z.string().optional(),
+        price: z.string().optional(),
+        priceLabel: z.string().optional(),
+        status: z.string().optional(),
+        bedrooms: z.number().optional(),
+        bathrooms: z.number().optional(),
+        area: z.string().optional(),
+        builderName: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Verify ownership
+      const [existing] = await db
+        .select({ id: properties.id, submitterPhone: properties.submitterPhone })
+        .from(properties)
+        .where(eq(properties.id, input.id));
+      if (!existing || existing.submitterPhone !== phone) {
+        throw new Error("Not authorized to update this listing.");
+      }
+
+      const { firebaseToken, id, ...updates } = input;
+      const filteredUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([, v]) => v !== undefined)
+      );
+      await db.update(properties).set(filteredUpdates).where(eq(properties.id, id));
+      return { success: true };
+    }),
+
+  // Public: mark my property as sold
+  markPropertyAsSold: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [existing] = await db
+        .select({ id: properties.id, submitterPhone: properties.submitterPhone })
+        .from(properties)
+        .where(eq(properties.id, input.id));
+      if (!existing || existing.submitterPhone !== phone) {
+        throw new Error("Not authorized to update this listing.");
+      }
+
+      await db.update(properties).set({ status: "Sold" }).where(eq(properties.id, input.id));
+      return { success: true };
+    }),
+
+  // Public: delete my property listing
+  deleteMyProperty: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [existing] = await db
+        .select({ id: properties.id, submitterPhone: properties.submitterPhone })
+        .from(properties)
+        .where(eq(properties.id, input.id));
+      if (!existing || existing.submitterPhone !== phone) {
+        throw new Error("Not authorized to delete this listing.");
+      }
+
+      // Delete related images first
+      await db.delete(propertyImages).where(eq(propertyImages.propertyId, input.id));
+      await db.delete(properties).where(eq(properties.id, input.id));
+      return { success: true };
+    }),
+
+  // Public: update my project listing
+  updateMyProject: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+        id: z.number(),
+        name: z.string().min(1).optional(),
+        description: z.string().optional(),
+        minPrice: z.string().optional(),
+        maxPrice: z.string().optional(),
+        status: z.string().optional(),
+        builderName: z.string().optional(),
+        configurations: z.string().optional(),
+        possessionDate: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [existing] = await db
+        .select({ id: projects.id, submitterPhone: projects.submitterPhone })
+        .from(projects)
+        .where(eq(projects.id, input.id));
+      if (!existing || existing.submitterPhone !== phone) {
+        throw new Error("Not authorized to update this listing.");
+      }
+
+      const { firebaseToken, id, ...updates } = input;
+      const filteredUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([, v]) => v !== undefined)
+      );
+      await db.update(projects).set(filteredUpdates).where(eq(projects.id, id));
+      return { success: true };
+    }),
+
+  // Public: mark my project as sold/completed
+  markProjectAsSold: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [existing] = await db
+        .select({ id: projects.id, submitterPhone: projects.submitterPhone })
+        .from(projects)
+        .where(eq(projects.id, input.id));
+      if (!existing || existing.submitterPhone !== phone) {
+        throw new Error("Not authorized to update this listing.");
+      }
+
+      await db.update(projects).set({ status: "Sold Out" }).where(eq(projects.id, input.id));
+      return { success: true };
+    }),
+
+  // Public: delete my project listing
+  deleteMyProject: publicProcedure
+    .input(
+      z.object({
+        firebaseToken: z.string(),
+        id: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [existing] = await db
+        .select({ id: projects.id, submitterPhone: projects.submitterPhone })
+        .from(projects)
+        .where(eq(projects.id, input.id));
+      if (!existing || existing.submitterPhone !== phone) {
+        throw new Error("Not authorized to delete this listing.");
+      }
+
+      // Delete related data first
+      await db.delete(projectImages).where(eq(projectImages.projectId, input.id));
+      await db.delete(projectAmenities).where(eq(projectAmenities.projectId, input.id));
+      await db.delete(projectFloorPlans).where(eq(projectFloorPlans.projectId, input.id));
+      await db.delete(projectVideos).where(eq(projectVideos.projectId, input.id));
+      await db.delete(projects).where(eq(projects.id, input.id));
       return { success: true };
     }),
 

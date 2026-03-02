@@ -733,7 +733,7 @@ export async function createProject(data: {
   city: string;
   latitude?: number | null;
   longitude?: number | null;
-  status: "Upcoming" | "Under Construction" | "Ready to Move";
+  status: "Upcoming" | "Under Construction" | "Ready to Move" | "Sold Out";
   priceRange: string;
   minPrice?: number | null;
   maxPrice?: number | null;
@@ -806,7 +806,7 @@ export async function updateProject(id: number, data: Partial<{
   city: string;
   latitude: number | null;
   longitude: number | null;
-  status: "Upcoming" | "Under Construction" | "Ready to Move";
+  status: "Upcoming" | "Under Construction" | "Ready to Move" | "Sold Out";
   priceRange: string;
   minPrice: number | null;
   maxPrice: number | null;

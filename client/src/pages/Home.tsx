@@ -75,10 +75,19 @@ export default function Home() {
             </Button>
             <div className="flex items-center gap-2">
               <span className="text-white/50 hidden sm:inline text-sm">|</span>
-              <Button size="sm" variant="ghost" asChild className="text-white/80 hover:text-white hover:bg-white/10 border border-white/30">
+              <Button
+                size="sm"
+                asChild
+                className="bg-amber-500 hover:bg-amber-400 text-white font-semibold border-0 shadow-md shadow-amber-900/30 px-4"
+              >
                 <Link href="/list-property/submit">+ List Your Property</Link>
               </Button>
-              <Button size="sm" variant="ghost" asChild className="text-white/60 hover:text-white/90 hover:bg-white/10">
+              <Button
+                size="sm"
+                variant="outline"
+                asChild
+                className="border-amber-400 text-amber-300 hover:bg-amber-500/20 hover:text-white bg-transparent"
+              >
                 <Link href="/my-listings">My Listings</Link>
               </Button>
             </div>
