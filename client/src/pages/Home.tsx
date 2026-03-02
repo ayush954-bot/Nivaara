@@ -80,7 +80,7 @@ export default function Home() {
                 asChild
                 className="bg-amber-500 hover:bg-amber-400 text-white font-semibold border-0 shadow-md shadow-amber-900/30 px-4"
               >
-                <Link href="/list-property/submit">+ List Your Property</Link>
+                <Link href="/list-property">+ List Your Property</Link>
               </Button>
               <Button
                 size="sm"

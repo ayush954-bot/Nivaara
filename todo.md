@@ -2232,3 +2232,6 @@
 - [x] Backend: publicListing.deleteMyProperty + deleteMyProject mutations
 - [x] Hero CTA: made "List Your Property" amber-filled button with shadow
 - [x] Hero CTA: made "My Listings" amber-outlined button
+
+## Quick Fixes (Mar 2026 - Session 4)
+- [x] Fix "List Your Property" hero amber button to link to /list-property (not /list-property/submit)
