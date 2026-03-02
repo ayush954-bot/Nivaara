@@ -2249,3 +2249,14 @@
 - [x] Show re-review notice banner in EditMyProperty form
 - [x] Show re-review notice banner in EditMyProject form
 - [x] Show "already pending" notice when editing a pending_review listing
+
+## Edit History / Audit Log & Edit-Lock
+
+- [x] Add listingEdits table to drizzle/schema.ts (id, listingType, listingId, submitterPhone, editedAt, changedFields JSON)
+- [x] Push DB migration with pnpm db:push
+- [x] Backend: insert audit log row in updateMyProperty and updateMyProject mutations
+- [x] Backend: add getMyPropertyEdits and getMyProjectEdits queries in publicListing router
+- [x] Frontend EditMyProperty: lock form and show "Pending Review" message when listingStatus === pending_review
+- [x] Frontend EditMyProject: lock form and show "Pending Review" message when listingStatus === pending_review
+- [x] Frontend MyListings: show edit history timeline per listing (collapsible)
+- [x] Write vitest tests for audit log recording

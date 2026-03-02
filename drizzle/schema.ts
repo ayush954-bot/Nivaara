@@ -266,3 +266,19 @@ export const projectVideos = mysqlTable("project_videos", {
 
 export type ProjectVideo = typeof projectVideos.$inferSelect;
 export type InsertProjectVideo = typeof projectVideos.$inferInsert;
+
+/**
+ * Listing Edits table - audit log of all public user edits to their listings
+ * Records each save action with timestamp, phone, and a JSON snapshot of changed fields
+ */
+export const listingEdits = mysqlTable("listing_edits", {
+  id: int("id").autoincrement().primaryKey(),
+  listingType: mysqlEnum("listingType", ["property", "project"]).notNull(),
+  listingId: int("listingId").notNull(),
+  listingTitle: varchar("listingTitle", { length: 255 }), // Snapshot of title/name at time of edit
+  submitterPhone: varchar("submitterPhone", { length: 20 }).notNull(),
+  changedFields: text("changedFields"), // JSON array of field names that were changed
+  editedAt: timestamp("editedAt").defaultNow().notNull(),
+});
+export type ListingEdit = typeof listingEdits.$inferSelect;
+export type InsertListingEdit = typeof listingEdits.$inferInsert;

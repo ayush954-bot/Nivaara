@@ -1,0 +1,8 @@
+{
+  "query": "SHOW TABLES LIKE 'listing_edits'; SHOW COLUMNS FROM __drizzle_migrations LIMIT 3;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SHOW TABLES LIKE 'listing_edits'; SHOW COLUMNS FROM __drizzle_migrations LIMIT 3;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 44 near \"LIMIT 3\""
+  ]
+}

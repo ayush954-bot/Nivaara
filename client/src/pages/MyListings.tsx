@@ -39,6 +39,9 @@ import {
   Pencil,
   Trash2,
   Tag,
+  History,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import PhoneOtpVerification from "@/components/PhoneOtpVerification";
 
@@ -305,6 +308,65 @@ function DeleteConfirmDialog({
   );
 }
 
+// ─── Edit History Timeline ───────────────────────────────────────────────────
+function EditHistoryTimeline({ token, listingType, listingId }: { token: string; listingType: "property" | "project"; listingId: number }) {
+  const [open, setOpen] = useState(false);
+  const { data: edits, isLoading } = trpc.publicListing.getMyListingEdits.useQuery(
+    { firebaseToken: token, listingType, listingId },
+    { enabled: open }
+  );
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mt-2"
+      >
+        <History className="h-3.5 w-3.5" />
+        View edit history
+        <ChevronDown className="h-3 w-3" />
+      </button>
+    );
+  }
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={() => setOpen(false)}
+        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-2"
+      >
+        <History className="h-3.5 w-3.5" />
+        Hide edit history
+        <ChevronUp className="h-3 w-3" />
+      </button>
+      {isLoading ? (
+        <p className="text-xs text-muted-foreground">Loading…</p>
+      ) : !edits || edits.length === 0 ? (
+        <p className="text-xs text-muted-foreground italic">No edits recorded yet.</p>
+      ) : (
+        <div className="relative pl-4 border-l-2 border-muted space-y-2">
+          {edits.map((edit) => {
+            const fields: string[] = (() => { try { return JSON.parse(edit.changedFields ?? "[]"); } catch { return []; } })();
+            return (
+              <div key={edit.id} className="relative">
+                <div className="absolute -left-[1.1rem] top-1 w-2.5 h-2.5 rounded-full bg-primary/60 border-2 border-background" />
+                <p className="text-xs font-medium text-foreground">
+                  {new Date(edit.editedAt).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </p>
+                {fields.length > 0 && (
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Changed: {fields.join(", ")}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Property Card ────────────────────────────────────────────────────────────
 function PropertyCard({ prop, token, onRefresh }: { prop: any; token: string; onRefresh: () => void }) {
   const [editOpen, setEditOpen] = useState(false);
@@ -413,6 +475,7 @@ function PropertyCard({ prop, token, onRefresh }: { prop: any; token: string; on
                 Submitted {new Date(prop.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
               </p>
             )}
+            <EditHistoryTimeline token={token} listingType="property" listingId={prop.id} />
           </CardContent>
         </div>
       </Card>
@@ -543,6 +606,7 @@ function ProjectCard({ proj, token, onRefresh }: { proj: any; token: string; onR
                 Submitted {new Date(proj.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
               </p>
             )}
+            <EditHistoryTimeline token={token} listingType="project" listingId={proj.id} />
           </CardContent>
         </div>
       </Card>

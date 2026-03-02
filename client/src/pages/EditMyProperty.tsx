@@ -243,8 +243,8 @@ export default function EditMyProperty() {
         <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200 mb-6">
           <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold text-blue-800 text-sm">Your listing is already pending review</p>
-            <p className="text-blue-700 text-sm mt-1">You can update the details below. After saving, it will remain in the review queue for staff approval.</p>
+            <p className="font-semibold text-blue-800 text-sm">Your listing is currently under review — editing is locked</p>
+            <p className="text-blue-700 text-sm mt-1">Staff are reviewing your listing. Once it is approved or rejected, you will be able to make further edits. Please check back later.</p>
           </div>
         </div>
       )}
@@ -490,9 +490,15 @@ export default function EditMyProperty() {
           <Button variant="outline" asChild>
             <Link href="/my-listings">Cancel</Link>
           </Button>
-          <Button onClick={handleSubmit} disabled={updateMutation.isPending || !title}>
-            {updateMutation.isPending ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</> : "Save Changes"}
-          </Button>
+          {prop.listingStatus === "pending_review" ? (
+            <Button disabled title="Editing is locked while your listing is under review">
+              <Info className="h-4 w-4 mr-2" /> Locked — Under Review
+            </Button>
+          ) : (
+            <Button onClick={handleSubmit} disabled={updateMutation.isPending || !title}>
+              {updateMutation.isPending ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</> : "Save Changes"}
+            </Button>
+          )}
         </div>
       </div>
     </div>

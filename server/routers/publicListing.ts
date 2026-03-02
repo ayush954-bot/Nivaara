@@ -9,6 +9,7 @@ import {
   projectAmenities,
   projectFloorPlans,
   projectVideos,
+  listingEdits,
 } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { storagePut } from "../storage";
@@ -488,6 +489,24 @@ export const publicListingRouter = router({
       }
 
       const { id, videoUrls, imageUrls } = input;
+      // Track which fields were changed for the audit log
+      const changedFieldsList: string[] = [];
+      if (input.title !== undefined) changedFieldsList.push("title");
+      if (input.description !== undefined) changedFieldsList.push("description");
+      if (input.price !== undefined) changedFieldsList.push("price");
+      if (input.priceLabel !== undefined) changedFieldsList.push("priceLabel");
+      if (input.status !== undefined) changedFieldsList.push("status");
+      if (input.propertyType !== undefined) changedFieldsList.push("propertyType");
+      if (input.bedrooms !== undefined) changedFieldsList.push("bedrooms");
+      if (input.bathrooms !== undefined) changedFieldsList.push("bathrooms");
+      if (input.area !== undefined) changedFieldsList.push("area");
+      if (input.builderName !== undefined) changedFieldsList.push("builder");
+      if (input.location !== undefined) changedFieldsList.push("location");
+      if (input.badge !== undefined) changedFieldsList.push("badge");
+      if (input.brochureUrl !== undefined) changedFieldsList.push("brochureUrl");
+      if (imageUrls !== undefined) changedFieldsList.push("images");
+      if (videoUrls !== undefined) changedFieldsList.push("videos");
+
       // Only update columns that actually exist in the properties table
       const validUpdates: Record<string, unknown> = {};
       // Always reset listing status to pending_review when a public user edits their listing
@@ -534,6 +553,15 @@ export const publicListingRouter = router({
         .select()
         .from(properties)
         .where(eq(properties.id, id));
+
+      // Insert audit log entry
+      await db.insert(listingEdits).values({
+        listingType: "property",
+        listingId: id,
+        listingTitle: updatedProp?.title ?? input.title ?? null,
+        submitterPhone: phone,
+        changedFields: JSON.stringify(changedFieldsList),
+      });
 
       // Send re-review notification email to admin
       if (updatedProp) {
@@ -661,6 +689,26 @@ export const publicListingRouter = router({
       }
 
       const { firebaseToken, id, videoUrls, imageUrls, amenities, floorPlans, ...updates } = input;
+      // Track which fields were changed for the audit log
+      const changedFieldsList: string[] = [];
+      if (updates.name !== undefined) changedFieldsList.push("name");
+      if (updates.description !== undefined) changedFieldsList.push("description");
+      if (updates.minPrice !== undefined || updates.maxPrice !== undefined) changedFieldsList.push("price");
+      if (updates.status !== undefined) changedFieldsList.push("status");
+      if (updates.builderName !== undefined) changedFieldsList.push("builderName");
+      if (updates.configurations !== undefined) changedFieldsList.push("configurations");
+      if (updates.possessionDate !== undefined) changedFieldsList.push("possessionDate");
+      if (updates.city !== undefined || updates.location !== undefined) changedFieldsList.push("location");
+      if (updates.reraNumber !== undefined) changedFieldsList.push("reraNumber");
+      if (updates.towers !== undefined || updates.floors !== undefined || updates.totalUnits !== undefined) changedFieldsList.push("projectDetails");
+      if (updates.builderDescription !== undefined || updates.builderEstablished !== undefined || updates.builderLogo !== undefined) changedFieldsList.push("builderInfo");
+      if (updates.masterPlanUrl !== undefined) changedFieldsList.push("masterPlan");
+      if (updates.brochureUrl !== undefined) changedFieldsList.push("brochure");
+      if (imageUrls !== undefined) changedFieldsList.push("images");
+      if (videoUrls !== undefined) changedFieldsList.push("videos");
+      if (amenities !== undefined) changedFieldsList.push("amenities");
+      if (floorPlans !== undefined) changedFieldsList.push("floorPlans");
+
       // Only keep fields that exist in the projects table
       const validProjectUpdates: Record<string, unknown> = {};
       // Always reset listing status to pending_review when a public user edits their listing
@@ -746,6 +794,15 @@ export const publicListingRouter = router({
         .select()
         .from(projects)
         .where(eq(projects.id, id));
+
+      // Insert audit log entry
+      await db.insert(listingEdits).values({
+        listingType: "project",
+        listingId: id,
+        listingTitle: updatedProj?.name ?? updates.name ?? null,
+        submitterPhone: phone,
+        changedFields: JSON.stringify(changedFieldsList),
+      });
 
       // Send re-review notification email to admin
       if (updatedProj) {
@@ -919,5 +976,48 @@ export const publicListingRouter = router({
       ]);
 
       return { ...proj, images, videos, amenities: amenitiesList, floorPlans: floorPlansList };
+    }),
+
+  // Public: get edit history for a specific listing
+  getMyListingEdits: publicProcedure
+    .input(z.object({
+      firebaseToken: z.string(),
+      listingType: z.enum(["property", "project"]),
+      listingId: z.number(),
+    }))
+    .query(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      // Verify ownership
+      if (input.listingType === "property") {
+        const [prop] = await db
+          .select({ submitterPhone: properties.submitterPhone })
+          .from(properties)
+          .where(eq(properties.id, input.listingId));
+        if (!prop || prop.submitterPhone !== phone) {
+          throw new Error("Not found or not authorized.");
+        }
+      } else {
+        const [proj] = await db
+          .select({ submitterPhone: projects.submitterPhone })
+          .from(projects)
+          .where(eq(projects.id, input.listingId));
+        if (!proj || proj.submitterPhone !== phone) {
+          throw new Error("Not found or not authorized.");
+        }
+      }
+
+      const edits = await db
+        .select()
+        .from(listingEdits)
+        .where(
+          eq(listingEdits.listingId, input.listingId)
+        )
+        .orderBy(listingEdits.editedAt);
+
+      // Filter by listingType in JS since we can't easily use AND with eq in this setup
+      return edits.filter(e => e.listingType === input.listingType);
     }),
 });
