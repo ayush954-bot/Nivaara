@@ -393,6 +393,36 @@ export default function PropertyDetail() {
                         Listed via Nivaara · Contact directly
                       </p>
                     </div>
+
+                    {/* Share and Brochure Buttons — same as in-house */}
+                    <div className="mt-6 pt-6 border-t space-y-3">
+                      <div className="flex gap-2">
+                        <ShareWithImage
+                          title={property.title}
+                          text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
+                          url={window.location.href}
+                          imageUrl={property.imageUrl || undefined}
+                          location={property.location}
+                          price={property.priceLabel || `₹${property.price}`}
+                          badges={getPropertyBadges(property).map(b => b.text)}
+                          variant="outline"
+                          className="flex-1"
+                        />
+                        {property.brochureUrl && (
+                          <Button
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => {
+                              const url = property.brochureUrl;
+                              if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                            }}
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Brochure
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </>
                 ) : (
                   <>

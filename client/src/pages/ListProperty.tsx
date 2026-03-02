@@ -18,6 +18,13 @@ import {
   Camera,
   FileText,
   TrendingUp,
+  Tag,
+  Image,
+  Youtube,
+  BookOpen,
+  Share2,
+  MessageCircle,
+  Sparkles,
 } from "lucide-react";
 
 const benefits = [
@@ -120,6 +127,51 @@ const listingTypes = [
     examples: "New Launch, Under-Construction, Township",
     color: "bg-purple-50 border-purple-200",
     iconColor: "text-purple-600",
+  },
+];
+
+const extendedFeatures = [
+  {
+    icon: Tag,
+    title: "Property Badges",
+    description: "Highlight your listing with eye-catching badges like \"New Launch\", \"Premium\", \"Best Seller\", \"Pre-Launch\", or \"Exclusive\" — making it stand out in search results.",
+    color: "text-amber-600",
+    bg: "bg-amber-50 border-amber-200",
+  },
+  {
+    icon: Image,
+    title: "Rich Photo Gallery",
+    description: "Upload up to 10 high-resolution photos. Listings with multiple photos get 3× more inquiries. Buyers can browse a full gallery before contacting you.",
+    color: "text-blue-600",
+    bg: "bg-blue-50 border-blue-200",
+  },
+  {
+    icon: Youtube,
+    title: "YouTube Video Tours",
+    description: "Attach YouTube walkthrough videos or virtual tours directly to your listing. Let buyers experience the property remotely before visiting in person.",
+    color: "text-red-600",
+    bg: "bg-red-50 border-red-200",
+  },
+  {
+    icon: BookOpen,
+    title: "Brochure PDF Upload",
+    description: "Attach a professional brochure PDF so serious buyers can download complete project details, floor plans, and specifications in one click.",
+    color: "text-purple-600",
+    bg: "bg-purple-50 border-purple-200",
+  },
+  {
+    icon: Share2,
+    title: "One-Tap Share Image",
+    description: "Generate a branded shareable image with your property photo, price, and location overlaid. Share it instantly via WhatsApp, Instagram, or any platform.",
+    color: "text-green-600",
+    bg: "bg-green-50 border-green-200",
+  },
+  {
+    icon: MessageCircle,
+    title: "WhatsApp Direct Contact",
+    description: "Buyers can reach you directly on WhatsApp from your listing page with a pre-filled message. No middlemen, no delays — just direct conversations.",
+    color: "text-emerald-600",
+    bg: "bg-emerald-50 border-emerald-200",
   },
 ];
 
@@ -334,6 +386,48 @@ export default function ListProperty() {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Extended Features */}
+      <section className="py-16 bg-gradient-to-br from-secondary/30 to-background">
+        <div className="container">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10 text-sm px-4 py-1">
+              <Sparkles className="h-3.5 w-3.5 mr-1.5 inline" />
+              Included with Every Free Listing
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Everything You Need to Sell Faster
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Your free listing comes packed with professional features that were previously only available to paid advertisers on other platforms.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {extendedFeatures.map((feature) => (
+              <div
+                key={feature.title}
+                className={`rounded-xl border-2 p-6 hover:shadow-lg transition-all hover:-translate-y-0.5 ${feature.bg}`}
+              >
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white shadow-sm mb-4`}>
+                  <feature.icon className={`h-6 w-6 ${feature.color}`} />
+                </div>
+                <h3 className="font-semibold text-lg text-foreground mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link href="/list-property/submit">
+              <Button size="lg" className="text-base px-8 py-5 font-semibold">
+                List Now — All Features Free
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

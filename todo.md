@@ -2260,3 +2260,11 @@
 - [x] Frontend EditMyProject: lock form and show "Pending Review" message when listingStatus === pending_review
 - [x] Frontend MyListings: show edit history timeline per listing (collapsible)
 - [x] Write vitest tests for audit log recording
+
+## Share Buttons & List Property Page Enhancements
+
+- [x] Audit share button component used on in-house property/project detail pages
+- [x] Add share buttons (WhatsApp, copy link, native share) to public property detail page
+- [x] Add share buttons (WhatsApp, copy link, native share) to public project detail page (already present)
+- [x] Ensure Open Graph meta tags use listing image for WhatsApp preview
+- [x] Enhance List Property page benefits section with extended features (badges, visuals, YouTube, brochure, WhatsApp share)
