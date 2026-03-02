@@ -22,7 +22,8 @@ function loadGoogleMapsScript(): Promise<void> {
     }
 
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places`;
+    // language=en ensures all place names are returned in English
+    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places&language=en`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => resolve();
@@ -55,10 +56,10 @@ export default function LocationAutocomplete({
 
         if (!inputRef.current) return;
 
-        // Create autocomplete instance
+        // Create autocomplete instance — no country restriction so international locations work
         autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-          types: ['geocode', 'establishment'], // Include addresses, talukas, localities, and places
-          componentRestrictions: { country: 'in' }, // Bias to India for better local results
+          types: ['geocode'], // geocode covers localities, sub-districts, talukas, cities, countries
+          // No componentRestrictions — allows any country (India, Australia, UAE, etc.)
           fields: ['formatted_address', 'geometry', 'name', 'address_components'],
         });
 

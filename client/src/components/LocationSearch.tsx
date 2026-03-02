@@ -23,7 +23,8 @@ function loadMapScript() {
       return;
     }
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places,geocoding`;
+    // language=en ensures all place names are returned in English
+    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places,geocoding&language=en`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
@@ -119,10 +120,9 @@ export function LocationSearch({
     autocompleteServiceRef.current.getPlacePredictions(
       {
         input: searchTerm,
-        // Use geocode type to include talukas, subdistricts, neighborhoods, and localities
-        // (regions) misses sub-district level places like Purandar
+        // geocode type includes localities, sub-districts, talukas, cities, and countries worldwide
+        // No componentRestrictions — allows any country (India, Australia, UAE, Jabalpur, Purandar, etc.)
         types: ['geocode'],
-        componentRestrictions: { country: 'in' }, // Bias to India
         language: 'en', // Always return English names
       },
       (predictions, status) => {

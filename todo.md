@@ -2268,3 +2268,11 @@
 - [x] Add share buttons (WhatsApp, copy link, native share) to public project detail page (already present)
 - [x] Ensure Open Graph meta tags use listing image for WhatsApp preview
 - [x] Enhance List Property page benefits section with extended features (badges, visuals, YouTube, brochure, WhatsApp share)
+
+## Location Autocomplete Fix
+
+- [x] Audit all location picker/autocomplete components in the codebase
+- [x] Remove any country restriction (componentRestrictions) from Places Autocomplete
+- [x] Ensure results are returned in English (language: 'en')
+- [x] Add types: ['geocode'] to surface localities, sub-districts, talukas worldwide
+- [x] Test Purandar (Pune), Janki Nagar (Jabalpur), and international (Australia) locations
