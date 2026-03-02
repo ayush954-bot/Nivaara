@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { MapPin, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 
 interface LocationAutocompleteProps {
   value: string;
@@ -13,99 +13,171 @@ const FORGE_BASE_URL =
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
-// Load Google Maps script with Places library
+// Shared promise so multiple components don't double-load the script
+let _mapsLoadPromise: Promise<void> | null = null;
+
 function loadGoogleMapsScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
+  if (_mapsLoadPromise) return _mapsLoadPromise;
+  _mapsLoadPromise = new Promise((resolve, reject) => {
     if (window.google?.maps?.places) {
       resolve();
       return;
     }
-
     const script = document.createElement("script");
-    // language=en ensures all place names are returned in English
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places&language=en`;
+    // language=en → English place names; no country restriction → global coverage
+    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=places,geocoding&language=en`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Google Maps script"));
+    script.onerror = () => {
+      _mapsLoadPromise = null;
+      reject(new Error("Failed to load Google Maps script"));
+    };
     document.head.appendChild(script);
   });
+  return _mapsLoadPromise;
 }
 
-export default function LocationAutocomplete({ 
-  value, 
-  onChange, 
-  placeholder = "Type to search location..." 
+interface Suggestion {
+  description: string;
+  placeId: string;
+}
+
+export default function LocationAutocomplete({
+  value,
+  onChange,
+  placeholder = "Type to search location...",
 }: LocationAutocompleteProps) {
   const [inputValue, setInputValue] = useState(value);
-  const [isLoading, setIsLoading] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingScript, setIsLoadingScript] = useState(false);
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [geocodeSuccess, setGeocodeSuccess] = useState(false);
 
-  // Update input value when prop changes
+  const autocompleteServiceRef = useRef<google.maps.places.AutocompleteService | null>(null);
+  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const justSelectedRef = useRef(false);
+
+  // Sync external value changes (e.g. when form is pre-populated from DB)
   useEffect(() => {
     setInputValue(value);
   }, [value]);
 
-  // Initialize Google Places Autocomplete
+  // Initialise Google Maps services once
   useEffect(() => {
-    const initAutocomplete = async () => {
-      try {
-        setIsLoading(true);
-        await loadGoogleMapsScript();
+    setIsLoadingScript(true);
+    loadGoogleMapsScript()
+      .then(() => {
+        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService();
+        geocoderRef.current = new window.google.maps.Geocoder();
+        setIsLoadingScript(false);
+      })
+      .catch((err) => {
+        console.error("Maps script failed:", err);
+        setIsLoadingScript(false);
+      });
+  }, []);
 
-        if (!inputRef.current) return;
+  // Fetch predictions whenever the user types
+  useEffect(() => {
+    if (!inputValue.trim() || !autocompleteServiceRef.current || justSelectedRef.current) {
+      setSuggestions([]);
+      return;
+    }
 
-        // Create autocomplete instance — no country restriction so international locations work
-        autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-          types: ['geocode'], // geocode covers localities, sub-districts, talukas, cities, countries
-          // No componentRestrictions — allows any country (India, Australia, UAE, etc.)
-          fields: ['formatted_address', 'geometry', 'name', 'address_components'],
-        });
-
-        // Listen for place selection
-        autocompleteRef.current.addListener('place_changed', () => {
-          const place = autocompleteRef.current?.getPlace();
-          
-          if (!place || !place.geometry || !place.geometry.location) {
-            console.error('No valid place selected');
-            return;
-          }
-
-          const lat = place.geometry.location.lat();
-          const lon = place.geometry.location.lng();
-          const locationName = place.formatted_address || place.name || '';
-
-          // Update parent component with location and coordinates
-          onChange(locationName, lat, lon);
-          setInputValue(locationName);
-        });
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error initializing Google Places Autocomplete:', error);
-        setIsLoading(false);
+    autocompleteServiceRef.current.getPlacePredictions(
+      {
+        input: inputValue,
+        // No types restriction → surfaces talukas, sub-districts, localities, cities, countries
+        // No componentRestrictions → global (India, Australia, UAE, etc.)
+        language: 'en',
+      },
+      (predictions, status) => {
+        if (
+          status === window.google.maps.places.PlacesServiceStatus.OK &&
+          predictions
+        ) {
+          setSuggestions(
+            predictions.map((p) => ({
+              description: p.description,
+              placeId: p.place_id,
+            }))
+          );
+          setShowSuggestions(true);
+        } else {
+          setSuggestions([]);
+        }
       }
-    };
+    );
+  }, [inputValue]);
 
-    initAutocomplete();
-
-    // Cleanup
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent | TouchEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
     return () => {
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [onChange]);
+  }, []);
 
-  // Handle manual input changes (typing)
+  const handleSuggestionSelect = useCallback(
+    (suggestion: Suggestion) => {
+      justSelectedRef.current = true;
+      setInputValue(suggestion.description);
+      setSuggestions([]);
+      setShowSuggestions(false);
+
+      if (!geocoderRef.current) {
+        onChange(suggestion.description);
+        return;
+      }
+
+      setIsGeocoding(true);
+      geocoderRef.current.geocode(
+        { placeId: suggestion.placeId },
+        (results, status) => {
+          setIsGeocoding(false);
+          if (status === "OK" && results && results[0]) {
+            const loc = results[0].geometry.location;
+            onChange(suggestion.description, loc.lat(), loc.lng());
+            setGeocodeSuccess(true);
+            setTimeout(() => {
+              setGeocodeSuccess(false);
+              justSelectedRef.current = false;
+            }, 2000);
+          } else {
+            onChange(suggestion.description);
+            justSelectedRef.current = false;
+          }
+        }
+      );
+    },
+    [onChange]
+  );
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    justSelectedRef.current = false;
     setInputValue(e.target.value);
-    // Don't call onChange here - only when place is selected from dropdown
+    if (!e.target.value.trim()) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
@@ -113,16 +185,48 @@ export default function LocationAutocomplete({
           type="text"
           value={inputValue}
           onChange={handleInputChange}
+          onFocus={() => {
+            if (suggestions.length > 0) setShowSuggestions(true);
+          }}
           placeholder={placeholder}
-          className="w-full pl-9 pr-9 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-          disabled={isLoading}
+          className="w-full pl-9 pr-9 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+          disabled={isLoadingScript}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
         />
-        {isLoading && (
+        {(isLoadingScript || isGeocoding) && (
           <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
         )}
+        {geocodeSuccess && !isGeocoding && (
+          <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-green-500" />
+        )}
       </div>
+
+      {/* Suggestions dropdown */}
+      {showSuggestions && suggestions.length > 0 && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-input rounded-md shadow-lg max-h-60 overflow-y-auto">
+          {suggestions.map((s) => (
+            <button
+              key={s.placeId}
+              type="button"
+              className="w-full text-left px-4 py-2.5 text-sm hover:bg-accent hover:text-accent-foreground flex items-center gap-2 border-b border-border/40 last:border-0"
+              onMouseDown={(e) => {
+                // Use mousedown so it fires before onBlur hides the dropdown
+                e.preventDefault();
+                handleSuggestionSelect(s);
+              }}
+            >
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <span className="truncate">{s.description}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <p className="text-xs text-muted-foreground mt-1">
-        Please select a location from the dropdown suggestions (coordinates required)
+        Select a location from the dropdown to attach coordinates
       </p>
     </div>
   );

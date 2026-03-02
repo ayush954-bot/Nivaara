@@ -739,7 +739,21 @@ function MyListingsContent({ verified }: { verified: VerifiedSession }) {
 }
 
 export default function MyListings() {
-  const [verified, setVerified] = useState<VerifiedSession | null>(null);
+  const [verified, setVerified] = useState<VerifiedSession | null>(() => {
+    // Restore session from sessionStorage so navigating back from edit pages keeps the user verified
+    try {
+      const stored = sessionStorage.getItem("nivaara_public_session");
+      if (stored) return JSON.parse(stored) as VerifiedSession;
+    } catch {}
+    return null;
+  });
+
+  const handleVerified = (phone: string, token: string) => {
+    const session: VerifiedSession = { phone, token };
+    // Persist to sessionStorage so EditMyProperty / EditMyProject can read it after navigation
+    sessionStorage.setItem("nivaara_public_session", JSON.stringify(session));
+    setVerified(session);
+  };
 
   return (
     <div className="container py-10 max-w-3xl mx-auto">
@@ -763,7 +777,7 @@ export default function MyListings() {
               Enter the same mobile number you used when submitting your listing. We'll send a one-time OTP to confirm your identity.
             </p>
             <PhoneOtpVerification
-              onVerified={(phone, token) => setVerified({ phone, token })}
+              onVerified={handleVerified}
             />
           </CardContent>
         </Card>

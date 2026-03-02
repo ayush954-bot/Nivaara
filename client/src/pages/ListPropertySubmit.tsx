@@ -622,7 +622,13 @@ export default function ListPropertySubmit() {
             </p>
           </div>
           <PhoneOtpVerification
-            onVerified={(phone, token) => setVerified({ phone, token })}
+            onVerified={(phone, token) => {
+              // Persist to sessionStorage so MyListings and edit pages can read it without re-verification
+              try {
+                sessionStorage.setItem("nivaara_public_session", JSON.stringify({ phone, token }));
+              } catch {}
+              setVerified({ phone, token });
+            }}
           />
         </div>
       </div>

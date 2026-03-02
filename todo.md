@@ -2276,3 +2276,12 @@
 - [x] Ensure results are returned in English (language: 'en')
 - [x] Add types: ['geocode'] to surface localities, sub-districts, talukas worldwide
 - [x] Test Purandar (Pune), Janki Nagar (Jabalpur), and international (Australia) locations
+
+## Location & Mobile Verification Fixes (Round 2)
+
+- [x] Fix Purandar/taluka-level places not appearing — switched to AutocompleteService with no type/country restriction
+- [x] Switch LocationAutocomplete to use AutocompleteService (like LocationSearch) for more control over predictions
+- [x] Ensure all location pickers across the app use the same fixed implementation
+- [x] Fix mobile verification loop on EditMyProperty — MyListings now persists session to sessionStorage on verify
+- [x] Fix mobile verification loop on EditMyProject — same fix applied
+- [x] Audit how phone session is stored and checked in EditMyProperty/EditMyProject — both already read from sessionStorage correctly
