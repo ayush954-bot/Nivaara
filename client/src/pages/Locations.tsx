@@ -35,12 +35,12 @@ export default function Locations() {
     {
       name: "Dubai, UAE",
       description: "Premium residential and commercial properties in Dubai's prime locations",
-      icon: "🇦🇪",
+      flagCode: "ae",
     },
     {
       name: "USA",
       description: "Investment opportunities in residential and commercial properties across major US cities",
-      icon: "🇺🇸",
+      flagCode: "us",
     },
   ];
 
@@ -90,7 +90,14 @@ export default function Locations() {
             {internationalMarkets.map((market, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="text-5xl mb-4">{market.icon}</div>
+                  <img
+                    src={`https://flagcdn.com/w80/${market.flagCode}.png`}
+                    srcSet={`https://flagcdn.com/w160/${market.flagCode}.png 2x`}
+                    width="80"
+                    height="60"
+                    alt={market.name}
+                    className="mb-4 rounded shadow-sm object-cover"
+                  />
                   <CardTitle className="text-2xl">{market.name}</CardTitle>
                 </CardHeader>
                 <CardContent>

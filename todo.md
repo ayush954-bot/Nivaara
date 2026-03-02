@@ -2235,3 +2235,4 @@
 
 ## Quick Fixes (Mar 2026 - Session 4)
 - [x] Fix "List Your Property" hero amber button to link to /list-property (not /list-property/submit)
+- [x] Fix flag emoji (🇦🇪 🇺🇸) showing as "AE"/"US" text on desktop — replaced with flagcdn.com img tags
