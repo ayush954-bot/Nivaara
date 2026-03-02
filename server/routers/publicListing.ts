@@ -454,6 +454,23 @@ export const publicListingRouter = router({
         bathrooms: z.number().optional(),
         area: z.string().optional(),
         builderName: z.string().optional(),
+        // Extended fields matching admin form
+        location: z.string().optional(),
+        latitude: z.number().optional(),
+        longitude: z.number().optional(),
+        propertyType: z.string().optional(),
+        furnishing: z.string().optional(),
+        facing: z.string().optional(),
+        floor: z.number().optional(),
+        totalFloors: z.number().optional(),
+        parking: z.number().optional(),
+        ageOfProperty: z.string().optional(),
+        reraNumber: z.string().optional(),
+        badge: z.string().optional(),
+        customBadgeText: z.string().optional(),
+        brochureUrl: z.string().optional(),
+        videoUrls: z.array(z.string()).optional(),
+        imageUrls: z.array(z.string()).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -470,11 +487,46 @@ export const publicListingRouter = router({
         throw new Error("Not authorized to update this listing.");
       }
 
-      const { firebaseToken, id, ...updates } = input;
-      const filteredUpdates = Object.fromEntries(
-        Object.entries(updates).filter(([, v]) => v !== undefined)
-      );
-      await db.update(properties).set(filteredUpdates).where(eq(properties.id, id));
+      const { id, videoUrls, imageUrls } = input;
+      // Only update columns that actually exist in the properties table
+      const validUpdates: Record<string, unknown> = {};
+      if (input.title !== undefined) validUpdates.title = input.title;
+      if (input.description !== undefined) validUpdates.description = input.description;
+      if (input.price !== undefined) validUpdates.price = input.price;
+      if (input.priceLabel !== undefined) validUpdates.priceLabel = input.priceLabel;
+      if (input.status !== undefined) validUpdates.status = input.status;
+      if (input.propertyType !== undefined) validUpdates.propertyType = input.propertyType;
+      if (input.bedrooms !== undefined) validUpdates.bedrooms = input.bedrooms;
+      if (input.bathrooms !== undefined) validUpdates.bathrooms = input.bathrooms;
+      if (input.area !== undefined) validUpdates.area = input.area; // area varchar (location area like Kharadi)
+      if (input.builderName !== undefined) validUpdates.builder = input.builderName; // map builderName → builder
+      if (input.location !== undefined) validUpdates.location = input.location;
+      if (input.latitude !== undefined) validUpdates.latitude = String(input.latitude);
+      if (input.longitude !== undefined) validUpdates.longitude = String(input.longitude);
+      if (input.badge !== undefined) validUpdates.badge = input.badge;
+      if (input.customBadgeText !== undefined) validUpdates.customBadgeText = input.customBadgeText;
+      if (input.brochureUrl !== undefined) validUpdates.brochureUrl = input.brochureUrl;
+      if (Object.keys(validUpdates).length > 0) {
+        await db.update(properties).set(validUpdates).where(eq(properties.id, id));
+      }
+
+      // Replace images if provided
+      if (imageUrls !== undefined) {
+        await db.delete(propertyImages).where(eq(propertyImages.propertyId, id));
+        if (imageUrls.length > 0) {
+          await db.insert(propertyImages).values(
+            imageUrls.map((url, idx) => ({ propertyId: id, imageUrl: url, displayOrder: idx }))
+          );
+        }
+      }
+
+      // Replace videos if provided (store in videoUrl field as JSON array)
+      if (videoUrls !== undefined) {
+        await db.update(properties)
+          .set({ videoUrl: videoUrls.length > 0 ? JSON.stringify(videoUrls) : null })
+          .where(eq(properties.id, id));
+      }
+
       return { success: true };
     }),
 
@@ -544,6 +596,33 @@ export const publicListingRouter = router({
         builderName: z.string().optional(),
         configurations: z.string().optional(),
         possessionDate: z.string().optional(),
+        // Extended fields matching admin form
+        city: z.string().optional(),
+        location: z.string().optional(),
+        latitude: z.number().optional(),
+        longitude: z.number().optional(),
+        reraNumber: z.string().optional(),
+        towers: z.number().optional(),
+        floors: z.number().optional(),
+        totalUnits: z.number().optional(),
+        builderDescription: z.string().optional(),
+        builderEstablished: z.number().optional(),
+        builderLogo: z.string().optional(),
+        masterPlanUrl: z.string().optional(),
+        brochureUrl: z.string().optional(),
+        badge: z.string().optional(),
+        customBadgeText: z.string().optional(),
+        videoUrls: z.array(z.object({ url: z.string(), type: z.string() })).optional(),
+        imageUrls: z.array(z.string()).optional(),
+        amenities: z.array(z.object({ name: z.string(), icon: z.string().optional() })).optional(),
+        floorPlans: z.array(z.object({
+          name: z.string(),
+          bedrooms: z.number().optional(),
+          bathrooms: z.number().optional(),
+          area: z.string().optional(),
+          price: z.string().optional(),
+          imageUrl: z.string().optional(),
+        })).optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -559,11 +638,85 @@ export const publicListingRouter = router({
         throw new Error("Not authorized to update this listing.");
       }
 
-      const { firebaseToken, id, ...updates } = input;
-      const filteredUpdates = Object.fromEntries(
-        Object.entries(updates).filter(([, v]) => v !== undefined)
-      );
-      await db.update(projects).set(filteredUpdates).where(eq(projects.id, id));
+      const { firebaseToken, id, videoUrls, imageUrls, amenities, floorPlans, ...updates } = input;
+      // Only keep fields that exist in the projects table
+      const validProjectUpdates: Record<string, unknown> = {};
+      if (updates.name !== undefined) validProjectUpdates.name = updates.name;
+      if (updates.description !== undefined) validProjectUpdates.description = updates.description;
+      if (updates.minPrice !== undefined) validProjectUpdates.minPrice = updates.minPrice;
+      if (updates.maxPrice !== undefined) validProjectUpdates.maxPrice = updates.maxPrice;
+      if (updates.status !== undefined) validProjectUpdates.status = updates.status;
+      if (updates.builderName !== undefined) validProjectUpdates.builderName = updates.builderName;
+      if (updates.configurations !== undefined) validProjectUpdates.configurations = updates.configurations;
+      if (updates.possessionDate !== undefined) validProjectUpdates.possessionDate = new Date(updates.possessionDate);
+      if (updates.city !== undefined) validProjectUpdates.city = updates.city;
+      if (updates.location !== undefined) validProjectUpdates.location = updates.location;
+      if (updates.latitude !== undefined) validProjectUpdates.latitude = String(updates.latitude);
+      if (updates.longitude !== undefined) validProjectUpdates.longitude = String(updates.longitude);
+      if (updates.reraNumber !== undefined) validProjectUpdates.reraNumber = updates.reraNumber;
+      if (updates.towers !== undefined) validProjectUpdates.towers = updates.towers;
+      if (updates.floors !== undefined) validProjectUpdates.floors = updates.floors;
+      if (updates.totalUnits !== undefined) validProjectUpdates.totalUnits = updates.totalUnits;
+      if (updates.builderDescription !== undefined) validProjectUpdates.builderDescription = updates.builderDescription;
+      if (updates.builderEstablished !== undefined) validProjectUpdates.builderEstablished = updates.builderEstablished;
+      if (updates.builderLogo !== undefined) validProjectUpdates.builderLogo = updates.builderLogo;
+      if (updates.masterPlanUrl !== undefined) validProjectUpdates.masterPlanUrl = updates.masterPlanUrl;
+      if (updates.brochureUrl !== undefined) validProjectUpdates.brochureUrl = updates.brochureUrl;
+      if (updates.badge !== undefined) validProjectUpdates.badge = updates.badge;
+      if (updates.customBadgeText !== undefined) validProjectUpdates.customBadgeText = updates.customBadgeText;
+      if (Object.keys(validProjectUpdates).length > 0) {
+        await db.update(projects).set(validProjectUpdates).where(eq(projects.id, id));
+      }
+
+      // Replace images if provided
+      if (imageUrls !== undefined) {
+        await db.delete(projectImages).where(eq(projectImages.projectId, id));
+        if (imageUrls.length > 0) {
+          await db.insert(projectImages).values(
+            imageUrls.map((url, idx) => ({ projectId: id, imageUrl: url, displayOrder: idx }))
+          );
+        }
+      }
+
+      // Replace videos if provided
+      if (videoUrls !== undefined) {
+        await db.delete(projectVideos).where(eq(projectVideos.projectId, id));
+        if (videoUrls.length > 0) {
+          await db.insert(projectVideos).values(
+            videoUrls.map((v, idx) => ({ projectId: id, videoUrl: v.url, videoType: v.type as any, displayOrder: idx }))
+          );
+        }
+      }
+
+      // Replace amenities if provided
+      if (amenities !== undefined) {
+        await db.delete(projectAmenities).where(eq(projectAmenities.projectId, id));
+        if (amenities.length > 0) {
+          await db.insert(projectAmenities).values(
+            amenities.map((a, idx) => ({ projectId: id, name: a.name, icon: a.icon ?? null, displayOrder: idx }))
+          );
+        }
+      }
+
+      // Replace floor plans if provided
+      if (floorPlans !== undefined) {
+        await db.delete(projectFloorPlans).where(eq(projectFloorPlans.projectId, id));
+        if (floorPlans.length > 0) {
+          await db.insert(projectFloorPlans).values(
+            floorPlans.map((fp, idx) => ({
+              projectId: id,
+              name: fp.name,
+              bedrooms: fp.bedrooms ?? 0,
+              bathrooms: fp.bathrooms ?? 0,
+              area: fp.area ? parseInt(fp.area) || 0 : 0,
+              price: fp.price ?? "0",
+              imageUrl: fp.imageUrl ?? null,
+              displayOrder: idx,
+            }))
+          );
+        }
+      }
+
       return { success: true };
     }),
 
@@ -672,5 +825,55 @@ export const publicListingRouter = router({
       ]);
 
       return { properties: myProperties, projects: myProjects };
+    }),
+
+  // Public: get full property details for editing (owner only)
+  getMyPropertyById: publicProcedure
+    .input(z.object({ firebaseToken: z.string(), id: z.number() }))
+    .query(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [prop] = await db
+        .select()
+        .from(properties)
+        .where(eq(properties.id, input.id));
+      if (!prop || prop.submitterPhone !== phone) {
+        throw new Error("Not found or not authorized.");
+      }
+
+      const images = await db
+        .select()
+        .from(propertyImages)
+        .where(eq(propertyImages.propertyId, input.id));
+
+      return { ...prop, images };
+    }),
+
+  // Public: get full project details for editing (owner only)
+  getMyProjectById: publicProcedure
+    .input(z.object({ firebaseToken: z.string(), id: z.number() }))
+    .query(async ({ input }) => {
+      const phone = await verifyFirebaseToken(input.firebaseToken);
+      const db = await getDb();
+      if (!db) throw new Error("Database unavailable");
+
+      const [proj] = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.id, input.id));
+      if (!proj || proj.submitterPhone !== phone) {
+        throw new Error("Not found or not authorized.");
+      }
+
+      const [images, videos, amenitiesList, floorPlansList] = await Promise.all([
+        db.select().from(projectImages).where(eq(projectImages.projectId, input.id)),
+        db.select().from(projectVideos).where(eq(projectVideos.projectId, input.id)),
+        db.select().from(projectAmenities).where(eq(projectAmenities.projectId, input.id)),
+        db.select().from(projectFloorPlans).where(eq(projectFloorPlans.projectId, input.id)),
+      ]);
+
+      return { ...proj, images, videos, amenities: amenitiesList, floorPlans: floorPlansList };
     }),
 });

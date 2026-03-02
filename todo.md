@@ -2236,3 +2236,8 @@
 ## Quick Fixes (Mar 2026 - Session 4)
 - [x] Fix "List Your Property" hero amber button to link to /list-property (not /list-property/submit)
 - [x] Fix flag emoji (🇦🇪 🇺🇸) showing as "AE"/"US" text on desktop — replaced with flagcdn.com img tags
+
+## My Listings Edit & Location Search Fixes (Mar 2026)
+- [ ] My Listings: replace limited edit dialog with full-featured edit form (all fields same as admin PropertyForm/ProjectForm)
+- [ ] My Listings: expand updateMyProperty/updateMyProject backend mutations to accept all fields
+- [ ] LocationSearch: fix autocomplete to bias toward India/Pune so localities like Purandar appear in results

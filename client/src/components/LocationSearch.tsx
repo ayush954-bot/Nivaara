@@ -119,7 +119,11 @@ export function LocationSearch({
     autocompleteServiceRef.current.getPlacePredictions(
       {
         input: searchTerm,
-        types: ['(regions)'], // Focus on cities, neighborhoods, and areas
+        // Use geocode type to include talukas, subdistricts, neighborhoods, and localities
+        // (regions) misses sub-district level places like Purandar
+        types: ['geocode'],
+        componentRestrictions: { country: 'in' }, // Bias to India
+        language: 'en', // Always return English names
       },
       (predictions, status) => {
         setIsLoadingPlaces(false);

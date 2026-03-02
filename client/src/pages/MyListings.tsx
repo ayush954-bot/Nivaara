@@ -364,9 +364,11 @@ function PropertyCard({ prop, token, onRefresh }: { prop: any; token: string; on
                   </Link>
                 </Button>
               )}
-              <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
-                <Pencil className="h-3.5 w-3.5 mr-1.5" />
-                Edit
+              <Button size="sm" variant="outline" asChild>
+                <Link href={`/my-listings/edit-property/${prop.id}`}>
+                  <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                  Edit
+                </Link>
               </Button>
               {prop.status !== "Sold" && (
                 <Button
@@ -492,9 +494,11 @@ function ProjectCard({ proj, token, onRefresh }: { proj: any; token: string; onR
                   </Link>
                 </Button>
               )}
-              <Button size="sm" variant="outline" onClick={() => setEditOpen(true)}>
-                <Pencil className="h-3.5 w-3.5 mr-1.5" />
-                Edit
+              <Button size="sm" variant="outline" asChild>
+                <Link href={`/my-listings/edit-project/${proj.id}`}>
+                  <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                  Edit
+                </Link>
               </Button>
               {proj.status !== "Sold Out" && (
                 <Button

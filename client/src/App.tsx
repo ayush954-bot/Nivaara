@@ -28,6 +28,8 @@ import ListProperty from "./pages/ListProperty";
 import ListPropertySubmit from "./pages/ListPropertySubmit";
 import AdminReviewQueue from "./pages/AdminReviewQueue";
 import MyListings from "./pages/MyListings";
+import EditMyProperty from "./pages/EditMyProperty";
+import EditMyProject from "./pages/EditMyProject";
 import AdminPendingBanner from "./components/AdminPendingBanner";
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -60,6 +62,8 @@ function Router() {
           <Route path={"/list-property"} component={ListProperty} />
           <Route path={"/list-property/submit"} component={ListPropertySubmit} />
           <Route path={"/my-listings"} component={MyListings} />
+          <Route path={"/my-listings/edit-property/:id"} component={EditMyProperty} />
+          <Route path={"/my-listings/edit-project/:id"} component={EditMyProject} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>
