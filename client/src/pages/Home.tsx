@@ -26,11 +26,44 @@ import {
   Zap,
 } from "lucide-react";
 
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Nivaara Realty Solutions",
+  "alternateName": "Nivaara",
+  "url": "https://nivaararealty.com",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://nivaararealty.com/api/google-favicon",
+    "width": 512,
+    "height": 512
+  },
+  "image": "https://nivaararealty.com/api/google-favicon",
+  "description": "Nivaara Realty Solutions is your trusted real estate partner across India and international markets. We offer residential and commercial property services in Pune, Mumbai, Delhi, Bangalore, and Dubai.",
+  "telephone": "+91-9764515697",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Pune",
+    "addressRegion": "Maharashtra",
+    "addressCountry": "IN"
+  },
+  "areaServed": ["Pune", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Dubai"],
+  "sameAs": [
+    "https://www.facebook.com/nivaararealty",
+    "https://www.instagram.com/nivaararealty"
+  ]
+};
+
 export default function Home() {
   const { data: testimonials = [] } = trpc.testimonials.list.useQuery();
 
   return (
     <div className="flex flex-col">
+      {/* JSON-LD Organization Schema for Google Search */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_SCHEMA) }}
+      />
 
 
       {/* Hero Section with Search */}
