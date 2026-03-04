@@ -10,6 +10,7 @@ import { serveStatic, setupVite } from "./vite";
 import cookieParser from "cookie-parser";
 import { staffRouter } from "../staff-routes";
 import { ogRoutes } from "../og-routes";
+import { imageProxyRouter } from "../image-proxy";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -51,6 +52,9 @@ async function startServer() {
     })
   );
   
+  // Image proxy — allows canvas to draw external images without CORS taint
+  app.use(imageProxyRouter);
+
   // OG meta routes - MUST be before static file serving
   // This intercepts social media crawler requests and serves dynamic OG meta tags
   app.use(ogRoutes);

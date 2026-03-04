@@ -1,7 +1,7 @@
 // Share component — generates a professional shareable image with property details
 // Layout: top 60% = real property photo (or type-specific fallback from CDN),
 //         bottom 40% = dark info panel with title, location, price, link, branding.
-// No text is drawn over the photo — all text lives in the dedicated info panel.
+// All external images are routed through /api/image-proxy to avoid canvas taint (CORS).
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Check, Loader2 } from "lucide-react";
@@ -24,6 +24,15 @@ interface ShareWithImageProps {
 }
 
 // ─── helpers ────────────────────────────────────────────────────────────────
+
+/** Route any external http/https URL through our server proxy so canvas doesn't taint */
+function proxyUrl(src: string): string {
+  if (!src) return src;
+  if (src.startsWith("data:")) return src; // already a data URL — no proxy needed
+  if (src.startsWith("/"))      return src; // relative URL — same origin, no proxy needed
+  // External URL — proxy it
+  return `/api/image-proxy?url=${encodeURIComponent(src)}`;
+}
 
 function wrapText(
   ctx: CanvasRenderingContext2D,
@@ -58,13 +67,13 @@ function wrapText(
 
 function badgeColor(badge: string): string {
   const b = badge.toLowerCase();
-  if (b.includes("new"))                                    return "#059669";
+  if (b.includes("new"))                                     return "#059669";
   if (b.includes("hot") || b.includes("discount") || b.includes("reduced")) return "#dc2626";
-  if (b.includes("exclusive") || b.includes("special"))    return "#9333ea";
+  if (b.includes("exclusive") || b.includes("special"))     return "#9333ea";
   if (b.includes("pre-launch") || b.includes("pre launch")) return "#ea580c";
-  if (b.includes("premium"))                               return "#b45309";
-  if (b.includes("upcoming"))                              return "#2563eb";
-  if (b.includes("featured"))                              return "#d97706";
+  if (b.includes("premium"))                                return "#b45309";
+  if (b.includes("upcoming"))                               return "#2563eb";
+  if (b.includes("featured"))                               return "#d97706";
   return "#ea580c";
 }
 
@@ -73,9 +82,8 @@ function badgeColor(badge: string): string {
 async function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    if (src.startsWith("http://") || src.startsWith("https://")) {
-      img.crossOrigin = "anonymous";
-    }
+    // crossOrigin must be set BEFORE src for it to take effect
+    img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = src;
@@ -104,22 +112,14 @@ async function buildShareImage(opts: {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  // ── 1. Draw photo ──────────────────────────────────────────────────────────
+  // ── 1. Load photo via proxy (avoids canvas taint) ─────────────────────────
   let photoImg: HTMLImageElement | null = null;
+  const proxied = proxyUrl(opts.photoSrc);
   try {
-    photoImg = await loadImage(opts.photoSrc);
-  } catch {
-    // If CDN photo fails (CORS), try without crossOrigin
-    try {
-      photoImg = await new Promise((res, rej) => {
-        const img = new Image();
-        img.onload = () => res(img);
-        img.onerror = rej;
-        img.src = opts.photoSrc;
-      });
-    } catch {
-      photoImg = null;
-    }
+    photoImg = await loadImage(proxied);
+  } catch (err) {
+    console.warn("[share] image load failed:", err);
+    photoImg = null;
   }
 
   if (photoImg) {
@@ -141,12 +141,21 @@ async function buildShareImage(opts: {
     ctx.drawImage(photoImg, dx, dy, dw, dh);
     ctx.restore();
   } else {
-    // Solid dark fallback if image completely unavailable
-    ctx.fillStyle = "#1e293b";
+    // Solid dark gradient fallback if image completely unavailable
+    const grad = ctx.createLinearGradient(0, 0, 0, PHOTO_H);
+    grad.addColorStop(0, "#1e3a5f");
+    grad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, PHOTO_H);
+    // Draw "No photo" text
+    ctx.font = "bold 48px system-ui, sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("No photo available", W / 2, PHOTO_H / 2);
   }
 
-  // ── 2. Thin gradient fade at bottom of photo (no text here) ───────────────
+  // ── 2. Thin gradient fade at bottom of photo ──────────────────────────────
   const fadeH = 80;
   const fade = ctx.createLinearGradient(0, PHOTO_H - fadeH, 0, PHOTO_H);
   fade.addColorStop(0, "rgba(15,23,42,0)");
@@ -159,6 +168,8 @@ async function buildShareImage(opts: {
     let bx = 28;
     const by = 28;
     ctx.font = "bold 30px system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
     for (const badge of opts.badges.slice(0, 3)) {
       const bw = ctx.measureText(badge).width + 32;
       const bh = 48;
@@ -167,8 +178,6 @@ async function buildShareImage(opts: {
       ctx.roundRect(bx, by, bw, bh, 10);
       ctx.fill();
       ctx.fillStyle = "#fff";
-      ctx.textAlign = "left";
-      ctx.textBaseline = "middle";
       ctx.fillText(badge, bx + 16, by + bh / 2);
       bx += bw + 12;
     }
@@ -179,7 +188,7 @@ async function buildShareImage(opts: {
   ctx.font = "bold 30px system-ui, sans-serif";
   ctx.textAlign = "right";
   ctx.textBaseline = "middle";
-  const pw = ctx.measureText("📞 " + phone).width + 32;
+  const pw = ctx.measureText(phone).width + 64; // leave room for phone icon text
   const ph = 48;
   const px = W - 28;
   const py = 28;
@@ -188,7 +197,7 @@ async function buildShareImage(opts: {
   ctx.roundRect(px - pw, py, pw, ph, 10);
   ctx.fill();
   ctx.fillStyle = "#d4a853";
-  ctx.fillText("📞 " + phone, px - 16, py + ph / 2);
+  ctx.fillText(phone, px - 16, py + ph / 2);
 
   // ── 5. Info panel background ───────────────────────────────────────────────
   ctx.fillStyle = "#0f172a";
@@ -224,14 +233,19 @@ async function buildShareImage(opts: {
     cy += 8;
     ctx.font = "38px system-ui, sans-serif";
     ctx.fillStyle = "#cbd5e1";
-    const locText = "📍 " + opts.location;
-    // Truncate if too long
+    const locText = "  " + opts.location; // leading spaces for pin icon visual
     let loc = locText;
     while (ctx.measureText(loc).width > W - PAD * 2 && loc.length > 10) {
       loc = loc.slice(0, -1);
     }
     if (loc !== locText) loc += "…";
-    ctx.fillText(loc, PAD, cy);
+    // Draw a small coloured dot as location marker
+    ctx.fillStyle = "#f87171";
+    ctx.beginPath();
+    ctx.arc(PAD + 10, cy - 12, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillText(opts.location.length > 45 ? opts.location.substring(0, 42) + "…" : opts.location, PAD + 28, cy);
     cy += 52;
   }
 
@@ -240,7 +254,11 @@ async function buildShareImage(opts: {
     cy += 4;
     ctx.font = "bold 50px system-ui, sans-serif";
     ctx.fillStyle = "#4ade80";
-    ctx.fillText("💰 " + opts.price, PAD, cy);
+    ctx.fillText(opts.price, PAD + 28, cy);
+    // small rupee indicator
+    ctx.font = "bold 36px system-ui, sans-serif";
+    ctx.fillStyle = "#86efac";
+    ctx.fillText("Price:", PAD, cy);
     cy += 62;
   }
 
@@ -258,8 +276,8 @@ async function buildShareImage(opts: {
   ctx.font = "32px system-ui, sans-serif";
   ctx.fillStyle = "#60a5fa";
   let shortUrl = opts.url.replace(/^https?:\/\//, "");
-  if (shortUrl.length > 48) shortUrl = shortUrl.substring(0, 45) + "…";
-  ctx.fillText("🔗 " + shortUrl, PAD, cy);
+  if (shortUrl.length > 50) shortUrl = shortUrl.substring(0, 47) + "…";
+  ctx.fillText(shortUrl, PAD, cy);
 
   // ── 12. Branding strip at very bottom ─────────────────────────────────────
   const brandH = 90;
@@ -271,7 +289,7 @@ async function buildShareImage(opts: {
   ctx.fillStyle = "#d4a853";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Nivaara Realty Solutions  •  \"We Build Trust\"", W / 2, brandY + brandH / 2);
+  ctx.fillText('Nivaara Realty Solutions  \u2022  "We Build Trust"', W / 2, brandY + brandH / 2);
 
   return new Promise<Blob | null>((res) => {
     canvas.toBlob((b) => res(b), "image/jpeg", 0.92);
@@ -308,12 +326,12 @@ export function ShareWithImage({
         photoSrc,
       });
 
-      // Formatted WhatsApp message (auto-copied to clipboard)
+      // Formatted WhatsApp message
       const msg = [
         `🏠 *${title}*`,
-        builder   ? `by ${builder}` : null,
-        location  ? `📍 ${location}` : null,
-        price     ? `💰 ${price}` : null,
+        builder  ? `by ${builder}` : null,
+        location ? `📍 ${location}` : null,
+        price    ? `💰 ${price}` : null,
         "",
         text,
         "",
@@ -324,11 +342,11 @@ export function ShareWithImage({
         `_Shared via Nivaara Realty Solutions_\n"We Build Trust"`,
       ].filter((l) => l !== null).join("\n");
 
+      // Copy message to clipboard (silent fail if not available)
       try {
         await navigator.clipboard.writeText(msg);
-        toast.success("Message copied to clipboard!");
       } catch {
-        // clipboard not available — silent
+        // silent
       }
 
       if (imageBlob && navigator.share && navigator.canShare) {
@@ -351,14 +369,23 @@ export function ShareWithImage({
         toast.success("Image downloaded! Paste the copied message in WhatsApp.");
       } else {
         // Canvas unavailable — open WhatsApp web with text only
-        window.open(
-          `https://wa.me/?text=${encodeURIComponent(msg)}`,
-          "_blank"
-        );
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+        toast.success("Opening WhatsApp with property details.");
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
-        toast.error("Share failed. Please try again.");
+        // Last resort: open WhatsApp with text only
+        const msg = [
+          `🏠 *${title}*`,
+          location ? `📍 ${location}` : null,
+          price    ? `💰 ${price}` : null,
+          "",
+          `🔗 ${url}`,
+          "",
+          `📞 *Contact us: +91 9764515697*`,
+        ].filter(Boolean).join("\n");
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+        toast.info("Opened WhatsApp with property details.");
       }
     }
     setIsSharing(false);
