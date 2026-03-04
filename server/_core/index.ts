@@ -11,7 +11,6 @@ import cookieParser from "cookie-parser";
 import { staffRouter } from "../staff-routes";
 import { ogRoutes } from "../og-routes";
 import { imageProxyRouter } from "../image-proxy";
-import { faviconRouter } from "../favicon-routes";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -35,11 +34,6 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-
-  // Favicon routes — MUST be first to bypass platform /favicon.ico redirect
-  // The platform intercepts /favicon.ico and returns a 302 redirect to the CDN logo.
-  // Google's favicon crawler does NOT follow redirects, so we must return 200 directly.
-  app.use(faviconRouter);
 
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));

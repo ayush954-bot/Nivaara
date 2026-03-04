@@ -6,19 +6,14 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <!--
-      Favicon Strategy:
-      The platform intercepts /favicon.ico at Cloudflare edge and 302-redirects to a CDN PNG
-      with Content-Type: application/octet-stream, causing browsers to download it.
-      Fix: Use inline base64 data URI as PRIMARY favicon (zero network requests, cannot be
-      intercepted). Use /api/favicon/* paths as fallback (Cloudflare only intercepts /favicon.ico).
-    -->
-    <!-- PRIMARY: Inline base64 favicon — instant, no network request, no interception -->
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIABDAgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAgpJREFUeJylUT1PFFEUPfe9N187s4vu8LGoTCjMGgJKIkiHH9HKxlItqG0tLEzwDxg7Ymttor/AxEI7EgyF0cIYIix+oBgUAjvMvDfvWmwWVs1iDKe6ue/ec847Fzgk6OAn3q/bk4yOftfdA3j/6YAIYIb0y35w/MxjLsxa+uXtbac8MCW8qF6kPxbyjcbr3x3+oexUaklUv/BKhXGswjgOT55/UR65sun11y+Fybm5btoAADceniolkw/J8ZUMeiIV9fYJL/L82sh16VfC4MT4nU4C0anu9dWvqii+AfC6UH5JOEFVRr0X2WTa6t0VBluS7hBI7NkXAEBCUlAbveXEyRzrfKXY3XoZDJ1dBIBs7d1TkIDbc+werDEAqVIycZ+UJ/cIGODs+9Ijvb50k4mMzXY+5hsfZrz+U09UuW+QTWbZ6lXhlHrYFhu7n9/Mwlq7/wW2sDo1XOhNFOanCo9M27y52mwsTAe10edudXiCrfkKIgKbLatTw1bzXxlACI+F8Lkw30g6FZs39c7y/LhzdOiB9MvXrMm2iUi1riU6QmQGmGHz5hrn6XvhlsbAXACA1alpLs9fNtnOMy8engFIghmAbRMQhBMopzKYyFJ1UnjhaSh3wGbbn9rOuNCcNhbvMpNkIT23mowJr+yDROuYJB0BkgQuLFvDLYXuIOW2wi+07Tbyn/1D4Bcor9P0mcheXQAAAABJRU5ErkJggg==" />
-    <!-- FALLBACK: Server-side routes at /api/favicon/* (bypasses Cloudflare /favicon.ico intercept) -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/api/favicon/icon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/api/favicon/192.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/api/favicon/apple.png" />
+    <!-- Favicon -->
+    <!-- Primary favicon for Google and browsers (root-level) -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Fallback CDN favicons -->
+    <link rel="icon" type="image/x-icon" href="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/GhCVWQwJGtCSjKKe.ico" />
+    <link rel="icon" type="image/png" sizes="192x192" href="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/DzCZsHdZxYzvZkgo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/DzCZsHdZxYzvZkgo.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <title>Nivaara Realty Solutions - Trusted Real Estate India</title>
     <meta name="description" content="Nivaara offers expert real estate services across India & Dubai. Buy, sell, rent properties in Pune, Mumbai, Delhi, Bangalore with full transparency.">

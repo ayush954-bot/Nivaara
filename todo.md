@@ -2305,3 +2305,4 @@
 - [ ] Use real property photos as background for fallback share images
 
 - [x] Fix favicon: bypass Cloudflare 302 redirect by serving favicon from custom Express path and using HTML link rel=icon to override default /favicon.ico
+- [ ] Fix /favicon.ico URL: visiting nivaararealty.com/favicon.ico directly downloads the file instead of displaying the logo image in the browser (CANNOT fix from code — Cloudflare intercepts /favicon.ico before Express; the CDN file has Content-Disposition: attachment which forces download; must be fixed by re-uploading logo in Management UI Settings)
