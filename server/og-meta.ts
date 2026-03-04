@@ -1,4 +1,11 @@
-import { getProjectBySlug, getPropertyById, getPropertyBySlug } from "./db";
+import {
+  getProjectBySlug,
+  getPropertyById,
+  getPropertyBySlug,
+  getCoverImage,
+  getPropertyImages,
+  getProjectImages,
+} from "./db";
 
 /**
  * Generate dynamic Open Graph meta tags for projects and properties
@@ -47,16 +54,47 @@ function toAbsoluteImageUrl(imageUrl: string | null | undefined): string {
   return `${BASE_URL}/${cleanUrl}`;
 }
 
+/** Pick best image for a property: cover > first gallery image > legacy imageUrl > default */
+async function getBestPropertyImage(
+  propertyId: number,
+  legacyImageUrl?: string | null
+): Promise<string> {
+  try {
+    const cover = await getCoverImage(propertyId);
+    if (cover?.imageUrl) return toAbsoluteImageUrl(cover.imageUrl);
+    const images = await getPropertyImages(propertyId);
+    if (images.length > 0 && images[0].imageUrl)
+      return toAbsoluteImageUrl(images[0].imageUrl);
+  } catch { /* ignore */ }
+  return toAbsoluteImageUrl(legacyImageUrl);
+}
+
+/** Pick best image for a project: coverImage column > first gallery image > default */
+async function getBestProjectImage(
+  projectId: number,
+  coverImage?: string | null
+): Promise<string> {
+  if (coverImage) return toAbsoluteImageUrl(coverImage);
+  try {
+    const images = await getProjectImages(projectId);
+    if (images.length > 0 && images[0].imageUrl)
+      return toAbsoluteImageUrl(images[0].imageUrl);
+  } catch { /* ignore */ }
+  return DEFAULT_IMAGE;
+}
+
 export async function getProjectOGMeta(slug: string): Promise<OGMeta | null> {
   try {
     const project = await getProjectBySlug(slug);
     if (!project) return null;
 
+    const image = await getBestProjectImage(project.id, project.coverImage);
+
     return {
       title: `${project.name} by ${project.builderName} | ${SITE_NAME}`,
-      description: project.description?.substring(0, 200) || 
-        `Explore ${project.name} - ${project.configurations || ""} apartments in ${project.location}, ${project.city}. Price starting from ${project.priceRange || "Contact for price"}.`,
-      image: toAbsoluteImageUrl(project.coverImage),
+      description: project.description?.substring(0, 200) ||
+        `Explore ${project.name} — ${project.configurations || ""} in ${project.location}, ${project.city}. Starting from ${project.priceRange || "Contact for price"}.`,
+      image,
       url: `${BASE_URL}/projects/${slug}`,
       type: "article",
     };
@@ -68,26 +106,30 @@ export async function getProjectOGMeta(slug: string): Promise<OGMeta | null> {
 
 export async function getPropertyOGMeta(idOrSlug: string): Promise<OGMeta | null> {
   try {
-    // Try to find by slug first, then by ID
     let property = await getPropertyBySlug(idOrSlug);
-    
-    // If not found by slug, try by ID (for backward compatibility)
     if (!property) {
       const id = parseInt(idOrSlug, 10);
-      if (!isNaN(id)) {
-        property = await getPropertyById(id);
-      }
+      if (!isNaN(id)) property = await getPropertyById(id);
     }
-    
     if (!property) return null;
 
     const slug = property.slug || property.id.toString();
-    
+    const image = await getBestPropertyImage(property.id, property.imageUrl);
+
+    const bedroomStr =
+      property.bedrooms && property.bedrooms > 0
+        ? `${property.bedrooms} BHK `
+        : "";
+    const priceStr = property.price
+      ? `₹${Number(property.price).toLocaleString("en-IN")}`
+      : "Contact for price";
+
     return {
       title: `${property.title} | ${SITE_NAME}`,
-      description: property.description?.substring(0, 200) || 
-        `${property.bedrooms} BHK ${property.propertyType} in ${property.location}. Price: ₹${property.price}`,
-      image: toAbsoluteImageUrl(property.imageUrl),
+      description:
+        property.description?.substring(0, 200) ||
+        `${bedroomStr}${property.propertyType} in ${property.location}. Price: ${priceStr}. Listed on Nivaara Realty Solutions.`,
+      image,
       url: `${BASE_URL}/properties/${slug}`,
       type: "article",
     };
@@ -101,18 +143,48 @@ export function generateOGMetaTags(meta: OGMeta): string {
   return `
     <!-- Dynamic Open Graph / Facebook -->
     <meta property="og:type" content="${meta.type}">
-    <meta property="og:site_name" content="${SITE_NAME}">
+    <meta property="og:site_name" content="${escapeHtml(SITE_NAME)}">
     <meta property="og:title" content="${escapeHtml(meta.title)}">
     <meta property="og:description" content="${escapeHtml(meta.description)}">
     <meta property="og:image" content="${meta.image}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="${meta.url}">
-    
-    <!-- Twitter -->
+
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${escapeHtml(meta.title)}">
     <meta name="twitter:description" content="${escapeHtml(meta.description)}">
     <meta name="twitter:image" content="${meta.image}">
   `;
+}
+
+/**
+ * Build a minimal HTML page that social crawlers will read for OG tags.
+ * Injects dynamic meta tags into the base index.html template.
+ */
+export function buildOGHtmlPage(meta: OGMeta, baseHtml: string): string {
+  const ogTags = generateOGMetaTags(meta);
+
+  // Replace static OG block (from <!-- Open Graph --> to last twitter:image tag)
+  let html = baseHtml.replace(
+    /<!-- Open Graph \/ Facebook -->[\s\S]*?<meta name="twitter:image"[^>]*>/,
+    ogTags.trim()
+  );
+
+  // Replace static <title>
+  html = html.replace(
+    /<title>[^<]*<\/title>/,
+    `<title>${escapeHtml(meta.title)}</title>`
+  );
+
+  // Replace static <meta name="description">
+  html = html.replace(
+    /<meta name="description" content="[^"]*">/,
+    `<meta name="description" content="${escapeHtml(meta.description)}">`
+  );
+
+  return html;
 }
 
 function escapeHtml(text: string): string {

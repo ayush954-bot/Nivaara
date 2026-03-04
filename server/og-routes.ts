@@ -1,88 +1,94 @@
 import { Router } from "express";
 import fs from "fs";
 import path from "path";
-import { isSocialMediaCrawler } from "./og-meta";
+import {
+  isSocialMediaCrawler,
+  getPropertyOGMeta,
+  getProjectOGMeta,
+  buildOGHtmlPage,
+} from "./og-meta";
 
 const router = Router();
 
 /**
- * Middleware to serve pre-generated static HTML files with correct OG meta tags
- * for social media crawlers. These files are generated during the build process.
+ * Read the base index.html template.
+ * In development the Vite-processed file isn't available, so we read the
+ * source file from client/index.html. In production we use dist/public/index.html.
  */
+function getBaseHtml(): string {
+  const candidates = [
+    // Production build
+    path.resolve(import.meta.dirname, "..", "public", "index.html"),
+    // Development fallback — source template
+    path.resolve(import.meta.dirname, "..", "client", "index.html"),
+  ];
 
-// Get the dist/public path based on environment
-function getPublicPath(): string {
-  if (process.env.NODE_ENV === "development") {
-    return path.resolve(import.meta.dirname, "..", "dist", "public");
-  }
-  // In production, the built file is at dist/public/
-  return path.resolve(import.meta.dirname, "..", "public");
-}
-
-// Handle project pages for social media crawlers
-router.get("/projects/:slug", async (req, res, next) => {
-  const userAgent = req.get("user-agent") || "";
-  
-  // Only intercept for social media crawlers
-  if (!isSocialMediaCrawler(userAgent)) {
-    return next();
-  }
-  
-  const slug = req.params.slug;
-  console.log("[OG Routes] Social crawler detected for project:", slug, "UA:", userAgent.substring(0, 50));
-  
-  try {
-    // Try to serve the pre-generated static HTML file
-    const publicPath = getPublicPath();
-    const staticFilePath = path.join(publicPath, "projects", slug, "index.html");
-    
-    console.log("[OG Routes] Looking for static file:", staticFilePath);
-    
-    if (fs.existsSync(staticFilePath)) {
-      console.log("[OG Routes] Serving pre-generated static file for project:", slug);
-      const html = await fs.promises.readFile(staticFilePath, "utf-8");
-      res.status(200).set({ "Content-Type": "text/html" }).send(html);
-      return;
+  for (const p of candidates) {
+    if (fs.existsSync(p)) {
+      return fs.readFileSync(p, "utf-8");
     }
-    
-    console.log("[OG Routes] Static file not found, falling through:", staticFilePath);
-    next();
-  } catch (error) {
-    console.error("[OG Routes] Error:", error);
-    next();
   }
-});
+
+  // Minimal fallback if neither file exists
+  return `<!doctype html><html><head><title>Nivaara Realty Solutions</title></head><body></body></html>`;
+}
 
 // Handle property pages for social media crawlers
 router.get("/properties/:slug", async (req, res, next) => {
   const userAgent = req.get("user-agent") || "";
-  
-  // Only intercept for social media crawlers
-  if (!isSocialMediaCrawler(userAgent)) {
-    return next();
-  }
-  
+  if (!isSocialMediaCrawler(userAgent)) return next();
+
   const slug = req.params.slug;
-  console.log("[OG Routes] Social crawler detected for property:", slug, "UA:", userAgent.substring(0, 50));
-  
+  console.log(
+    "[OG Routes] Crawler for property:",
+    slug,
+    "UA:",
+    userAgent.substring(0, 60)
+  );
+
   try {
-    // Try to serve the pre-generated static HTML file
-    const publicPath = getPublicPath();
-    const staticFilePath = path.join(publicPath, "properties", slug, "index.html");
-    
-    console.log("[OG Routes] Looking for static file:", staticFilePath);
-    
-    if (fs.existsSync(staticFilePath)) {
-      console.log("[OG Routes] Serving pre-generated static file for property:", slug);
-      const html = await fs.promises.readFile(staticFilePath, "utf-8");
-      res.status(200).set({ "Content-Type": "text/html" }).send(html);
-      return;
+    const meta = await getPropertyOGMeta(slug);
+    if (!meta) {
+      console.log("[OG Routes] Property not found:", slug);
+      return next();
     }
-    
-    console.log("[OG Routes] Static file not found, falling through:", staticFilePath);
-    next();
+
+    const baseHtml = getBaseHtml();
+    const html = buildOGHtmlPage(meta, baseHtml);
+
+    res.status(200).set({ "Content-Type": "text/html; charset=utf-8" }).send(html);
   } catch (error) {
-    console.error("[OG Routes] Error:", error);
+    console.error("[OG Routes] Error for property:", slug, error);
+    next();
+  }
+});
+
+// Handle project pages for social media crawlers
+router.get("/projects/:slug", async (req, res, next) => {
+  const userAgent = req.get("user-agent") || "";
+  if (!isSocialMediaCrawler(userAgent)) return next();
+
+  const slug = req.params.slug;
+  console.log(
+    "[OG Routes] Crawler for project:",
+    slug,
+    "UA:",
+    userAgent.substring(0, 60)
+  );
+
+  try {
+    const meta = await getProjectOGMeta(slug);
+    if (!meta) {
+      console.log("[OG Routes] Project not found:", slug);
+      return next();
+    }
+
+    const baseHtml = getBaseHtml();
+    const html = buildOGHtmlPage(meta, baseHtml);
+
+    res.status(200).set({ "Content-Type": "text/html; charset=utf-8" }).send(html);
+  } catch (error) {
+    console.error("[OG Routes] Error for project:", slug, error);
     next();
   }
 });
