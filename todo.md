@@ -2292,3 +2292,14 @@
 - [x] Add default fallback images by property type (land, shop, apartment, villa, plot, commercial, etc.)
 - [x] Ensure fallback images are used in share image generation when no photo uploaded
 - [x] Ensure fallback images show in property cards and detail pages when no photo
+
+## Share Image Redesign (Real Photos + Layout Fix)
+- [ ] Source real Indian land/plot photo and upload as CDN asset
+- [ ] Source real Indian shop/commercial photo and upload as CDN asset
+- [ ] Source real Indian apartment/flat photo and upload as CDN asset
+- [ ] Source real Indian villa/bungalow photo and upload as CDN asset
+- [ ] Source real Indian office photo and upload as CDN asset
+- [ ] Source real Indian penthouse photo and upload as CDN asset
+- [ ] Rewrite ShareWithImage canvas generator: fix text overlap, clean layout
+- [ ] Remove duplicate text rendering in share image
+- [ ] Use real property photos as background for fallback share images

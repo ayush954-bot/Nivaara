@@ -1,27 +1,284 @@
-// Share component - generates a shareable image with property details overlaid
-// Single-tap share: creates image with photo + text + branding, then shares
-// Falls back to a property-type-specific canvas image when no photo is available
-import { useState, useRef } from "react";
+// Share component — generates a professional shareable image with property details
+// Layout: top 60% = real property photo (or type-specific fallback from CDN),
+//         bottom 40% = dark info panel with title, location, price, link, branding.
+// No text is drawn over the photo — all text lives in the dedicated info panel.
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { generateFallbackImageDataUrl } from "@/lib/propertyFallbackImage";
+import { getFallbackImageUrl } from "@/lib/propertyFallbackImage";
 
 interface ShareWithImageProps {
   title: string;
   text: string;
   url: string;
   imageUrl?: string;
-  propertyType?: string; // Used for fallback image when no photo
+  propertyType?: string;
   variant?: "default" | "outline" | "ghost";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
-  // Additional property details for the overlay
   location?: string;
   price?: string;
   builder?: string;
-  badges?: string[]; // Property badges like "New", "Premium", "Upcoming"
+  badges?: string[];
 }
+
+// ─── helpers ────────────────────────────────────────────────────────────────
+
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  maxLines = 2
+): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+      if (lines.length >= maxLines) break;
+    } else {
+      current = test;
+    }
+  }
+  if (current && lines.length < maxLines) lines.push(current);
+  // Truncate last line with ellipsis if title was cut
+  if (lines.length === maxLines && ctx.measureText(lines[maxLines - 1]).width > maxWidth) {
+    while (ctx.measureText(lines[maxLines - 1] + "…").width > maxWidth) {
+      lines[maxLines - 1] = lines[maxLines - 1].slice(0, -1);
+    }
+    lines[maxLines - 1] += "…";
+  }
+  return lines;
+}
+
+function badgeColor(badge: string): string {
+  const b = badge.toLowerCase();
+  if (b.includes("new"))                                    return "#059669";
+  if (b.includes("hot") || b.includes("discount") || b.includes("reduced")) return "#dc2626";
+  if (b.includes("exclusive") || b.includes("special"))    return "#9333ea";
+  if (b.includes("pre-launch") || b.includes("pre launch")) return "#ea580c";
+  if (b.includes("premium"))                               return "#b45309";
+  if (b.includes("upcoming"))                              return "#2563eb";
+  if (b.includes("featured"))                              return "#d97706";
+  return "#ea580c";
+}
+
+// ─── canvas renderer ────────────────────────────────────────────────────────
+
+async function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    if (src.startsWith("http://") || src.startsWith("https://")) {
+      img.crossOrigin = "anonymous";
+    }
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function buildShareImage(opts: {
+  title: string;
+  location?: string;
+  price?: string;
+  builder?: string;
+  url: string;
+  badges: string[];
+  photoSrc: string;
+}): Promise<Blob | null> {
+  const W = 1080;
+  const H = 1350;
+  const PHOTO_H = Math.round(H * 0.60); // top 60% = photo
+  const INFO_Y  = PHOTO_H;              // bottom 40% = info panel
+  const INFO_H  = H - PHOTO_H;
+  const PAD     = 56;
+
+  const canvas = document.createElement("canvas");
+  canvas.width  = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+
+  // ── 1. Draw photo ──────────────────────────────────────────────────────────
+  let photoImg: HTMLImageElement | null = null;
+  try {
+    photoImg = await loadImage(opts.photoSrc);
+  } catch {
+    // If CDN photo fails (CORS), try without crossOrigin
+    try {
+      photoImg = await new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => res(img);
+        img.onerror = rej;
+        img.src = opts.photoSrc;
+      });
+    } catch {
+      photoImg = null;
+    }
+  }
+
+  if (photoImg) {
+    // Cover-fit into the photo zone
+    const aspect = photoImg.width / photoImg.height;
+    const targetAspect = W / PHOTO_H;
+    let dw: number, dh: number, dx: number, dy: number;
+    if (aspect > targetAspect) {
+      dh = PHOTO_H; dw = PHOTO_H * aspect;
+      dx = (W - dw) / 2; dy = 0;
+    } else {
+      dw = W; dh = W / aspect;
+      dx = 0; dy = 0;
+    }
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, W, PHOTO_H);
+    ctx.clip();
+    ctx.drawImage(photoImg, dx, dy, dw, dh);
+    ctx.restore();
+  } else {
+    // Solid dark fallback if image completely unavailable
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, 0, W, PHOTO_H);
+  }
+
+  // ── 2. Thin gradient fade at bottom of photo (no text here) ───────────────
+  const fadeH = 80;
+  const fade = ctx.createLinearGradient(0, PHOTO_H - fadeH, 0, PHOTO_H);
+  fade.addColorStop(0, "rgba(15,23,42,0)");
+  fade.addColorStop(1, "rgba(15,23,42,1)");
+  ctx.fillStyle = fade;
+  ctx.fillRect(0, PHOTO_H - fadeH, W, fadeH);
+
+  // ── 3. Badges (top-left of photo) ─────────────────────────────────────────
+  if (opts.badges.length > 0) {
+    let bx = 28;
+    const by = 28;
+    ctx.font = "bold 30px system-ui, sans-serif";
+    for (const badge of opts.badges.slice(0, 3)) {
+      const bw = ctx.measureText(badge).width + 32;
+      const bh = 48;
+      ctx.fillStyle = badgeColor(badge);
+      ctx.beginPath();
+      ctx.roundRect(bx, by, bw, bh, 10);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(badge, bx + 16, by + bh / 2);
+      bx += bw + 12;
+    }
+  }
+
+  // ── 4. Phone pill (top-right of photo) ────────────────────────────────────
+  const phone = "+91 9764515697";
+  ctx.font = "bold 30px system-ui, sans-serif";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  const pw = ctx.measureText("📞 " + phone).width + 32;
+  const ph = 48;
+  const px = W - 28;
+  const py = 28;
+  ctx.fillStyle = "rgba(0,0,0,0.72)";
+  ctx.beginPath();
+  ctx.roundRect(px - pw, py, pw, ph, 10);
+  ctx.fill();
+  ctx.fillStyle = "#d4a853";
+  ctx.fillText("📞 " + phone, px - 16, py + ph / 2);
+
+  // ── 5. Info panel background ───────────────────────────────────────────────
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(0, INFO_Y, W, INFO_H);
+
+  // Gold accent bar at top of info panel
+  ctx.fillStyle = "#d4a853";
+  ctx.fillRect(0, INFO_Y, W, 5);
+
+  // ── 6. Title ───────────────────────────────────────────────────────────────
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.font = "bold 58px system-ui, sans-serif";
+  ctx.fillStyle = "#f8fafc";
+  const titleLines = wrapText(ctx, opts.title, W - PAD * 2, 2);
+  let cy = INFO_Y + 70;
+  for (const line of titleLines) {
+    ctx.fillText(line, PAD, cy);
+    cy += 68;
+  }
+
+  // ── 7. Builder (if any) ────────────────────────────────────────────────────
+  if (opts.builder) {
+    cy += 4;
+    ctx.font = "36px system-ui, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("by " + opts.builder, PAD, cy);
+    cy += 50;
+  }
+
+  // ── 8. Location ────────────────────────────────────────────────────────────
+  if (opts.location) {
+    cy += 8;
+    ctx.font = "38px system-ui, sans-serif";
+    ctx.fillStyle = "#cbd5e1";
+    const locText = "📍 " + opts.location;
+    // Truncate if too long
+    let loc = locText;
+    while (ctx.measureText(loc).width > W - PAD * 2 && loc.length > 10) {
+      loc = loc.slice(0, -1);
+    }
+    if (loc !== locText) loc += "…";
+    ctx.fillText(loc, PAD, cy);
+    cy += 52;
+  }
+
+  // ── 9. Price ───────────────────────────────────────────────────────────────
+  if (opts.price) {
+    cy += 4;
+    ctx.font = "bold 50px system-ui, sans-serif";
+    ctx.fillStyle = "#4ade80";
+    ctx.fillText("💰 " + opts.price, PAD, cy);
+    cy += 62;
+  }
+
+  // ── 10. Divider ────────────────────────────────────────────────────────────
+  cy += 16;
+  ctx.strokeStyle = "#1e3a5f";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(PAD, cy);
+  ctx.lineTo(W - PAD, cy);
+  ctx.stroke();
+  cy += 36;
+
+  // ── 11. Short URL ──────────────────────────────────────────────────────────
+  ctx.font = "32px system-ui, sans-serif";
+  ctx.fillStyle = "#60a5fa";
+  let shortUrl = opts.url.replace(/^https?:\/\//, "");
+  if (shortUrl.length > 48) shortUrl = shortUrl.substring(0, 45) + "…";
+  ctx.fillText("🔗 " + shortUrl, PAD, cy);
+
+  // ── 12. Branding strip at very bottom ─────────────────────────────────────
+  const brandH = 90;
+  const brandY = H - brandH;
+  ctx.fillStyle = "rgba(212,168,83,0.12)";
+  ctx.fillRect(0, brandY, W, brandH);
+
+  ctx.font = "bold 36px system-ui, sans-serif";
+  ctx.fillStyle = "#d4a853";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Nivaara Realty Solutions  •  \"We Build Trust\"", W / 2, brandY + brandH / 2);
+
+  return new Promise<Blob | null>((res) => {
+    canvas.toBlob((b) => res(b), "image/jpeg", 0.92);
+  });
+}
+
+// ─── component ──────────────────────────────────────────────────────────────
 
 export function ShareWithImage({
   title,
@@ -38,374 +295,106 @@ export function ShareWithImage({
   badges = [],
 }: ShareWithImageProps) {
   const [isSharing, setIsSharing] = useState(false);
-  const [shared, setShared] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // Generate shareable image with text overlay
-  // Always succeeds — uses property photo if available, otherwise generates a
-  // professional type-specific fallback (land = green, shop = indigo, etc.)
-  const generateShareableImage = async (): Promise<Blob | null> => {
-    return new Promise(async (resolve) => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        resolve(null);
-        return;
-      }
-
-      // Determine the image source: real photo or type-specific fallback
-      const effectiveImageUrl = imageUrl || generateFallbackImageDataUrl(propertyType);
-
-      const img = new Image();
-      // Only set crossOrigin for external http(s) URLs — not for data: URLs
-      if (effectiveImageUrl.startsWith('http://') || effectiveImageUrl.startsWith('https://')) {
-        img.crossOrigin = 'anonymous';
-      }
-
-      let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-      const clearTimeoutOnLoad = () => {
-        if (timeoutId) clearTimeout(timeoutId);
-      };
-
-      img.onload = () => {
-        clearTimeoutOnLoad();
-
-        // Canvas size: Instagram/WhatsApp friendly 4:5 ratio
-        const canvasWidth = 1080;
-        const canvasHeight = 1350;
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-
-        // Calculate image dimensions to cover top portion (~55% of canvas)
-        const imageHeight = canvasHeight * 0.55;
-        const imageAspect = img.width / img.height;
-        const targetAspect = canvasWidth / imageHeight;
-
-        let drawWidth, drawHeight, drawX, drawY;
-
-        if (imageAspect > targetAspect) {
-          drawHeight = imageHeight;
-          drawWidth = imageHeight * imageAspect;
-          drawX = (canvasWidth - drawWidth) / 2;
-          drawY = 0;
-        } else {
-          drawWidth = canvasWidth;
-          drawHeight = canvasWidth / imageAspect;
-          drawX = 0;
-          drawY = 0;
-        }
-
-        // Fill background with dark color
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-        // Draw the property image (real or fallback) at top
-        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-
-        // Draw badges at top-left corner
-        if (badges && badges.length > 0) {
-          let badgeX = 30;
-          const badgeY = 30;
-
-          badges.forEach((badge) => {
-            ctx.font = 'bold 28px system-ui, -apple-system, sans-serif';
-            const badgeWidth = ctx.measureText(badge).width + 30;
-            const badgeHeight = 45;
-
-            const badgeLower = badge.toLowerCase();
-            if (badgeLower.includes('new')) {
-              ctx.fillStyle = '#059669';
-            } else if (badgeLower.includes('discount') || badgeLower.includes('reduced') || badgeLower.includes('hot')) {
-              ctx.fillStyle = '#dc2626';
-            } else if (badgeLower.includes('special') || badgeLower.includes('exclusive')) {
-              ctx.fillStyle = '#9333ea';
-            } else if (badgeLower.includes('best seller') || badgeLower.includes('bestseller')) {
-              ctx.fillStyle = '#2563eb';
-            } else if (badgeLower.includes('pre-launch') || badgeLower.includes('prelaunch') || badgeLower.includes('pre launch')) {
-              ctx.fillStyle = '#ea580c';
-            } else if (badgeLower.includes('premium')) {
-              ctx.fillStyle = '#d4a853';
-            } else if (badgeLower.includes('upcoming')) {
-              ctx.fillStyle = '#3b82f6';
-            } else if (badgeLower.includes('featured')) {
-              ctx.fillStyle = '#f59e0b';
-            } else {
-              ctx.fillStyle = '#ea580c';
-            }
-
-            ctx.beginPath();
-            ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 8);
-            ctx.fill();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.fillText(badge, badgeX + 15, badgeY + 32);
-
-            badgeX += badgeWidth + 15;
-          });
-        }
-
-        // Phone number at top-right corner
-        const phoneNumber = '+91 9764515697';
-        ctx.font = 'bold 36px system-ui, -apple-system, sans-serif';
-        ctx.textAlign = 'right';
-        const phoneWidth = ctx.measureText(phoneNumber).width + 40;
-        const phoneX = canvasWidth - 30;
-        const phoneY = 30;
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.beginPath();
-        ctx.roundRect(phoneX - phoneWidth, phoneY, phoneWidth, 50, 8);
-        ctx.fill();
-
-        ctx.fillStyle = '#d4a853';
-        ctx.fillText('📞 ' + phoneNumber, phoneX - 20, phoneY + 37);
-
-        // Gradient overlay at bottom of image for text visibility
-        const gradient = ctx.createLinearGradient(0, imageHeight - 150, 0, imageHeight);
-        gradient.addColorStop(0, 'rgba(15, 23, 42, 0)');
-        gradient.addColorStop(1, 'rgba(15, 23, 42, 1)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, imageHeight - 150, canvasWidth, 150);
-
-        // Text section starts after image
-        const textStartY = imageHeight + 40;
-        const padding = 60;
-
-        ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
-        ctx.textAlign = 'left';
-
-        const maxWidth = canvasWidth - padding * 2;
-        const titleLines = wrapText(ctx, title, maxWidth);
-        let currentY = textStartY;
-
-        const titleHeight = titleLines.length * 65;
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-        ctx.fillRect(0, textStartY - 50, canvasWidth, titleHeight + 20);
-
-        ctx.fillStyle = '#d4a853';
-        titleLines.forEach((line) => {
-          ctx.fillText(line, padding, currentY);
-          currentY += 65;
-        });
-
-        if (builder) {
-          currentY += 10;
-          ctx.fillStyle = '#94a3b8';
-          ctx.font = '36px system-ui, -apple-system, sans-serif';
-          ctx.fillText(`by ${builder}`, padding, currentY);
-          currentY += 55;
-        }
-
-        if (location) {
-          currentY += 15;
-          ctx.fillStyle = '#e2e8f0';
-          ctx.font = '38px system-ui, -apple-system, sans-serif';
-          ctx.fillText(`📍 ${location}`, padding, currentY);
-          currentY += 55;
-        }
-
-        if (price) {
-          currentY += 5;
-          ctx.fillStyle = '#22c55e';
-          ctx.font = 'bold 48px system-ui, -apple-system, sans-serif';
-          ctx.fillText(`💰 ${price}`, padding, currentY);
-          currentY += 65;
-        }
-
-        // Divider line
-        currentY += 20;
-        ctx.strokeStyle = '#334155';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(padding, currentY);
-        ctx.lineTo(canvasWidth - padding, currentY);
-        ctx.stroke();
-
-        // Link
-        currentY += 50;
-        ctx.fillStyle = '#60a5fa';
-        ctx.font = '32px system-ui, -apple-system, sans-serif';
-        const shortUrl = url.replace(/^https?:\/\//, '').substring(0, 45) + (url.length > 50 ? '...' : '');
-        ctx.fillText(`🔗 ${shortUrl}`, padding, currentY);
-
-        // Branding at bottom
-        const brandingY = canvasHeight - 80;
-
-        ctx.fillStyle = 'rgba(212, 168, 83, 0.1)';
-        ctx.fillRect(0, brandingY - 40, canvasWidth, 120);
-
-        ctx.fillStyle = '#d4a853';
-        ctx.font = 'bold 36px system-ui, -apple-system, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Nivaara Realty Solutions', canvasWidth / 2, brandingY);
-
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '28px system-ui, -apple-system, sans-serif';
-        ctx.fillText('"We Build Trust"', canvasWidth / 2, brandingY + 40);
-
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              console.error('Failed to create blob from canvas');
-              resolve(null);
-            }
-          },
-          'image/jpeg',
-          0.9
-        );
-      };
-
-      img.onerror = () => {
-        clearTimeoutOnLoad();
-        // If the real photo fails to load (CORS/network), fall back to the type-specific canvas image
-        if (effectiveImageUrl !== generateFallbackImageDataUrl(propertyType)) {
-          // Retry with the fallback
-          const fallbackImg = new Image();
-          fallbackImg.onload = () => {
-            img.src = fallbackImg.src; // trigger the main onload with fallback
-          };
-          fallbackImg.onerror = () => resolve(null);
-          fallbackImg.src = generateFallbackImageDataUrl(propertyType);
-        } else {
-          resolve(null);
-        }
-      };
-
-      // Timeout guard
-      timeoutId = setTimeout(() => {
-        // On timeout, try to generate with fallback image
-        if (!imageUrl || effectiveImageUrl === imageUrl) {
-          // Was using real photo — retry with fallback
-          img.src = generateFallbackImageDataUrl(propertyType);
-        } else {
-          resolve(null);
-        }
-      }, 10000);
-
-      img.src = effectiveImageUrl;
-    });
-  };
-
-  const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] => {
-    const words = text.split(' ');
-    const lines: string[] = [];
-    let currentLine = '';
-
-    words.forEach((word) => {
-      const testLine = currentLine ? `${currentLine} ${word}` : word;
-      const metrics = ctx.measureText(testLine);
-
-      if (metrics.width > maxWidth && currentLine) {
-        lines.push(currentLine);
-        currentLine = word;
-      } else {
-        currentLine = testLine;
-      }
-    });
-
-    if (currentLine) {
-      lines.push(currentLine);
-    }
-
-    return lines;
-  };
+  const [shared, setShared]       = useState(false);
 
   const handleShare = async () => {
     setIsSharing(true);
-
     try {
-      // Generate the shareable image (always succeeds — uses fallback if no photo)
-      const imageBlob = await generateShareableImage();
+      // Use real property photo if available, else CDN type-specific fallback
+      const photoSrc = imageUrl || getFallbackImageUrl(propertyType);
 
-      // Beautifully formatted WhatsApp message
-      const formattedMessage = `🏠 *${title}*${builder ? `\nby ${builder}` : ''}${location ? `\n📍 ${location}` : ''}${price ? `\n💰 ${price}` : ''}\n\n${text}\n\n🔗 ${url}\n\n📞 *Contact us: +91 9764515697*\n\n_Shared via Nivaara Realty Solutions_\n"We Build Trust"`;
+      const imageBlob = await buildShareImage({
+        title, location, price, builder, url, badges,
+        photoSrc,
+      });
 
-      // Copy the formatted message to clipboard
+      // Formatted WhatsApp message (auto-copied to clipboard)
+      const msg = [
+        `🏠 *${title}*`,
+        builder   ? `by ${builder}` : null,
+        location  ? `📍 ${location}` : null,
+        price     ? `💰 ${price}` : null,
+        "",
+        text,
+        "",
+        `🔗 ${url}`,
+        "",
+        `📞 *Contact us: +91 9764515697*`,
+        "",
+        `_Shared via Nivaara Realty Solutions_\n"We Build Trust"`,
+      ].filter((l) => l !== null).join("\n");
+
       try {
-        await navigator.clipboard.writeText(formattedMessage);
-        toast.success("Message copied! Paste in WhatsApp and attach the downloaded image.");
-      } catch (err) {
-        console.error('Failed to copy message:', err);
+        await navigator.clipboard.writeText(msg);
+        toast.success("Message copied to clipboard!");
+      } catch {
+        // clipboard not available — silent
       }
 
       if (imageBlob && navigator.share && navigator.canShare) {
         const file = new File(
           [imageBlob],
-          `${title.replace(/[^a-zA-Z0-9]/g, '_')}_nivaara.jpg`,
-          { type: 'image/jpeg' }
+          `${title.replace(/[^a-zA-Z0-9]/g, "_")}_nivaara.jpg`,
+          { type: "image/jpeg" }
         );
-
-        const shareData = { files: [file] };
-
-        if (navigator.canShare(shareData)) {
-          await navigator.share(shareData);
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file] });
           setShared(true);
-          toast.success("Image shared! Paste the link from clipboard.");
-          setTimeout(() => setShared(false), 2000);
+          toast.success("Image shared! Paste the copied message in WhatsApp.");
+          setTimeout(() => setShared(false), 2500);
         } else {
-          downloadImage(imageBlob);
+          downloadBlob(imageBlob, title);
+          toast.success("Image downloaded! Paste the copied message in WhatsApp.");
         }
       } else if (imageBlob) {
-        // Fallback for browsers without Web Share API
-        downloadImage(imageBlob);
+        downloadBlob(imageBlob, title);
+        toast.success("Image downloaded! Paste the copied message in WhatsApp.");
       } else {
-        // Should rarely happen — only if canvas itself is unavailable
-        toast.info("Image could not be generated. Opening WhatsApp with text only.");
-        shareTextOnly();
+        // Canvas unavailable — open WhatsApp web with text only
+        window.open(
+          `https://wa.me/?text=${encodeURIComponent(msg)}`,
+          "_blank"
+        );
       }
     } catch (e) {
       if ((e as Error).name !== "AbortError") {
-        toast.error("Failed to share. Try again.");
+        toast.error("Share failed. Please try again.");
       }
     }
-
     setIsSharing(false);
   };
 
-  const downloadImage = (blob: Blob) => {
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_nivaara.jpg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(blobUrl);
-    toast.success("Image downloaded! Share it on WhatsApp.");
-  };
-
-  const shareTextOnly = () => {
-    const message = `🏠 *${title}*\n\n${text}\n\n🔗 ${url}\n\nShared via Nivaara Realty Solutions`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
-  };
-
   return (
-    <>
-      <Button
-        variant={variant}
-        size={size}
-        onClick={handleShare}
-        className={className}
-        disabled={isSharing}
-      >
-        {isSharing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : shared ? (
-          <Check className="h-4 w-4" />
-        ) : (
-          <Share2 className="h-4 w-4" />
-        )}
-        {size !== "icon" && (
-          <span className="ml-2">
-            {isSharing ? "Creating..." : shared ? "Shared!" : "Share"}
-          </span>
-        )}
-      </Button>
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
-    </>
+    <Button
+      variant={variant}
+      size={size}
+      onClick={handleShare}
+      className={className}
+      disabled={isSharing}
+    >
+      {isSharing ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : shared ? (
+        <Check className="h-4 w-4" />
+      ) : (
+        <Share2 className="h-4 w-4" />
+      )}
+      {size !== "icon" && (
+        <span className="ml-2">
+          {isSharing ? "Creating…" : shared ? "Shared!" : "Share"}
+        </span>
+      )}
+    </Button>
   );
+}
+
+function downloadBlob(blob: Blob, title: string) {
+  const url = URL.createObjectURL(blob);
+  const a   = document.createElement("a");
+  a.href    = url;
+  a.download = `${title.replace(/[^a-zA-Z0-9]/g, "_")}_nivaara.jpg`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
