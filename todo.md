@@ -2303,3 +2303,5 @@
 - [ ] Rewrite ShareWithImage canvas generator: fix text overlap, clean layout
 - [ ] Remove duplicate text rendering in share image
 - [ ] Use real property photos as background for fallback share images
+
+- [x] Fix favicon: bypass Cloudflare 302 redirect by serving favicon from custom Express path and using HTML link rel=icon to override default /favicon.ico
