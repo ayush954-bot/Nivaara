@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { getPropertyBadges } from "@/lib/badgeUtils";
 import { ShareWithImage } from "@/components/ShareWithImage";
+import { getFallbackImageUrl } from "@/lib/propertyFallbackImage";
 import {
   Building2,
   MapPin,
@@ -258,17 +259,17 @@ export default function ProjectDetail() {
                 className="relative h-[400px] rounded-xl overflow-hidden bg-secondary cursor-pointer group"
                 onClick={() => openLightbox(0)}
               >
-                {project.coverImage && !project.coverImage.includes('placeholder') ? (
-                  <img
-                    src={project.coverImage}
-                    alt={project.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-                    <Building2 className="h-24 w-24 text-primary/40" />
-                  </div>
-                )}
+                <img
+                  src={project.coverImage && !project.coverImage.includes('placeholder') ? project.coverImage : getFallbackImageUrl('apartment')}
+                  alt={project.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.startsWith('data:')) {
+                      target.src = getFallbackImageUrl('apartment');
+                    }
+                  }}
+                />
                 
                 {/* Badges - Using badgeUtils like Properties section */}
                 {(() => {

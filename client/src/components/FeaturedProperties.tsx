@@ -14,6 +14,7 @@ import {
   Star,
 } from "lucide-react";
 import { getPropertyBadges } from "@/lib/badgeUtils";
+import { getFallbackImageUrl } from "@/lib/propertyFallbackImage";
 
 export default function FeaturedProperties() {
   const { data: featuredProperties = [] } = trpc.properties.featured.useQuery();
@@ -143,9 +144,15 @@ export default function FeaturedProperties() {
                   <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 group">
                     <div className="relative overflow-hidden">
                       <img
-                        src={property.imageUrl || "https://files.manuscdn.com/user_upload_by_module/session_file/310419663026719415/jTkCDCbsQAjfpSvs.jpg"}
+                        src={property.imageUrl || getFallbackImageUrl(property.propertyType)}
                         alt={property.title}
                         className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (!target.src.startsWith('data:')) {
+                            target.src = getFallbackImageUrl(property.propertyType);
+                          }
+                        }}
                       />
                       {/* Stacked Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-2">

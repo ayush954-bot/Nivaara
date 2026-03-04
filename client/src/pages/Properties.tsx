@@ -16,6 +16,7 @@ import { Building2, MapPin, Ruler, IndianRupee, Loader2, Navigation, Map as MapI
 import { Link } from "wouter";
 import { getPropertyBadges } from "@/lib/badgeUtils";
 import { PropertiesMapView } from "@/components/PropertiesMapView";
+import { getFallbackImageUrl } from "@/lib/propertyFallbackImage";
 
 export default function Properties() {
   const [location] = useLocation();
@@ -268,7 +269,7 @@ export default function Properties() {
                     <div
                       className="h-48 bg-cover bg-center relative"
                       style={{
-                        backgroundImage: `url(${property.imageUrl || "/images/hero-building.jpg"})`,
+                        backgroundImage: `url(${property.imageUrl || getFallbackImageUrl(property.propertyType)})`,
                       }}
                     >
                       {(() => {

@@ -2285,3 +2285,10 @@
 - [x] Fix mobile verification loop on EditMyProperty — MyListings now persists session to sessionStorage on verify
 - [x] Fix mobile verification loop on EditMyProject — same fix applied
 - [x] Audit how phone session is stored and checked in EditMyProperty/EditMyProject — both already read from sessionStorage correctly
+
+## WhatsApp Share Fix & Default Property Images
+- [x] Diagnose WhatsApp share image generation failure for land/no-image properties
+- [x] Fix share image generation to handle missing/broken images gracefully
+- [x] Add default fallback images by property type (land, shop, apartment, villa, plot, commercial, etc.)
+- [x] Ensure fallback images are used in share image generation when no photo uploaded
+- [x] Ensure fallback images show in property cards and detail pages when no photo

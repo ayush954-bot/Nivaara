@@ -23,6 +23,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { getPropertyBadges } from "@/lib/badgeUtils";
 import { ShareWithImage } from "@/components/ShareWithImage";
+import { getFallbackImageUrl } from "@/lib/propertyFallbackImage";
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -65,11 +66,12 @@ export default function PropertyDetail() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // Determine which images to display
+  // When no images are available, use a property-type-specific fallback generated on canvas
   const displayImages = propertyImages.length > 0 
     ? propertyImages.map(img => img.imageUrl)
     : property?.imageUrl 
     ? [property.imageUrl] 
-    : ["/images/hero-building.jpg"];
+    : []; // empty = handled below with fallback
 
   const handleInquirySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,9 +149,16 @@ export default function PropertyDetail() {
       {/* Image Gallery */}
       <div className="relative h-[400px] md:h-[500px] overflow-hidden bg-black">
         <img
-          src={displayImages[selectedImageIndex]}
+          src={displayImages.length > 0 ? displayImages[selectedImageIndex] : getFallbackImageUrl(property.propertyType)}
           alt={`${property.title} - Image ${selectedImageIndex + 1}`}
-          className="w-full h-full object-contain"
+          className={`w-full h-full ${displayImages.length === 0 ? 'object-contain' : 'object-contain'}`}
+          onError={(e) => {
+            // If the real image fails to load, show the type-specific fallback
+            const target = e.currentTarget;
+            if (!target.src.startsWith('data:')) {
+              target.src = getFallbackImageUrl(property.propertyType);
+            }
+          }}
         />
         {/* Badge Display */}
         {(() => {
@@ -402,6 +411,7 @@ export default function PropertyDetail() {
                           text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
                           url={window.location.href}
                           imageUrl={property.imageUrl || undefined}
+                          propertyType={property.propertyType}
                           location={property.location}
                           price={property.priceLabel || `₹${property.price}`}
                           badges={getPropertyBadges(property).map(b => b.text)}
@@ -520,6 +530,7 @@ export default function PropertyDetail() {
                           text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
                           url={window.location.href}
                           imageUrl={property.imageUrl || undefined}
+                          propertyType={property.propertyType}
                           location={property.location}
                           price={property.priceLabel || `₹${property.price}`}
                           badges={getPropertyBadges(property).map(b => b.text)}

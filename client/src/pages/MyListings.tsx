@@ -44,6 +44,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import PhoneOtpVerification from "@/components/PhoneOtpVerification";
+import { getFallbackImageUrl } from "@/lib/propertyFallbackImage";
 
 type VerifiedSession = { phone: string; token: string };
 
@@ -386,11 +387,19 @@ function PropertyCard({ prop, token, onRefresh }: { prop: any; token: string; on
     <>
       <Card className="overflow-hidden">
         <div className="flex flex-col sm:flex-row">
-          {prop.imageUrl && (
-            <div className="sm:w-40 h-36 sm:h-auto shrink-0">
-              <img src={prop.imageUrl} alt={prop.title} className="w-full h-full object-cover" />
-            </div>
-          )}
+          <div className="sm:w-40 h-36 sm:h-auto shrink-0">
+            <img
+              src={prop.imageUrl || getFallbackImageUrl(prop.propertyType)}
+              alt={prop.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.startsWith('data:')) {
+                  target.src = getFallbackImageUrl(prop.propertyType);
+                }
+              }}
+            />
+          </div>
           <CardContent className="flex-1 py-4 px-4 sm:px-5">
             <div className="flex items-start justify-between gap-3 mb-2">
               <div className="flex items-center gap-2">
