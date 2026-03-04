@@ -251,14 +251,16 @@ async function buildShareImage(opts: {
 
   // ── 9. Price ───────────────────────────────────────────────────────────────
   if (opts.price) {
-    cy += 4;
-    ctx.font = "bold 50px system-ui, sans-serif";
-    ctx.fillStyle = "#4ade80";
-    ctx.fillText(opts.price, PAD + 28, cy);
-    // small rupee indicator
-    ctx.font = "bold 36px system-ui, sans-serif";
+    cy += 12;
+    // "Price:" label on its own line
+    ctx.font = "32px system-ui, sans-serif";
     ctx.fillStyle = "#86efac";
     ctx.fillText("Price:", PAD, cy);
+    cy += 44;
+    // Price value on the next line
+    ctx.font = "bold 52px system-ui, sans-serif";
+    ctx.fillStyle = "#4ade80";
+    ctx.fillText(opts.price, PAD, cy);
     cy += 62;
   }
 
