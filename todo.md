@@ -2312,3 +2312,4 @@
 - [x] Add robots.txt Express route that explicitly allows Googlebot to crawl /favicon.ico
 - [x] Add /api/google-favicon Express route that serves the logo with Content-Disposition: inline (for Google favicon crawler which follows redirects)
 - [x] Add Google Search Console HTML verification file (google71279b969d31efa0.html) to client/public
+- [x] Add social media icons to footer: Instagram, LinkedIn, YouTube, Facebook, Google Business with correct links
