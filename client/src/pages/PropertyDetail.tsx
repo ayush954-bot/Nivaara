@@ -132,8 +132,45 @@ export default function PropertyDetail() {
     );
   }
 
+  // Build JSON-LD structured data for this property
+  const propertyJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.title,
+    "description": property.description || `${property.propertyType} for sale in ${property.location}`,
+    "url": `https://nivaararealty.com/properties/${property.slug}`,
+    "image": property.imageUrl || `https://nivaararealty.com/api/google-favicon`,
+    "datePosted": new Date(property.createdAt).toISOString(),
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": property.location,
+      "addressCountry": "IN"
+    },
+    ...(property.price ? {
+      "offers": {
+        "@type": "Offer",
+        "price": property.price,
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock"
+      }
+    } : {}),
+    ...(property.area ? { "floorSize": { "@type": "QuantitativeValue", "value": property.area, "unitCode": "FTK" } } : {}),
+    ...(property.bedrooms && property.bedrooms > 0 ? { "numberOfRooms": property.bedrooms } : {}),
+    "broker": {
+      "@type": "RealEstateAgent",
+      "name": "Nivaara Realty Solutions",
+      "url": "https://nivaararealty.com",
+      "telephone": "+91-9764515697"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-secondary/30">
+      {/* JSON-LD Structured Data for Google Search */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(propertyJsonLd) }}
+      />
       {/* Back Button */}
       <div className="container py-6">
         <Button
@@ -408,7 +445,7 @@ export default function PropertyDetail() {
                       <div className="flex gap-2">
                         <ShareWithImage
                           title={property.title}
-                          text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
+                          text={`Check out ${property.title}${property.bedrooms && property.bedrooms > 0 ? ` - ${property.bedrooms} BHK` : ''} ${property.propertyType} in ${property.location}`}
                           url={window.location.href}
                           imageUrl={property.imageUrl || undefined}
                           propertyType={property.propertyType}
@@ -527,7 +564,7 @@ export default function PropertyDetail() {
                       <div className="flex gap-2">
                         <ShareWithImage
                           title={property.title}
-                          text={`Check out ${property.title} - ${property.bedrooms} BHK ${property.propertyType} in ${property.location}`}
+                          text={`Check out ${property.title}${property.bedrooms && property.bedrooms > 0 ? ` - ${property.bedrooms} BHK` : ''} ${property.propertyType} in ${property.location}`}
                           url={window.location.href}
                           imageUrl={property.imageUrl || undefined}
                           propertyType={property.propertyType}

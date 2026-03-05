@@ -2313,3 +2313,6 @@
 - [x] Add /api/google-favicon Express route that serves the logo with Content-Disposition: inline (for Google favicon crawler which follows redirects)
 - [x] Add Google Search Console HTML verification file (google71279b969d31efa0.html) to client/public
 - [x] Add social media icons to footer: Instagram, LinkedIn, YouTube, Facebook, Google Business with correct links
+- [x] Fix null BHK in WhatsApp share text for land/plot listings
+- [x] Add property-level JSON-LD RealEstateListing schema to property detail pages
+- [x] Add Google Analytics 4 (G-PN5VP7N9Q5) to the website
