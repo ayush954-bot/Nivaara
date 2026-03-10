@@ -1,0 +1,171 @@
+{
+  "query": "SELECT id, title, location, listingStatus, listingSource FROM properties ORDER BY createdAt ASC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, location, listingStatus, listingSource FROM properties ORDER BY createdAt ASC;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "location": "Kharadi, Pune",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "location": "Hinjawadi",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "location": "Wagholi",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "4",
+      "title": "Commercial Shop in Viman Nagar",
+      "location": "Viman Nagar, Pune",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "5",
+      "title": "Residential Plot in Baner",
+      "location": "Baner",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "6",
+      "title": "Luxury Villa in Mumbai Suburbs",
+      "location": "Mumbai, Maharashtra",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "7",
+      "title": "Modern Apartment in Dubai Marina",
+      "location": "Dubai, Dubai, United Arab Emirates",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "8",
+      "title": "Commercial Space in Bangalore",
+      "location": "Bengaluru, Karnataka",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "630001",
+      "title": "Ultra Luxury 4BHK Penthouse",
+      "location": "Kharadi, Pune, Maharashtra, India",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "660097",
+      "title": "Land At Pargaon Purandar",
+      "location": "Pargaon, Maharashtra, India",
+      "listingStatus": "published",
+      "listingSource": "public"
+    },
+    {
+      "id": "720073",
+      "title": "Land at Pargaon Purandar",
+      "location": "Pargaon, Maharashtra, India",
+      "listingStatus": "published",
+      "listingSource": "public"
+    },
+    {
+      "id": "900001",
+      "title": "Test Property with Images",
+      "location": "Test Location, Pune",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900002",
+      "title": "Test Property - Kharadi 3 BHK",
+      "location": "Kharadi, Pune, Maharashtra, India",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900003",
+      "title": "Property for Image Test",
+      "location": "Mumbai",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900004",
+      "title": "Test Property with Video",
+      "location": "Test Location, Pune",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900005",
+      "title": "Test Property - Manual Location",
+      "location": "Some Custom Location",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900006",
+      "title": "Test Property without Video",
+      "location": "Test Location 2, Mumbai",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900007",
+      "title": "Test Property - With Zone",
+      "location": "Kharadi, Pune",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900008",
+      "title": "Test Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "location": "Test Location, Bangalore",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900009",
+      "title": "Test Property - https://youtu.be/dQw4w9WgXcQ",
+      "location": "Test Location, Bangalore",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900010",
+      "title": "Property for Delete Test",
+      "location": "Bangalore",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900011",
+      "title": "Test Property - https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "location": "Test Location, Bangalore",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900012",
+      "title": "Multi-Image Property",
+      "location": "Delhi",
+      "listingStatus": "published",
+      "listingSource": "staff"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tlocation\tlistingStatus\tlistingSource\n1\tLuxury 3BHK Apartment in Kharadi\tKharadi, Pune\tpublished\tstaff\n2\tPremium Office Space in Hinjewadi\tHinjawadi\tpublished\tstaff\n3\tUnder Construction 2BHK in Wagholi\tWagholi\tpublished\tstaff\n4\tCommercial Shop in Viman Nagar\tViman Nagar, Pune\tpublished\tstaff\n5\tResidential Plot in Baner\tBaner\tpublished\tstaff\n6\tLuxury Villa in Mumbai Suburbs\tMumbai, Maharashtra\tpublished\tstaff\n7\tModern Apartment in Dubai Marina\tDubai, Dubai, United Arab Emirates\tpublished\tstaff\n8\tCommercial Space in Bangalore\tBengaluru, Karnataka\tpublished\tstaff\n630001\tUltra Luxury 4BHK Penthouse\tKharadi, Pune, Maharashtra, India\tpublished\tstaff\n660097\tLand At Pargaon Purandar\tPargaon, Maharashtra, India\tpublished\tpublic\n720073\tLand at Pargaon Purandar\tPargaon, Maharashtra, India\tpublished\tpublic\n900001\tTest Property with Images\tTest Location, Pune\tpublished\tstaff\n900002\tTest Property - Kharadi 3 BHK\tKharadi, Pune, Maharashtra, India\tpublished\tstaff\n900003\tProperty for Image Test\tMumbai\tpublished\tstaff\n900004\tTest Property with Video\tTest Location, Pune\tpublished\tstaff\n900005\tTest Property - Manual Location\tSome Custom Location\tpublished\tstaff\n900006\tTest Property without Video\tTest Location 2, Mumbai\tpublished\tstaff\n900007\tTest Property - With Zone\tKharadi, Pune\tpublished\tstaff\n900008\tTest Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ\tTest Location, Bangalore\tpublished\tstaff\n900009\tTest Property - https://youtu.be/dQw4w9WgXcQ\tTest Location, Bangalore\tpublished\tstaff\n900010\tProperty for Delete Test\tBangalore\tpublished\tstaff\n900011\tTest Property - https://www.youtube.com/embed/dQw4w9WgXcQ\tTest Location, Bangalore\tpublished\tstaff\n900012\tMulti-Image Property\tDelhi\tpublished\tstaff\n",
+  "stderr": "",
+  "execution_time_ms": 1529
+}

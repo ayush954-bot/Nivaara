@@ -1,0 +1,125 @@
+{
+  "query": "SELECT id, title, listingSource FROM properties ORDER BY id ASC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wsSeNnMFw5dboG.2c4b3d36d2f1 --database aSHZEBwUmWTuA7HAwuTg3z --execute SELECT id, title, listingSource FROM properties ORDER BY id ASC;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Luxury 3BHK Apartment in Kharadi",
+      "listingSource": "staff"
+    },
+    {
+      "id": "2",
+      "title": "Premium Office Space in Hinjewadi",
+      "listingSource": "staff"
+    },
+    {
+      "id": "3",
+      "title": "Under Construction 2BHK in Wagholi",
+      "listingSource": "staff"
+    },
+    {
+      "id": "4",
+      "title": "Commercial Shop in Viman Nagar",
+      "listingSource": "staff"
+    },
+    {
+      "id": "5",
+      "title": "Residential Plot in Baner",
+      "listingSource": "staff"
+    },
+    {
+      "id": "6",
+      "title": "Luxury Villa in Mumbai Suburbs",
+      "listingSource": "staff"
+    },
+    {
+      "id": "7",
+      "title": "Modern Apartment in Dubai Marina",
+      "listingSource": "staff"
+    },
+    {
+      "id": "8",
+      "title": "Commercial Space in Bangalore",
+      "listingSource": "staff"
+    },
+    {
+      "id": "630001",
+      "title": "Ultra Luxury 4BHK Penthouse",
+      "listingSource": "staff"
+    },
+    {
+      "id": "660097",
+      "title": "Land At Pargaon Purandar",
+      "listingSource": "public"
+    },
+    {
+      "id": "720073",
+      "title": "Land at Pargaon Purandar",
+      "listingSource": "public"
+    },
+    {
+      "id": "900001",
+      "title": "Test Property with Images",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900002",
+      "title": "Test Property - Kharadi 3 BHK",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900003",
+      "title": "Property for Image Test",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900004",
+      "title": "Test Property with Video",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900005",
+      "title": "Test Property - Manual Location",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900006",
+      "title": "Test Property without Video",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900007",
+      "title": "Test Property - With Zone",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900008",
+      "title": "Test Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900009",
+      "title": "Test Property - https://youtu.be/dQw4w9WgXcQ",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900010",
+      "title": "Property for Delete Test",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900011",
+      "title": "Test Property - https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "listingSource": "staff"
+    },
+    {
+      "id": "900012",
+      "title": "Multi-Image Property",
+      "listingSource": "staff"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tlistingSource\n1\tLuxury 3BHK Apartment in Kharadi\tstaff\n2\tPremium Office Space in Hinjewadi\tstaff\n3\tUnder Construction 2BHK in Wagholi\tstaff\n4\tCommercial Shop in Viman Nagar\tstaff\n5\tResidential Plot in Baner\tstaff\n6\tLuxury Villa in Mumbai Suburbs\tstaff\n7\tModern Apartment in Dubai Marina\tstaff\n8\tCommercial Space in Bangalore\tstaff\n630001\tUltra Luxury 4BHK Penthouse\tstaff\n660097\tLand At Pargaon Purandar\tpublic\n720073\tLand at Pargaon Purandar\tpublic\n900001\tTest Property with Images\tstaff\n900002\tTest Property - Kharadi 3 BHK\tstaff\n900003\tProperty for Image Test\tstaff\n900004\tTest Property with Video\tstaff\n900005\tTest Property - Manual Location\tstaff\n900006\tTest Property without Video\tstaff\n900007\tTest Property - With Zone\tstaff\n900008\tTest Property - https://www.youtube.com/watch?v=dQw4w9WgXcQ\tstaff\n900009\tTest Property - https://youtu.be/dQw4w9WgXcQ\tstaff\n900010\tProperty for Delete Test\tstaff\n900011\tTest Property - https://www.youtube.com/embed/dQw4w9WgXcQ\tstaff\n900012\tMulti-Image Property\tstaff\n",
+  "stderr": "",
+  "execution_time_ms": 1505
+}
