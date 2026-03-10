@@ -200,8 +200,50 @@ export default function ProjectDetail() {
     );
   }
 
+  // Build JSON-LD structured data for Google rich results
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": project.name,
+    "description": project.description || `${project.name} - ${project.status} project in ${project.location}`,
+    "url": `https://nivaararealty.com/projects/${project.slug || project.id}`,
+    "image": project.coverImage || `https://nivaararealty.com/images/hero-building.jpg`,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": project.location,
+      "addressRegion": "Maharashtra",
+      "addressCountry": "IN"
+    },
+    ...(project.priceRange ? {
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "INR",
+        "price": project.priceRange,
+        "availability": project.status === "Ready to Move" ? "https://schema.org/InStock" : "https://schema.org/PreOrder"
+      }
+    } : {}),
+    "broker": {
+      "@type": "RealEstateAgent",
+      "name": "Nivaara Realty Solutions",
+      "url": "https://nivaararealty.com",
+      "telephone": "+919764515697",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Office No. 203, Zen Square, Kharadi",
+        "addressLocality": "Pune",
+        "addressRegion": "Maharashtra",
+        "addressCountry": "IN"
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col">
+      {/* JSON-LD Structured Data for Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* Lightbox */}
       {lightboxOpen && allImages.length > 0 && (

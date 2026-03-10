@@ -2317,3 +2317,5 @@
 - [x] Add property-level JSON-LD RealEstateListing schema to property detail pages
 - [x] Add Google Analytics 4 (G-PN5VP7N9Q5) to the website
 - [x] Fix index.html favicon: remove broken /favicon.svg reference, use minimal clean set per Google guidance
+- [x] Add JSON-LD RealEstateListing schema to project detail pages (dynamic, works for all projects automatically)
+- [ ] Provide GA4 Search Console linking instructions
