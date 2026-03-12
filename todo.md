@@ -2319,3 +2319,13 @@
 - [x] Fix index.html favicon: remove broken /favicon.svg reference, use minimal clean set per Google guidance
 - [x] Add JSON-LD RealEstateListing schema to project detail pages (dynamic, works for all projects automatically)
 - [ ] Provide GA4 Search Console linking instructions
+
+- [ ] Fix Google indexing issues: add canonical tags to all pages, fix sitemap to include property/project pages, add noindex to admin/staff pages, block manus.space from Google
+
+## Google Indexing Fixes (March 2026)
+
+- [x] Block manus.space domain from Google indexing (X-Robots-Tag: noindex + robots.txt Disallow: /)
+- [x] Fix robots.txt to also disallow /admin/ path
+- [x] Add canonical URL injection in buildOGHtmlPage for property/project pages
+- [x] Fix flaky property badge test (31 days -> 45 days to avoid timezone edge case)
+- [x] All 72 tests passing

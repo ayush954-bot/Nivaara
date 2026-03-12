@@ -167,7 +167,13 @@ router.get("/sitemap.xml", async (_req, res) => {
 
 // ─── Robots.txt ──────────────────────────────────────────────────────────────
 
-router.get("/robots.txt", (_req, res) => {
+router.get("/robots.txt", (req, res) => {
+  const host = req.hostname || "";
+  // On manus.space staging domain, block all crawlers
+  if (host.includes("manus.space") || host.includes("manus.computer")) {
+    const txt = `User-Agent: *\nDisallow: /\n`;
+    return res.status(200).set({ "Content-Type": "text/plain" }).send(txt);
+  }
   const txt = `User-Agent: *
 Allow: /
 Allow: /favicon.ico
@@ -175,6 +181,7 @@ Allow: /api/google-favicon
 Disallow: /api/trpc/
 Disallow: /api/oauth/
 Disallow: /staff/
+Disallow: /admin/
 
 Sitemap: https://nivaararealty.com/sitemap.xml
 `;

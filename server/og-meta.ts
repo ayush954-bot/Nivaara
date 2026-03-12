@@ -184,6 +184,20 @@ export function buildOGHtmlPage(meta: OGMeta, baseHtml: string): string {
     `<meta name="description" content="${escapeHtml(meta.description)}">`
   );
 
+  // Replace or inject canonical URL for this specific page
+  // This tells Google the authoritative URL for this property/project page
+  if (html.includes('<link rel="canonical"')) {
+    html = html.replace(
+      /<link rel="canonical" href="[^"]*" \/>/,
+      `<link rel="canonical" href="${meta.url}" />`
+    );
+  } else {
+    html = html.replace(
+      '</head>',
+      `  <link rel="canonical" href="${meta.url}" />\n</head>`
+    );
+  }
+
   return html;
 }
 

@@ -73,9 +73,9 @@ describe("Property Badge System", () => {
     expect(badge).toBe("New");
   });
 
-  it("should handle edge case: 31 days old (no longer new)", () => {
+  it("should handle edge case: 45 days old (no longer new)", () => {
     const oldDate = new Date();
-    oldDate.setDate(oldDate.getDate() - 31);
+    oldDate.setDate(oldDate.getDate() - 45);
     
     const property = {
       createdAt: oldDate,

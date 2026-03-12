@@ -41,6 +41,16 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // Cookie parser for staff authentication
   app.use(cookieParser());
+
+  // Block search engine indexing on the manus.space staging domain.
+  // This prevents Google from treating manus.space and nivaararealty.com as duplicates.
+  app.use((_req, res, next) => {
+    const host = _req.hostname || "";
+    if (host.includes("manus.space") || host.includes("manus.computer")) {
+      res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    }
+    next();
+  });
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   // Staff authentication routes
