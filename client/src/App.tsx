@@ -31,6 +31,7 @@ import MyListings from "./pages/MyListings";
 import EditMyProperty from "./pages/EditMyProperty";
 import EditMyProject from "./pages/EditMyProject";
 import AdminPendingBanner from "./components/AdminPendingBanner";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -64,6 +65,7 @@ function Router() {
           <Route path={"/my-listings"} component={MyListings} />
           <Route path={"/my-listings/edit-property/:id"} component={EditMyProperty} />
           <Route path={"/my-listings/edit-project/:id"} component={EditMyProject} />
+          <Route path={"/privacy-policy"} component={PrivacyPolicy} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>

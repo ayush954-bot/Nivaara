@@ -2329,3 +2329,4 @@
 - [x] Add canonical URL injection in buildOGHtmlPage for property/project pages
 - [x] Fix flaky property badge test (31 days -> 45 days to avoid timezone edge case)
 - [x] All 72 tests passing
+- [x] Create /privacy-policy page and add to sitemap + footer

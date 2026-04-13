@@ -165,6 +165,11 @@ export default function Footer() {
         <div className="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/70">
           <p>&copy; 2026 Nivaara Realty Solutions LLP. All rights reserved.</p>
           <p className="mt-2">RERA Registered | Transparency. Trust. Excellence.</p>
+          <p className="mt-2">
+            <Link href="/privacy-policy" className="hover:text-background transition-colors underline underline-offset-2">
+              Privacy Policy
+            </Link>
+          </p>
         </div>
       </div>
     </footer>

@@ -96,6 +96,7 @@ const STATIC_PAGES = [
   "/contact",
   "/faq",
   "/locations",
+  "/privacy-policy",
 ];
 
 router.get("/sitemap.xml", async (_req, res) => {
