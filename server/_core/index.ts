@@ -12,6 +12,7 @@ import { staffRouter } from "../staff-routes";
 import { ogRoutes } from "../og-routes";
 import { imageProxyRouter } from "../image-proxy";
 import { seoRoutes } from "../seo-routes";
+import { externalApiRouter } from "../external-api";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -64,7 +65,9 @@ async function startServer() {
     })
   );
   
-   // SEO routes — sitemap, robots.txt, google-favicon (MUST be before static serving)
+  // External REST API — property submission from external apps
+  app.use(externalApiRouter);
+  // SEO routes — sitemap, robots.txt, google-favicon (MUST be before static serving)
   app.use(seoRoutes);
   // Image proxy — allows canvas to draw external images without CORS taint
   app.use(imageProxyRouter);

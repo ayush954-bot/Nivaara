@@ -2330,3 +2330,4 @@
 - [x] Fix flaky property badge test (31 days -> 45 days to avoid timezone edge case)
 - [x] All 72 tests passing
 - [x] Create /privacy-policy page and add to sitemap + footer
+- [x] Build external property submission REST API with API key auth, image upload, and video link support

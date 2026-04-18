@@ -282,3 +282,17 @@ export const listingEdits = mysqlTable("listing_edits", {
 });
 export type ListingEdit = typeof listingEdits.$inferSelect;
 export type InsertListingEdit = typeof listingEdits.$inferInsert;
+/**
+ * API Keys table - stores keys for external applications to submit properties via REST API
+ */
+export const apiKeys = mysqlTable("api_keys", {
+  id: int("id").autoincrement().primaryKey(),
+  keyHash: varchar("keyHash", { length: 64 }).notNull().unique(), // SHA-256 hash of the key
+  keyPrefix: varchar("keyPrefix", { length: 12 }).notNull(), // First 8 chars for identification (e.g. "niv_abc1")
+  label: varchar("label", { length: 255 }).notNull(), // Human-readable name (e.g. "Facebook Messaging App")
+  isActive: boolean("isActive").default(true).notNull(),
+  lastUsedAt: timestamp("lastUsedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type InsertApiKey = typeof apiKeys.$inferInsert;
